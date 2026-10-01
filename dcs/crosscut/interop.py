@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import json
 
 def normalize_standard_format(raw_payload: str) -> dict:

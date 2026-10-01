@@ -3,7 +3,7 @@
 If these hold, pipeline composition is sound.
 """
 
-from dcs.mesh.behavior import Behavior, Pipeline, empty, pipeline  # pragma: no cover
+from dcs.mesh.behavior import Behavior, Pipeline, empty
 from dcs.triad.lattice import truth_le  # pragma: no cover
 
 
