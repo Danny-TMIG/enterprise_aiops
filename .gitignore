@@ -1,10 +1,10 @@
 .venv/
+.lanes/
 __pycache__/
 *.pyc
 *.egg-info/
 build/
 dist/
-.lanes/
 node_modules/
 data/
 .codeql/
@@ -24,7 +24,6 @@ dcs_ct_log.json
 license_*.json
 symbol_atlas/
 dendritic_seeds/
-# Junk that slipped in
 botnet.db
 state.mmap
 checkpoints/
