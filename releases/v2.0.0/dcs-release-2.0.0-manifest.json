@@ -1,0 +1,11 @@
+{
+  "distribution_bundle": "dcs-sovereign-release-2.0.0.tar.gz",
+  "version": "2.0.0",
+  "timestamp": 1790873403,
+  "hash_digest": "f5b9cf277cca8c2b860cf392fbc529c74e95c522b631a79870cac31b95761297",
+  "signature_attestation": {
+    "algorithm": "sha256-mock-isolated",
+    "key_id": "sovereign-local-thinkpad-node",
+    "signature": "f4ef8f5c8b3d0f38ab89e127c79f2bbdb4fae809993c48866b8bc7745fb41585"
+  }
+}

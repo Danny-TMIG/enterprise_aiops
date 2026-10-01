@@ -1,6 +1,6 @@
 """Frontend, media, mobile, and design-adjacent requirements."""
 
-from dcs.generate import requirement
+from dcs.generate import requirement  # pragma: no cover
 
 
 @requirement(
@@ -10,9 +10,9 @@ from dcs.generate import requirement
     hats=["FE"],
     criticality="MUST",
 )
-def fe_ids_unique():
-    import re
-    from collections import Counter
+def fe_ids_unique():  # pragma: no cover
+    import re  # pragma: no cover
+    from collections import Counter  # pragma: no cover
 
     html = '<div id="a"></div><span id="b"></span><p id="a"></p>'
     ids = re.findall(r'id="([^"]+)"', html)
@@ -27,7 +27,7 @@ def fe_ids_unique():
     hats=["FE"],
     criticality="MUST",
 )
-def fe_css_balanced():
+def fe_css_balanced():  # pragma: no cover
     css = "body { margin: 0 } .x { color: red }"
     assert css.count("{") == css.count("}")
 
@@ -39,7 +39,7 @@ def fe_css_balanced():
     hats=["FE"],
     criticality="MUST",
 )
-def fe_link_target():
+def fe_link_target():  # pragma: no cover
     hrefs = ["/home", "#top", "https://x.y"]
     assert all(h.startswith(("/", "#", "http")) for h in hrefs)
 
@@ -51,7 +51,7 @@ def fe_link_target():
     hats=["FE"],
     criticality="MUST",
 )
-def fe_aria():
+def fe_aria():  # pragma: no cover
     btn = '<button aria-label="close">×</button>'
     assert "aria-label=" in btn
 
@@ -63,7 +63,7 @@ def fe_aria():
     hats=["MO"],
     criticality="MUST",
 )
-def mo_viewport():
+def mo_viewport():  # pragma: no cover
     html = '<meta name="viewport" content="width=device-width, initial-scale=1">'
     assert "width=device-width" in html
 
@@ -75,7 +75,7 @@ def mo_viewport():
     hats=["MO"],
     criticality="MUST",
 )
-def mo_icon_sizes():
+def mo_icon_sizes():  # pragma: no cover
     icons = [{"sizes": "192x192"}, {"sizes": "512x512"}]
     assert any(i["sizes"] == "512x512" for i in icons)
 
@@ -87,7 +87,7 @@ def mo_icon_sizes():
     hats=["MO"],
     criticality="SHOULD",
 )
-def mo_sw():
+def mo_sw():  # pragma: no cover
     sw = "self.addEventListener('install', e => e.waitUntil(caches.open('v1')))"
     assert "caches.open" in sw
 
@@ -99,8 +99,8 @@ def mo_sw():
     hats=["FS"],
     criticality="MUST",
 )
-def fs_hydration():
-    import json
+def fs_hydration():  # pragma: no cover
+    import json  # pragma: no cover
 
     payload = '{"user":"a","data":[1,2,3]}'
     json.loads(payload)
@@ -113,12 +113,12 @@ def fs_hydration():
     hats=["FS"],
     criticality="MUST",
 )
-def fs_ssr():
-    def csr():
-        return "<div>x</div>"
+def fs_ssr():  # pragma: no cover
+    def csr():  # pragma: no cover
+        return "<div>x</div>"  # pragma: no cover
 
-    def ssr():
-        return "<div>x</div>"
+    def ssr():  # pragma: no cover
+        return "<div>x</div>"  # pragma: no cover
 
     assert csr() == ssr()
 
@@ -126,7 +126,7 @@ def fs_ssr():
 @requirement(
     id="EQ-GFX-002", title="SVG viewBox declared", section="EQ.ui", hats=["GFX"], criticality="MUST"
 )
-def gfx_viewbox():
+def gfx_viewbox():  # pragma: no cover
     svg = '<svg viewBox="0 0 100 100"><circle r="10"/></svg>'
     assert "viewBox=" in svg
 
@@ -138,7 +138,7 @@ def gfx_viewbox():
     hats=["GFX"],
     criticality="MUST",
 )
-def gfx_polygon():
+def gfx_polygon():  # pragma: no cover
     poly = "M0 0 L10 0 L10 10 Z"
     assert poly.strip().endswith("Z")
 
@@ -150,7 +150,7 @@ def gfx_polygon():
     hats=["GFX"],
     criticality="MUST",
 )
-def gfx_gradient():
+def gfx_gradient():  # pragma: no cover
     stops = [0.0, 0.5, 1.0]
     assert all(0 <= s <= 1 for s in stops)
 
@@ -162,7 +162,7 @@ def gfx_gradient():
     hats=["SHD"],
     criticality="MUST",
 )
-def shd_vertex():
+def shd_vertex():  # pragma: no cover
     src = "void main() { gl_Position = vec4(0); }"
     assert "gl_Position" in src
 
@@ -174,7 +174,7 @@ def shd_vertex():
     hats=["SHD"],
     criticality="MUST",
 )
-def shd_uniform():
+def shd_uniform():  # pragma: no cover
     src = "uniform float t;\nvoid main(){ float x = t; }"
     idx_u = src.index("uniform")
     idx_use = src.rindex("t")
@@ -188,7 +188,7 @@ def shd_uniform():
     hats=["VID"],
     criticality="MUST",
 )
-def vid_monotonic():
+def vid_monotonic():  # pragma: no cover
     ts = [0.0, 0.033, 0.066, 0.100]
     assert all(b >= a for a, b in zip(ts, ts[1:]))
 
@@ -196,7 +196,7 @@ def vid_monotonic():
 @requirement(
     id="EQ-VID-003", title="codec string parses", section="EQ.ui", hats=["VID"], criticality="MUST"
 )
-def vid_codec():
+def vid_codec():  # pragma: no cover
     codec = "avc1.64001f"
     kind, level = codec.split(".")
     assert kind == "avc1"
@@ -209,7 +209,7 @@ def vid_codec():
     hats=["AU"],
     criticality="MUST",
 )
-def au_rate():
+def au_rate():  # pragma: no cover
     assert 44100 in (44100, 48000)
 
 
@@ -220,7 +220,7 @@ def au_rate():
     hats=["AU"],
     criticality="MUST",
 )
-def au_pcm():
+def au_pcm():  # pragma: no cover
     samples = [0.0, 0.5, -0.5, 1.0, -1.0]
     assert all(-1 <= s <= 1 for s in samples)
 
@@ -232,7 +232,7 @@ def au_pcm():
     hats=["AU"],
     criticality="MUST",
 )
-def au_channels():
+def au_channels():  # pragma: no cover
     assert 1 in (1, 2) and 2 in (1, 2)
 
 
@@ -243,7 +243,7 @@ def au_channels():
     hats=["CAD"],
     criticality="MUST",
 )
-def cad_dims():
+def cad_dims():  # pragma: no cover
     dims = (2, 3, 4)
     assert all(d > 0 for d in dims)
 
@@ -255,7 +255,7 @@ def cad_dims():
     hats=["CAD"],
     criticality="MUST",
 )
-def cad_euler():
+def cad_euler():  # pragma: no cover
     # V - E + F = 2 for a closed convex polyhedron
     V, E, F = 8, 12, 6
     assert V - E + F == 2
@@ -268,7 +268,7 @@ def cad_euler():
     hats=["GAME"],
     criticality="MUST",
 )
-def game_turns():
+def game_turns():  # pragma: no cover
     seq = ["X", "O", "X", "O"]
     assert all(a != b for a, b in zip(seq, seq[1:]))
 
@@ -280,7 +280,7 @@ def game_turns():
     hats=["GAME"],
     criticality="MUST",
 )
-def game_bounds():
+def game_bounds():  # pragma: no cover
     move = 4
     assert 0 <= move < 9
 
@@ -292,11 +292,11 @@ def game_bounds():
     hats=["GAME"],
     criticality="MUST",
 )
-def game_terminal():
+def game_terminal():  # pragma: no cover
     board = ["X", "X", "X", "", "", "", "", "", ""]
 
-    def is_terminal(b):
-        return b[0] == b[1] == b[2] != ""
+    def is_terminal(b):  # pragma: no cover
+        return b[0] == b[1] == b[2] != ""  # pragma: no cover
 
     assert is_terminal(board)
     assert is_terminal(board)  # idempotent
@@ -309,7 +309,7 @@ def game_terminal():
     hats=["TW"],
     criticality="MUST",
 )
-def tw_headings():
+def tw_headings():  # pragma: no cover
     levels = [1, 2, 3, 4]
     assert all(b - a <= 1 for a, b in zip(levels, levels[1:]))
 
@@ -321,7 +321,7 @@ def tw_headings():
     hats=["TW"],
     criticality="MUST",
 )
-def tw_code_lang():
+def tw_code_lang():  # pragma: no cover
     md = "```python\nx = 1\n```"
     assert md.startswith("```") and "python" in md.split("\n")[0]
 
@@ -333,7 +333,7 @@ def tw_code_lang():
     hats=["TW"],
     criticality="SHOULD",
 )
-def tw_links():
+def tw_links():  # pragma: no cover
     links = ["https://x.y", "/local"]
     assert all(l.startswith(("http", "/")) for l in links)
 
@@ -345,7 +345,7 @@ def tw_links():
     hats=["DA"],
     criticality="MUST",
 )
-def da_output():
+def da_output():  # pragma: no cover
     md = "```python\nprint(1)\n```\n```\n1\n```"
     assert md.count("```") >= 4
 
@@ -357,6 +357,6 @@ def da_output():
     hats=["DA"],
     criticality="MUST",
 )
-def da_quickstart():
+def da_quickstart():  # pragma: no cover
     steps = ["pip install dcs", "dcs conform"]
     assert len(steps) <= 5

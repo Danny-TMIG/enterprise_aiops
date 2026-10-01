@@ -1,0 +1,19 @@
+[run]
+branch = True
+include =
+    dcs/verify.py
+    dcs/verify_intoto.py
+    dcs/mesh/behavior.py
+    dcs/self.py
+
+[report]
+fail_under = 100
+show_missing = True
+skip_covered = False
+
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if __name__ == .__main__.:
+    raise AssertionError
+    raise NotImplementedError

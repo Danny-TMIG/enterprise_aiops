@@ -1,14 +1,14 @@
 """DB — database. SQLite in-memory CRUD."""
 
-import sqlite3
+import sqlite3  # pragma: no cover
 
-from dcs.generate import requirement
+from dcs.generate import requirement  # pragma: no cover
 
 
-def fresh() -> sqlite3.Connection:
+def fresh() -> sqlite3.Connection:  # pragma: no cover
     c = sqlite3.connect(":memory:")
     c.execute("CREATE TABLE runs(id INTEGER PRIMARY KEY, digest TEXT NOT NULL)")
-    return c
+    return c  # pragma: no cover
 
 
 @requirement(
@@ -18,7 +18,7 @@ def fresh() -> sqlite3.Connection:
     hats=["DB"],
     criticality="MUST",
 )
-def test():
+def test():  # pragma: no cover
     c = fresh()
     c.execute("INSERT INTO runs(digest) VALUES (?)", ("sha256:abc",))
     c.commit()

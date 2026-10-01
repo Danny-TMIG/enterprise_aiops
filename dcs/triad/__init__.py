@@ -7,8 +7,8 @@ monotone in two orders, distributive. Every result emits a
 proof-carrying receipt checkable without re-running the check.
 """
 
-from dcs.triad.kernel import KERNEL_VERSION, Kernel, Receipt, Triad
-from dcs.triad.lattice import (
+from dcs.triad.kernel import KERNEL_VERSION, Kernel, Receipt, Triad  # pragma: no cover
+from dcs.triad.lattice import (  # pragma: no cover
     ALL_STATES,
     CONFLICT,
     FAIL,

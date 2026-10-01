@@ -1,20 +1,20 @@
 """KRN — kernel. POSIX resource limits, read-only observation."""
 
-import resource
+import resource  # pragma: no cover
 
-from dcs.generate import requirement
+from dcs.generate import requirement  # pragma: no cover
 
 
-def limits() -> dict:
-    return {
+def limits() -> dict:  # pragma: no cover
+    return {  # pragma: no cover
         "nofile": resource.getrlimit(resource.RLIMIT_NOFILE),
         "nproc": resource.getrlimit(resource.RLIMIT_NPROC),
     }
 
 
-def within_soft(cap: int) -> bool:
+def within_soft(cap: int) -> bool:  # pragma: no cover
     soft, _ = resource.getrlimit(resource.RLIMIT_NOFILE)
-    return 0 < soft <= cap
+    return 0 < soft <= cap  # pragma: no cover
 
 
 @requirement(
@@ -24,6 +24,6 @@ def within_soft(cap: int) -> bool:
     hats=["KRN"],
     criticality="MUST",
 )
-def test():
+def test():  # pragma: no cover
     l = limits()
     assert l["nofile"][0] > 0

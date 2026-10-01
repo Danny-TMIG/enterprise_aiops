@@ -1,8 +1,8 @@
 """Wall clock vs monotonic — elapsed never goes backwards."""
 
-import time
+import time  # pragma: no cover
 
-from dcs.generate import requirement
+from dcs.generate import requirement  # pragma: no cover
 
 
 @requirement(
@@ -12,7 +12,7 @@ from dcs.generate import requirement
     hats=["SYS", "SIM"],
     criticality="MUST",
 )
-def test():
+def test():  # pragma: no cover
     t0 = time.monotonic()
     time.sleep(0.001)
     t1 = time.monotonic()

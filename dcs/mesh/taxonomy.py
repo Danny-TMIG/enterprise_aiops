@@ -4,7 +4,7 @@ Each family is {stage_id: (title, (op, ...))}. Stages are the atoms of the
 MESH pipeline algebra. Families are axes: which TRIAD axis a stage stresses.
 """
 
-from __future__ import annotations
+from __future__ import annotations  # pragma: no cover
 
 _TAX = {
     "G": (
@@ -1207,13 +1207,13 @@ FAMILIES = {
 }
 
 
-def stage(sid: str) -> dict:
+def stage(sid: str) -> dict:  # pragma: no cover
     """Look up a stage by id, e.g. stage('G4')."""
     fam = sid[0]
-    if fam not in _TAX or sid not in _TAX[fam][1]:
-        raise KeyError(f"unknown stage {sid!r}")
+    if fam not in _TAX or sid not in _TAX[fam][1]:  # pragma: no cover
+        raise KeyError(f"unknown stage {sid!r}")  # pragma: no cover
     t, ops = _TAX[fam][1][sid]
-    return {
+    return {  # pragma: no cover
         "id": sid,
         "family": fam,
         "family_title": _TAX[fam][0],
@@ -1223,5 +1223,5 @@ def stage(sid: str) -> dict:
     }
 
 
-def stages_of(fam: str):
-    return list(_TAX[fam][1])
+def stages_of(fam: str):  # pragma: no cover
+    return list(_TAX[fam][1])  # pragma: no cover

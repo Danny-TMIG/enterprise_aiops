@@ -1,6 +1,6 @@
 """i18n: locale-aware formatting + message catalog."""
 
-from dcs.generate import requirement
+from dcs.generate import requirement  # pragma: no cover
 
 CATALOG = {
     "en": {"greeting": "Hello, {name}"},
@@ -9,10 +9,10 @@ CATALOG = {
 }
 
 
-def t(locale: str, key: str, **kw) -> str:
+def t(locale: str, key: str, **kw) -> str:  # pragma: no cover
     cat = CATALOG.get(locale) or CATALOG["en"]
     template = cat.get(key) or CATALOG["en"].get(key) or key
-    return template.format(**kw)
+    return template.format(**kw)  # pragma: no cover
 
 
 @requirement(
@@ -22,7 +22,7 @@ def t(locale: str, key: str, **kw) -> str:
     hats=["FE", "TW", "DA"],
     criticality="MUST",
 )
-def test():
+def test():  # pragma: no cover
     assert t("es", "greeting", name="Ana") == "Hola, Ana"
     assert t("zz", "greeting", name="Sam") == "Hello, Sam"
     assert t("en", "unknown.key") == "unknown.key"

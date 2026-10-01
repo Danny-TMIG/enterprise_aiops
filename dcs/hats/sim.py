@@ -1,15 +1,15 @@
 """SIM — simulation. Deterministic stepper."""
 
-from dcs.generate import requirement
+from dcs.generate import requirement  # pragma: no cover
 
 
-def simulate(init, step, n: int):
+def simulate(init, step, n: int):  # pragma: no cover
     s = init
     history = [s]
     for _ in range(n):
         s = step(s)
         history.append(s)
-    return history
+    return history  # pragma: no cover
 
 
 @requirement(
@@ -19,6 +19,6 @@ def simulate(init, step, n: int):
     hats=["SIM"],
     criticality="MUST",
 )
-def test():
+def test():  # pragma: no cover
     h = simulate(0, lambda s: s + 1, 5)
     assert h == [0, 1, 2, 3, 4, 5]

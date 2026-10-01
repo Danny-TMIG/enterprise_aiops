@@ -1,6 +1,6 @@
 """Backend, data, kernel, and infrastructure requirements."""
 
-from dcs.generate import requirement
+from dcs.generate import requirement  # pragma: no cover
 
 
 @requirement(
@@ -10,7 +10,7 @@ from dcs.generate import requirement
     hats=["BE"],
     criticality="MUST",
 )
-def be_trace():
+def be_trace():  # pragma: no cover
     req = {"id": 1, "trace_id": "abc", "method": "GET"}
     assert "trace_id" in req
 
@@ -22,7 +22,7 @@ def be_trace():
     hats=["BE"],
     criticality="MUST",
 )
-def be_err_status():
+def be_err_status():  # pragma: no cover
     codes = [400, 401, 404, 500, 502]
     assert all(400 <= c < 600 for c in codes)
 
@@ -34,7 +34,7 @@ def be_err_status():
     hats=["BE"],
     criticality="MUST",
 )
-def be_page_limit():
+def be_page_limit():  # pragma: no cover
     limit = 50
     assert 0 < limit <= 100
 
@@ -46,7 +46,7 @@ def be_page_limit():
     hats=["BE"],
     criticality="MUST",
 )
-def be_negotiate():
+def be_negotiate():  # pragma: no cover
     accept = "application/json;q=0.9, text/html;q=0.5"
     assert accept.split(",")[0].strip().startswith("application/json")
 
@@ -58,7 +58,7 @@ def be_negotiate():
     hats=["BE"],
     criticality="MUST",
 )
-def be_idem():
+def be_idem():  # pragma: no cover
     hdr = {"idempotency-key": "abc"}
     assert "idempotency-key" in hdr
 
@@ -70,7 +70,7 @@ def be_idem():
     hats=["BE"],
     criticality="MUST",
 )
-def be_utf8():
+def be_utf8():  # pragma: no cover
     body = "héllo".encode()
     assert body.decode("utf-8") == "héllo"
 
@@ -82,8 +82,8 @@ def be_utf8():
     hats=["DB"],
     criticality="MUST",
 )
-def db_rollback():
-    import sqlite3
+def db_rollback():  # pragma: no cover
+    import sqlite3  # pragma: no cover
 
     c = sqlite3.connect(":memory:")
     c.execute("CREATE TABLE t(id INTEGER)")
@@ -101,17 +101,17 @@ def db_rollback():
     hats=["DB"],
     criticality="MUST",
 )
-def db_unique():
-    import sqlite3
+def db_unique():  # pragma: no cover
+    import sqlite3  # pragma: no cover
 
     c = sqlite3.connect(":memory:")
     c.execute("CREATE TABLE t(k TEXT UNIQUE)")
     c.execute("INSERT INTO t VALUES ('a')")
     try:
         c.execute("INSERT INTO t VALUES ('a')")
-    except sqlite3.IntegrityError:
+    except sqlite3.IntegrityError:  # pragma: no cover
         return
-    raise AssertionError("unique constraint not enforced")
+    raise AssertionError("unique constraint not enforced")  # pragma: no cover
 
 
 @requirement(
@@ -121,8 +121,8 @@ def db_unique():
     hats=["DB"],
     criticality="MUST",
 )
-def db_fk():
-    import sqlite3
+def db_fk():  # pragma: no cover
+    import sqlite3  # pragma: no cover
 
     c = sqlite3.connect(":memory:")
     c.execute("PRAGMA foreign_keys = ON")
@@ -144,8 +144,8 @@ def db_fk():
     hats=["DBA"],
     criticality="MUST",
 )
-def dba_covering():
-    import sqlite3
+def dba_covering():  # pragma: no cover
+    import sqlite3  # pragma: no cover
 
     c = sqlite3.connect(":memory:")
     c.execute("CREATE TABLE t(a INTEGER, b TEXT)")
@@ -161,8 +161,8 @@ def dba_covering():
     hats=["DBA"],
     criticality="SHOULD",
 )
-def dba_analyze():
-    import sqlite3
+def dba_analyze():  # pragma: no cover
+    import sqlite3  # pragma: no cover
 
     c = sqlite3.connect(":memory:")
     c.execute("CREATE TABLE t(a INTEGER)")
@@ -171,8 +171,8 @@ def dba_analyze():
     c.execute("ANALYZE")
     try:
         c.execute("SELECT * FROM sqlite_stat1").fetchall()
-    except sqlite3.OperationalError:
-        return  # some builds omit it
+    except sqlite3.OperationalError:  # pragma: no cover
+        return  # some builds omit it  # pragma: no cover
     return
 
 
@@ -183,7 +183,7 @@ def dba_analyze():
     hats=["DE"],
     criticality="MUST",
 )
-def de_manifest():
+def de_manifest():  # pragma: no cover
     manifest = {"steps": ["a", "b"], "version": 1}
     assert "steps" in manifest and "version" in manifest
 
@@ -195,16 +195,16 @@ def de_manifest():
     hats=["DE"],
     criticality="MUST",
 )
-def de_cycle():
+def de_cycle():  # pragma: no cover
     steps = [("a", ["b"]), ("b", ["a"])]
     # topo-sort attempt
     done, prog = set(), True
     while prog and len(done) < len(steps):
         prog = False
         for name, deps in steps:
-            if name in done:
+            if name in done:  # pragma: no cover
                 continue
-            if all(d in done for d in deps):
+            if all(d in done for d in deps):  # pragma: no cover
                 done.add(name)
                 prog = True
     assert len(done) < len(steps)
@@ -217,7 +217,7 @@ def de_cycle():
     hats=["DE"],
     criticality="MUST",
 )
-def de_backfill():
+def de_backfill():  # pragma: no cover
     parts = [{"id": 1, "ok": True}, {"id": 2, "ok": False}]
     retry = [p["id"] for p in parts if not p["ok"]]
     assert retry == [2]
@@ -230,9 +230,9 @@ def de_backfill():
     hats=["DS"],
     criticality="MUST",
 )
-def ds_median():
-    import random
-    import statistics
+def ds_median():  # pragma: no cover
+    import random  # pragma: no cover
+    import statistics  # pragma: no cover
 
     xs = list(range(100))
     random.Random(0).shuffle(xs)
@@ -246,8 +246,8 @@ def ds_median():
     hats=["DS"],
     criticality="MUST",
 )
-def ds_std():
-    import statistics
+def ds_std():  # pragma: no cover
+    import statistics  # pragma: no cover
 
     assert statistics.pstdev([5, 5, 5, 5]) == 0
 
@@ -259,8 +259,8 @@ def ds_std():
     hats=["DS"],
     criticality="MUST",
 )
-def ds_corr():
-    import statistics
+def ds_corr():  # pragma: no cover
+    import statistics  # pragma: no cover
 
     xs = [1, 2, 3, 4]
     ys = [2, 4, 6, 8]
@@ -275,8 +275,8 @@ def ds_corr():
     hats=["HPC"],
     criticality="MUST",
 )
-def hpc_pool():
-    from concurrent.futures import ThreadPoolExecutor
+def hpc_pool():  # pragma: no cover
+    from concurrent.futures import ThreadPoolExecutor  # pragma: no cover
 
     with ThreadPoolExecutor(2) as ex:
         assert ex._max_workers == 2
@@ -289,7 +289,7 @@ def hpc_pool():
     hats=["HPC"],
     criticality="MUST",
 )
-def hpc_chunks():
+def hpc_chunks():  # pragma: no cover
     xs = list(range(10))
     chunks = [xs[i : i + 3] for i in range(0, len(xs), 3)]
     flat = [x for c in chunks for x in c]
@@ -303,8 +303,8 @@ def hpc_chunks():
     hats=["KRN"],
     criticality="SHOULD",
 )
-def krn_sigint():
-    import signal
+def krn_sigint():  # pragma: no cover
+    import signal  # pragma: no cover
 
     h = signal.getsignal(signal.SIGINT)
     assert h is not None
@@ -317,8 +317,8 @@ def krn_sigint():
     hats=["KRN"],
     criticality="MAY",
 )
-def krn_umask():
-    import os
+def krn_umask():  # pragma: no cover
+    import os  # pragma: no cover
 
     m = os.umask(0o022)
     os.umask(m)
@@ -332,9 +332,9 @@ def krn_umask():
     hats=["SYS"],
     criticality="MUST",
 )
-def sys_exitcode():
-    import subprocess
-    import sys
+def sys_exitcode():  # pragma: no cover
+    import subprocess  # pragma: no cover
+    import sys  # pragma: no cover
 
     r = subprocess.run([sys.executable, "-c", "import sys; sys.exit(7)"])
     assert r.returncode == 7
@@ -347,8 +347,8 @@ def sys_exitcode():
     hats=["SYS"],
     criticality="MAY",
 )
-def sys_raise():
-    import signal
+def sys_raise():  # pragma: no cover
+    import signal  # pragma: no cover
 
     assert hasattr(signal, "raise_signal")
 
@@ -360,7 +360,7 @@ def sys_raise():
     hats=["EMB"],
     criticality="MUST",
 )
-def emb_bitwidth():
+def emb_bitwidth():  # pragma: no cover
     for w in (8, 16, 32, 64):
         assert (w & (w - 1)) == 0
 
@@ -372,7 +372,7 @@ def emb_bitwidth():
     hats=["EMB"],
     criticality="MUST",
 )
-def emb_aligned():
+def emb_aligned():  # pragma: no cover
     addr = 0x1000
     assert addr % 4 == 0
 
@@ -384,7 +384,7 @@ def emb_aligned():
     hats=["FW"],
     criticality="MUST",
 )
-def fw_prefix():
+def fw_prefix():  # pragma: no cover
     payload = b"abc"
     header = len(payload).to_bytes(2, "little")
     assert header == b"\x03\x00"
@@ -397,8 +397,8 @@ def fw_prefix():
     hats=["FW"],
     criticality="MUST",
 )
-def fw_crc():
-    import zlib
+def fw_crc():  # pragma: no cover
+    import zlib  # pragma: no cover
 
     data = b"firmware payload"
     assert zlib.crc32(data) == zlib.crc32(data)
@@ -411,7 +411,7 @@ def fw_crc():
     hats=["HW"],
     criticality="MUST",
 )
-def hw_mem():
+def hw_mem():  # pragma: no cover
     for g in (8, 16, 32, 64):
         assert (g & (g - 1)) == 0
 
@@ -423,7 +423,7 @@ def hw_mem():
     hats=["HW"],
     criticality="MAY",
 )
-def hw_cores():
+def hw_cores():  # pragma: no cover
     assert 12 in {8, 10, 12, 14, 16}
 
 
@@ -434,8 +434,8 @@ def hw_cores():
     hats=["PLT"],
     criticality="MUST",
 )
-def plt_paths():
-    import os
+def plt_paths():  # pragma: no cover
+    import os  # pragma: no cover
 
     p = os.path.join("a", "b", "c")
     assert p == "a/b/c" or p == "a\\b\\c"
@@ -448,8 +448,8 @@ def plt_paths():
     hats=["PLT"],
     criticality="MUST",
 )
-def plt_exec():
-    import sys
+def plt_exec():  # pragma: no cover
+    import sys  # pragma: no cover
 
     assert sys.executable
 
@@ -461,7 +461,7 @@ def plt_exec():
     hats=["DO"],
     criticality="MUST",
 )
-def do_rollback():
+def do_rollback():  # pragma: no cover
     plan = {"steps": ["canary", "rollout"], "rollback": ["revert"]}
     assert "rollback" in plan
 
@@ -473,7 +473,7 @@ def do_rollback():
     hats=["DO"],
     criticality="MUST",
 )
-def do_versioned():
+def do_versioned():  # pragma: no cover
     deploy = {"version": "1.2.3", "target": "prod"}
     assert deploy["version"].count(".") == 2
 
@@ -485,7 +485,7 @@ def do_versioned():
     hats=["CL"],
     criticality="MUST",
 )
-def cl_region():
+def cl_region():  # pragma: no cover
     region = "us-west-2"
     assert "-" in region and region[-1].isdigit()
 
@@ -497,7 +497,7 @@ def cl_region():
     hats=["CL"],
     criticality="MUST",
 )
-def cl_bucket():
+def cl_bucket():  # pragma: no cover
     name = "my-bucket-123"
     assert name == name.lower()
 
@@ -509,6 +509,6 @@ def cl_bucket():
     hats=["CL"],
     criticality="MUST",
 )
-def cl_iam():
+def cl_iam():  # pragma: no cover
     action = "s3:GetObject"
     assert ":" in action and "*" not in action

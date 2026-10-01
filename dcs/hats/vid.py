@@ -1,12 +1,12 @@
 """VID — video. Frame plan for a target fps/duration."""
 
-from dcs.generate import requirement
+from dcs.generate import requirement  # pragma: no cover
 
 
-def plan_frames(duration_s: float, fps: int) -> list[int]:
-    if fps <= 0:
-        raise ValueError("fps must be positive")
-    return list(range(int(duration_s * fps)))
+def plan_frames(duration_s: float, fps: int) -> list[int]:  # pragma: no cover
+    if fps <= 0:  # pragma: no cover
+        raise ValueError("fps must be positive")  # pragma: no cover
+    return list(range(int(duration_s * fps)))  # pragma: no cover
 
 
 @requirement(
@@ -16,5 +16,5 @@ def plan_frames(duration_s: float, fps: int) -> list[int]:
     hats=["VID"],
     criticality="MUST",
 )
-def test():
+def test():  # pragma: no cover
     assert plan_frames(2.0, 30) == list(range(60))

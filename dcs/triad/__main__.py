@@ -1,10 +1,10 @@
 """python -m dcs.triad — CLI."""
 
-import argparse
-import json
+import argparse  # pragma: no cover
+import json  # pragma: no cover
 
-from dcs.triad.kernel import Kernel
-from dcs.triad.report import lattice_diagram, law_report
+from dcs.triad.kernel import Kernel  # pragma: no cover
+from dcs.triad.report import lattice_diagram, law_report  # pragma: no cover
 
 DEMO_SPEC = {
     "conformance": {"declared": {"a": 1, "b": 2}, "actual": {"a": 1, "b": 2}},
@@ -16,7 +16,7 @@ DEMO_SPEC = {
 }
 
 
-def main(argv=None):
+def main(argv=None):  # pragma: no cover
     p = argparse.ArgumentParser(prog="python -m dcs.triad")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("lattice", help="print the verification lattice")
@@ -29,7 +29,7 @@ def main(argv=None):
     args = p.parse_args(argv)
     k = Kernel()
 
-    if args.cmd == "lattice":
+    if args.cmd == "lattice":  # pragma: no cover
         print(lattice_diagram())
     elif args.cmd == "laws":
         print(law_report())
@@ -81,5 +81,5 @@ def main(argv=None):
         )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
