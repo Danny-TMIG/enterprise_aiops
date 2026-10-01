@@ -1,4 +1,4 @@
-"""Build sdlc.json from all known-to-man standards bodies."""
+"""Build sdlc.json from all known-to-man standards bodies (round-robin)."""
 import json
 from pathlib import Path
 
@@ -42,12 +42,7 @@ CATEGORIES = [
     "Configuration", "Quality", "Security", "Governance",
 ]
 
-FIELDS = ["id", "name", "category", "identity", "inputs", "outputs",
-          "controls", "dependencies", "evidence", "metrics", "state",
-          "exit_criteria", "test"]
-
 TARGET = 1485
-per_body = TARGET // sum(len(v) for v in STANDARDS_BODIES.values())
 
 def body_short(b):
     return b.split()[0].replace("/", "").replace("-", "").upper()
@@ -64,37 +59,34 @@ def make_identity(standard, body, category):
         "artifact": f"{body_short(body)}_{category.lower()}.md",
     }
 
+# Build a round-robin cycle of (body, standard, category) tuples
+cycle = []
+for cat in CATEGORIES:
+    for body, standards in STANDARDS_BODIES.items():
+        for standard in standards:
+            cycle.append((body, standard, cat))
+
 reqs = []
-idx = 0
-for body, standards in STANDARDS_BODIES.items():
-    for standard in standards:
-        for cat in CATEGORIES:
-            for _ in range(max(1, per_body)):
-                idx += 1
-                pid = f"SDLC-{idx:04d}"
-                reqs.append({
-                    "id": pid,
-                    "name": f"{standard}: {cat}",
-                    "category": cat,
-                    "identity": make_identity(standard, body, cat),
-                    "inputs": [f"{cat.lower()}_input"],
-                    "outputs": [f"{cat.lower()}_output"],
-                    "controls": ["traceable", "reviewed", "approved"],
-                    "dependencies": [],
-                    "evidence": [f"{pid}.evidence.json"],
-                    "metrics": ["coverage", "defect_density"],
-                    "state": "UNKNOWN",
-                    "exit_criteria": ["review_passed", "evidence_attached"],
-                    "test": f"dcs.tests.sdlc.test_{pid.lower().replace('-', '_')}",
-                })
-                if idx >= TARGET:
-                    break
-            if idx >= TARGET:
-                break
-        if idx >= TARGET:
-            break
-    if idx >= TARGET:
-        break
+i = 0
+while len(reqs) < TARGET:
+    body, standard, cat = cycle[i % len(cycle)]
+    i += 1
+    pid = f"SDLC-{len(reqs) + 1:04d}"
+    reqs.append({
+        "id": pid,
+        "name": f"{standard}: {cat}",
+        "category": cat,
+        "identity": make_identity(standard, body, cat),
+        "inputs": [f"{cat.lower()}_input"],
+        "outputs": [f"{cat.lower()}_output"],
+        "controls": ["traceable", "reviewed", "approved"],
+        "dependencies": [],
+        "evidence": [f"{pid}.evidence.json"],
+        "metrics": ["coverage", "defect_density"],
+        "state": "UNKNOWN",
+        "exit_criteria": ["review_passed", "evidence_attached"],
+        "test": f"dcs.tests.sdlc.test_{pid.lower().replace('-', '_')}",
+    })
 
 manifest = {
     "schema": "dcs.sdlc.v2",

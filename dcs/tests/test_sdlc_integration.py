@@ -60,6 +60,21 @@ def test_sdlc_by_category():
         assert c in cats
 
 
+def test_sdlc_by_body_empty():
+    """Cover the branch where requirements list is empty."""
+    bad = {"schema": "x", "requirements": []}
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        json.dump(bad, f)
+        p = Path(f.name)
+    try:
+        engine = SDLCEngine(p)
+        engine.load()
+        assert engine.by_body() == {}
+        assert engine.by_category() == {}
+    finally:
+        p.unlink()
+
+
 def test_sdlc_missing_field_raises():
     bad = {"schema": "x", "requirements": [{"id": "SDLC-BAD", "state": "UNKNOWN"}]}
     with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
