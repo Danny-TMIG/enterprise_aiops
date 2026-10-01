@@ -1,74 +1,45 @@
-# dcs-conformance
+# enterprise_aiops
 
-Belnap-folded conformance for the modern compliance stack.
+`~/enterprise_aiops` is a Python repository that records claims about software
+development lifecycle compliance as signed evidence and re-executes the
+underlying test before treating any claim as verified. The repository contains
+the `dcs` package, a manifest of 1,485 SDLC processes derived from 80 standards
+published by 26 standards bodies (ISO, IEEE, NIST, OWASP, CMMI, ITIL, GDPR,
+FedRAMP, PCI DSS, EU AI Act, and others), a standards registry that assigns
+each process a clause and control family from its source standard, an evidence
+chain that hashes the implementation file, the test file, and the command
+output, signs the record with HMAC-SHA256, and stores the record on disk, and a
+verification program that re-runs the recorded command and confirms that the
+implementation hash, test hash, stdout hash, and return code all match the
+stored record. The purpose of the repository is to make the boundary between a
+stated claim and a supported claim machine-checkable: a record receives the
+result `PASS` only when an independent re-run reproduces the same hashes, and
+any divergence downgrades the record to `PARTIAL` or `BLOCKED`.
 
-Binary tools answer pass/fail. When two of them disagree — GitHub says
-yes, AWS says no, an auditor says "partial" — they have no state for it.
-`dcs` does.
+## Layout
 
-## Install
+- `dcs/evidence_chain.py` — capture, sign, store, verify a single claim
+- `dcs/qualify_evidence.py` — run a qualification profile and write a signed record
+- `dcs/verify_evidence.py` — re-execute a stored record and compare hashes
+- `dcs/sdlc_engine.py` — load the SDLC manifest and iterate processes
+- `dcs/standards/sdlc.json` — 1,485 SDLC processes
+- `dcs/standards/registry.json` — 80 standards, each with clauses, controls, evidence
+- `dcs/tests/` — pytest suite with strict markers, warnings-as-errors, 100% coverage on tracked files
+- `governance/` — SBOM, SLSA provenance, compliance matrix, threat model, license audit, formal invariants
+- `pytest.ini`, `conftest.py` — strict test configuration
 
-    pip install dcs-conformance
+## Qualify and verify
 
-Optional extras:
+```
+.venv/bin/python dcs/qualify_evidence.py
+.venv/bin/python dcs/verify_evidence.py
+```
 
-    pip install 'dcs-conformance[aws]'      # boto3 connector
-    pip install 'dcs-conformance[oscap]'    # OpenSCAP ARF parsing
-    pip install 'dcs-conformance[crypto]'   # Ed25519 signing
+## What the repository is not
 
-## Quickstart
-
-    dcs keygen          # generate dcs/key.hex (Ed25519, gitignored)
-    dcs self            # fold local tests x external sources
-
-Every run writes three files:
-
-- self-<ts>.json         primary signed bundle
-- self-<ts>.oscal.json   OSCAL 1.1.2 Assessment Results
-- self-<ts>.intoto.json  in-toto v1 Statement in a DSSE envelope
-
-## Verify
-
-    dcs verify-intoto dcs/evidence/self-<ts>.intoto.json
-    # OK: 1 valid signature(s)
-
-Or against an externally supplied public key:
-
-    dcs verify-intoto envelope.json --pubkey $(cat dcs/key.pub.hex)
-
-## The Belnap fold
-
-Each requirement gets attestations from multiple sources. They fold
-via meet over Belnap FOUR:
-
-| sources              | folded |
-|----------------------|--------|
-| local=T, github=T    | T      |
-| local=T, aws=F       | B      |
-| local=T, github=U    | T      |
-| all=F                | F      |
-
-CONFLICT is a first-class state. A binary tool would have printed one
-of the inputs and dropped the disagreement.
-
-## Connectors
-
-Sovereign plugins. Missing tool or missing env var yields U; the
-verdict narrows but never breaks.
-
-- github      README, workflows, default branch
-- aws         S3 encryption, CloudTrail multi-region, IAM password policy
-- oscap       OpenSCAP ARF XML
-- kube_bench  CIS Kubernetes Benchmark
-- kyverno     Kyverno PolicyReport CRDs
-- prowler     Prowler OCSF findings
-
-## Interoperability
-
-- OSCAL       consumed by compliance-trestle, trestle-cli, FedRAMP tooling
-- in-toto     consumed by cosign, Rekor, policy-controller
-- Ed25519     verifiable with only key.pub.hex
-
-## License
-
-Apache-2.0
+The repository does not certify compliance with any standard. The repository
+does not replace an accredited assessor, penetration test, or legal review.
+The records the repository produces describe software behavior that can be
+reproduced by an independent run. Conformance claims against FedRAMP, PCI DSS,
+HIPAA, SOC 2, and similar programs require an authorized assessor and are not
+produced by this repository.
