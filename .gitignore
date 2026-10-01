@@ -24,3 +24,20 @@ dcs_ct_log.json
 license_*.json
 symbol_atlas/
 dendritic_seeds/
+# Junk that slipped in
+botnet.db
+state.mmap
+checkpoints/
+*.bak
+*.bak.*
+.snapshots/
+.coverage
+dcs/evidence/
+releases/v2.0.0/*.tar.gz
+run_git_and_cleanup.py
+sovereign_master_pipeline.py
+host_server.py
+causal_7layer.py
+dendritic_ops.py
+dendritic_seeds.py
+gener.py
