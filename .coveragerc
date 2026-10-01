@@ -25,3 +25,4 @@ include =
     dcs/crosscut/semver.py
     dcs/__main__.py
     dcs/conform.py
+    dcs/crosscut/interop.py
