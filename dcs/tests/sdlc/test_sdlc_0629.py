@@ -1,4 +1,4 @@
-"""Derived from Sigstore / Signing: Fulcio."""
+"""Derived from Sigstore / Signing: Policy."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

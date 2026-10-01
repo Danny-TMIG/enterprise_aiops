@@ -1,4 +1,4 @@
-"""Derived from BSI TR-03161 / BSI: Implementation."""
+"""Derived from BSI TR-03161 / BSI: Testing."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

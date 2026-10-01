@@ -1022,20 +1022,22 @@
     },
     "NIST AI RMF 1.0": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "GOVERN 1-6",
+        "MAP 1-5",
+        "MEASURE 1-4",
+        "MANAGE 1-4"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "govern",
+        "map",
+        "measure",
+        "manage"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "ai_rmf_profile",
+        "risk_register",
+        "impact_assessment",
+        "tevv_record"
       ]
     },
     "NIST CSF 2.0": {

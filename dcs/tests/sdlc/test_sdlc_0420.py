@@ -1,4 +1,4 @@
-"""Derived from IEEE 29119 / IEEE: Part 4 Techniques."""
+"""Derived from IEEE 29119 / IEEE: Part 3 Documentation."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

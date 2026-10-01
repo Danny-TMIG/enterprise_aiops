@@ -1,4 +1,4 @@
-"""Derived from Automotive SPICE 3.1 / Automotive: ACQ.1-4."""
+"""Derived from Automotive SPICE 3.1 / Automotive: SWE.1-6."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

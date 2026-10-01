@@ -1,6 +1,6 @@
 # Threat Model
 
-Generated: 2026-10-01T17:46:39.856814+00:00
+Generated: 2026-10-01T17:52:03.353255+00:00
 Method: STRIDE
 
 | File | SHA256 |
@@ -15,7 +15,7 @@ Method: STRIDE
 |---|---|---|---|
 | Tampering | CT + SHA256 | SDLC-0001 | NIST 800-53 |
 | Spoofing | in-toto + SLSA | SDLC-0002 | SLSA 1.0 |
-| Supply chain | SBOM (218) | SDLC-0003 | OpenSSF |
+| Supply chain | SBOM (221) | SDLC-0003 | OpenSSF |
 | Repudiation | Signed commits | SDLC-0004 | Sigstore |
 | Info disclosure | Data policy | SDLC-0005 | GDPR |
 | DoS | Rate limiting | SDLC-0006 | OWASP ASVS |

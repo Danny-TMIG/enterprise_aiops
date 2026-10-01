@@ -1,4 +1,4 @@
-"""Derived from EN 50128 / CENELEC: SW Implementation."""
+"""Derived from EN 50128 / CENELEC: SW Requirements."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

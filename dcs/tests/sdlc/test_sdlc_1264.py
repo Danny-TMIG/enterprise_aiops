@@ -1,4 +1,4 @@
-"""Derived from Protection Profile / CC: PP Intro."""
+"""Derived from Protection Profile / CC: Security Problem."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

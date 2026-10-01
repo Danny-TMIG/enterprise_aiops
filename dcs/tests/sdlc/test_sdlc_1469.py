@@ -1,4 +1,4 @@
-"""Derived from OWASP Top 10 / OWASP: A09 Logging."""
+"""Derived from OWASP Top 10 / OWASP: A10 SSRF."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

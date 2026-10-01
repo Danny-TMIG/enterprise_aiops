@@ -1,4 +1,4 @@
-"""Derived from in-toto 1.0 / Signing: Step."""
+"""Derived from in-toto 1.0 / Signing: Layout."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

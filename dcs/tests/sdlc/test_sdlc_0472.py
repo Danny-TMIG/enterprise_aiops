@@ -1,4 +1,4 @@
-"""Derived from ISO/IEC 42001 / AI: 8 Operation."""
+"""Derived from ISO/IEC 42001 / AI: 5 Leadership."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

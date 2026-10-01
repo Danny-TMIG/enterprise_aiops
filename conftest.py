@@ -29,11 +29,11 @@ def pytest_collection_modifyitems(config, items):
 
 def pytest_report_header(config):
     return [
-        f"repo:        {REPO_ROOT}",
-        f"python:      {sys.version.split()[0]}",
-        f"venv:        {VENV_PYTHON.exists()}",
-        f"runslow:     {config.getoption('runslow')}",
-        f"integration: {config.getoption('runintegration')}",
+        "repo:        " + str(REPO_ROOT),
+        "python:      " + sys.version.split()[0],
+        "venv:        " + str(VENV_PYTHON.exists()),
+        "runslow:     " + str(config.getoption("runslow")),
+        "integration: " + str(config.getoption("runintegration")),
     ]
 
 
@@ -52,21 +52,20 @@ def venv_python():
 @pytest.fixture(scope="session")
 def run_cmd(venv_python):
     """Run a command; fail with captured output on nonzero."""
-    def _run(args, *, cwd=REPO_ROOT, timeout=60, check=True, env=None):
+    def _run(args, cwd=REPO_ROOT, timeout=60, check=True, env=None):
+        argv = [str(a) for a in args]
         r = subprocess.run(
-            [str(a) for a in args], cwd=str(cwd),
+            argv, cwd=str(cwd),
             capture_output=True, text=True, timeout=timeout,
             env={**os.environ, **(env or {})},
         )
         if check and r.returncode != 0:
-            pytest.fail(
-                f"cmd failed: {' '.join(str(a) for a in args)}
-"
-                f"rc={r.returncode}
-"
-                f"stdout={r.stdout[-2000:]}
-"
-                f"stderr={r.stderr[-2000:]}"
+            msg = (
+                "cmd failed: " + " ".join(argv) + "\n"
+                + "rc=" + str(r.returncode) + "\n"
+                + "stdout=" + r.stdout[-2000:] + "\n"
+                + "stderr=" + r.stderr[-2000:]
             )
+            pytest.fail(msg)
         return r
     return _run

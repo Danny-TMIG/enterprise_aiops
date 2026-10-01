@@ -1,4 +1,4 @@
-"""Derived from The Update Framework / Signing: Targets."""
+"""Derived from The Update Framework / Signing: Root."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

@@ -1,4 +1,4 @@
-"""Derived from OWASP Proactive Controls / OWASP: C1 Define."""
+"""Derived from OWASP Proactive Controls / OWASP: C8 Protect."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

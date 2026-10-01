@@ -1,4 +1,4 @@
-"""Derived from OWASP ASVS 4.0 / OWASP: V6 Crypto."""
+"""Derived from OWASP ASVS 4.0 / OWASP: V2 Authn."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

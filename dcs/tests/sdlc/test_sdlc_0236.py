@@ -1,4 +1,4 @@
-"""Derived from AWS Well-Architected / Cloud: Sustainability."""
+"""Derived from AWS Well-Architected / Cloud: Security."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

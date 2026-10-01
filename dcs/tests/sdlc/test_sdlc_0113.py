@@ -1,4 +1,4 @@
-"""Derived from CMMI SVC 3.0 / CMMI: SD Service Delivery."""
+"""Derived from CMMI SVC 3.0 / CMMI: IRP Incident."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

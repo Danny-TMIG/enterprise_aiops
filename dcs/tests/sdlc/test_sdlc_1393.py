@@ -1,4 +1,4 @@
-"""Derived from CMMI SVC 3.0 / CMMI: CAM Capacity."""
+"""Derived from CMMI SVC 3.0 / CMMI: SD Service Delivery."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

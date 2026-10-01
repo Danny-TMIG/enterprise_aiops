@@ -1,4 +1,4 @@
-"""Derived from SEI CERT C++ / CERT: OBJ."""
+"""Derived from SEI CERT C++ / CERT: MEM."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

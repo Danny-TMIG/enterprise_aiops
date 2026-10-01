@@ -1,4 +1,4 @@
-"""Derived from SAFe 6.0 / SAFe: Lean-Agile."""
+"""Derived from SAFe 6.0 / SAFe: Agile Product."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

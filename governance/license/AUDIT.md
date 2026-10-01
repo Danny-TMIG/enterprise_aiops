@@ -1,8 +1,8 @@
 # License Audit
 
-Generated: 2026-10-01T17:46:39.856814+00:00
-Components: 218
-Unknown: 114
+Generated: 2026-10-01T17:52:03.353255+00:00
+Components: 221
+Unknown: 116
 Copyleft: 0
 
 | Package | Version | License |
@@ -57,6 +57,7 @@ Copyleft: 0
 | docker | 7.2.0 | UNKNOWN |
 | docutils | 0.23 | UNKNOWN |
 | duet | 0.2.9 | Apache 2 |
+| execnet | 2.1.2 | UNKNOWN |
 | fastapi | 0.142.2 | UNKNOWN |
 | filelock | 4.0.7 | UNKNOWN |
 | Flask | 3.1.3 | UNKNOWN |
@@ -159,6 +160,8 @@ Copyleft: 0
 | pytest | 9.1.1 | UNKNOWN |
 | pytest-asyncio | 1.4.0 | UNKNOWN |
 | pytest-cov | 7.1.0 | UNKNOWN |
+| pytest-timeout | 2.4.0 | MIT |
+| pytest-xdist | 3.8.0 | UNKNOWN |
 | python-dateutil | 2.9.0.post0 | Dual License |
 | python-dotenv | 1.2.3 | BSD-3-Clause |
 | python-owasp-zap-v2.4 | 0.1.0 | UNKNOWN |
@@ -204,6 +207,3 @@ Copyleft: 0
 | stevedore | 5.9.1 | UNKNOWN |
 | sympy | 1.14.0 | BSD |
 | thinc | 8.3.13 | MIT |
-| threadpoolctl | 3.7.0 | UNKNOWN |
-| tokenizers | 0.23.2 | UNKNOWN |
-| torch | 2.14.1 | UNKNOWN |

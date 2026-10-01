@@ -1,4 +1,4 @@
-"""Derived from IEEE 1016 / IEEE: Rationale."""
+"""Derived from IEEE 1016 / IEEE: Concerns."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

@@ -1,4 +1,4 @@
-"""Derived from NIST AI RMF 1.0 / NIST: Clause 2."""
+"""Derived from NIST AI RMF 1.0 / NIST: MANAGE 1-4."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

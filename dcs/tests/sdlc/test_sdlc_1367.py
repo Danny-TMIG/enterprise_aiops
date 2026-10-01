@@ -1,4 +1,4 @@
-"""Derived from ISO 26262 / ISO: Part 6 Software."""
+"""Derived from ISO 26262 / ISO: Part 4 System."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

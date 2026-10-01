@@ -1,4 +1,4 @@
-"""Derived from DO-254 / RTCA: DAL D."""
+"""Derived from DO-254 / RTCA: DAL A."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

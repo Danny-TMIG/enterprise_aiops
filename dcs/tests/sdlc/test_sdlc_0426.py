@@ -1,4 +1,4 @@
-"""Derived from NIST SP 800-207 / NIST: PEP."""
+"""Derived from NIST SP 800-207 / NIST: SDP."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

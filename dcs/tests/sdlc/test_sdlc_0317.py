@@ -1,4 +1,4 @@
-"""Derived from Azure CAF / Cloud: Govern."""
+"""Derived from Azure CAF / Cloud: Strategy."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

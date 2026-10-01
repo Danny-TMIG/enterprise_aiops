@@ -1,4 +1,4 @@
-"""Derived from TOGAF 10 / TOGAF: Governance."""
+"""Derived from TOGAF 10 / TOGAF: Architecture Content."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

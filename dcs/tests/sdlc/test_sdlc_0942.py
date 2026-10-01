@@ -1,4 +1,4 @@
-"""Derived from CISA SSDF / US-Gov: Respond."""
+"""Derived from CISA SSDF / US-Gov: Produce."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

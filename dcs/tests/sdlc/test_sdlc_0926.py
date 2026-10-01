@@ -1,4 +1,4 @@
-"""Derived from BSI IT-Grundschutz / BSI: Audit."""
+"""Derived from BSI IT-Grundschutz / BSI: Protection Needs."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

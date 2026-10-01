@@ -1,4 +1,4 @@
-"""Derived from COBIT 2019 / ISACA: MEA."""
+"""Derived from COBIT 2019 / ISACA: EDM."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

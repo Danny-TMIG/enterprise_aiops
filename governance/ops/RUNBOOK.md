@@ -1,7 +1,7 @@
 # Operations Runbook
 
-Generated: 2026-10-01T17:46:39.856814+00:00
-Commit: ae8ff24073d649f7130c6d8bbe78f6520ff5acda
+Generated: 2026-10-01T17:52:03.353255+00:00
+Commit: 719c9811dd8132d32191c24d7246e51120b2aa92
 
 ## Deploy
 pip install dist/dcs-0.5.0-py3-none-any.whl

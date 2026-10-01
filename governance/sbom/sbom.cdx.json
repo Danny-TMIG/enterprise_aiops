@@ -3,7 +3,7 @@
   "specVersion": "1.5",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-10-01T17:46:39.856814+00:00",
+    "timestamp": "2026-10-01T17:52:03.353255+00:00",
     "component": {
       "type": "application",
       "name": "dcs",
@@ -260,6 +260,11 @@
       "type": "library",
       "name": "duet",
       "version": "0.2.9"
+    },
+    {
+      "type": "library",
+      "name": "execnet",
+      "version": "2.1.2"
     },
     {
       "type": "library",
@@ -770,6 +775,16 @@
       "type": "library",
       "name": "pytest-cov",
       "version": "7.1.0"
+    },
+    {
+      "type": "library",
+      "name": "pytest-timeout",
+      "version": "2.4.0"
+    },
+    {
+      "type": "library",
+      "name": "pytest-xdist",
+      "version": "3.8.0"
     },
     {
       "type": "library",

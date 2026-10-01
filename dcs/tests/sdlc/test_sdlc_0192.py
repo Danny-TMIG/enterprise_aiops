@@ -1,4 +1,4 @@
-"""Derived from CMMI DEV 3.0 / CMMI: PPQA Process QA."""
+"""Derived from CMMI DEV 3.0 / CMMI: RD Requirements."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")
