@@ -1,12 +1,16 @@
-"""Auto-generated stub for SDLC-0923 — IEC 62304: Governance."""
+"""Derived from IEC 62304 / IEC: Clause 2."""
 import json
 from pathlib import Path
+M = Path("dcs/standards/sdlc.json")
+R = Path("dcs/standards/registry.json")
 
-MANIFEST = Path("dcs/standards/sdlc.json")
-
-def test_sdlc_0923_schema():
-    data = json.loads(MANIFEST.read_text())
-    proc = next((r for r in data["requirements"] if r["id"] == "SDLC-0923"), None)
-    assert proc is not None, "SDLC-0923 missing"
-    assert proc["identity"]["body"] in data["derived_from"]
+def test_sdlc_0923_clause_in_registry():
+    data = json.loads(M.read_text())
+    reg = json.loads(R.read_text())["registry"]
+    proc = next(x for x in data["requirements"] if x["id"] == "SDLC-0923")
+    std = proc["identity"]["standard"]
+    assert std in reg, f"{std} not in registry"
+    assert proc["identity"]["clause"] in reg[std]["clauses"], "clause not in registry"
+    assert proc["controls"][0] in reg[std]["controls"], "control not in registry"
+    assert proc["evidence"][0].endswith(tuple(reg[std]["evidence"])), "evidence not in registry"
     assert proc["state"] in {"UNKNOWN","TRUE","FALSE","CONFLICT"}

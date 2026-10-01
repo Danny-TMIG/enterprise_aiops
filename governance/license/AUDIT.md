@@ -1,6 +1,6 @@
 # License Audit
 
-Generated: 2026-10-01T17:45:07.948548+00:00
+Generated: 2026-10-01T17:46:00.526587+00:00
 Components: 218
 Unknown: 114
 Copyleft: 0

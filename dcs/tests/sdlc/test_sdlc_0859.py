@@ -1,12 +1,16 @@
-"""Auto-generated stub for SDLC-0859 — SOC 2 Type II: Security."""
+"""Derived from SOC 2 Type II / Audit: Clause 2."""
 import json
 from pathlib import Path
+M = Path("dcs/standards/sdlc.json")
+R = Path("dcs/standards/registry.json")
 
-MANIFEST = Path("dcs/standards/sdlc.json")
-
-def test_sdlc_0859_schema():
-    data = json.loads(MANIFEST.read_text())
-    proc = next((r for r in data["requirements"] if r["id"] == "SDLC-0859"), None)
-    assert proc is not None, "SDLC-0859 missing"
-    assert proc["identity"]["body"] in data["derived_from"]
+def test_sdlc_0859_clause_in_registry():
+    data = json.loads(M.read_text())
+    reg = json.loads(R.read_text())["registry"]
+    proc = next(x for x in data["requirements"] if x["id"] == "SDLC-0859")
+    std = proc["identity"]["standard"]
+    assert std in reg, f"{std} not in registry"
+    assert proc["identity"]["clause"] in reg[std]["clauses"], "clause not in registry"
+    assert proc["controls"][0] in reg[std]["controls"], "control not in registry"
+    assert proc["evidence"][0].endswith(tuple(reg[std]["evidence"])), "evidence not in registry"
     assert proc["state"] in {"UNKNOWN","TRUE","FALSE","CONFLICT"}

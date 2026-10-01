@@ -1,12 +1,16 @@
-"""Auto-generated stub for SDLC-0498 — IEEE 1471: Operations."""
+"""Derived from IEEE 1471 / IEEE: Clause 2."""
 import json
 from pathlib import Path
+M = Path("dcs/standards/sdlc.json")
+R = Path("dcs/standards/registry.json")
 
-MANIFEST = Path("dcs/standards/sdlc.json")
-
-def test_sdlc_0498_schema():
-    data = json.loads(MANIFEST.read_text())
-    proc = next((r for r in data["requirements"] if r["id"] == "SDLC-0498"), None)
-    assert proc is not None, "SDLC-0498 missing"
-    assert proc["identity"]["body"] in data["derived_from"]
+def test_sdlc_0498_clause_in_registry():
+    data = json.loads(M.read_text())
+    reg = json.loads(R.read_text())["registry"]
+    proc = next(x for x in data["requirements"] if x["id"] == "SDLC-0498")
+    std = proc["identity"]["standard"]
+    assert std in reg, f"{std} not in registry"
+    assert proc["identity"]["clause"] in reg[std]["clauses"], "clause not in registry"
+    assert proc["controls"][0] in reg[std]["controls"], "control not in registry"
+    assert proc["evidence"][0].endswith(tuple(reg[std]["evidence"])), "evidence not in registry"
     assert proc["state"] in {"UNKNOWN","TRUE","FALSE","CONFLICT"}
