@@ -14,7 +14,7 @@
       "buildType": "https://github.com/Danny-TMIG/enterprise_aiops/build",
       "externalParameters": {
         "source": "git+https://github.com/Danny-TMIG/enterprise_aiops",
-        "commit": "4e0d7f8721dd894fe264dc7acaea1e9e82e4d84b"
+        "commit": "ae8ff24073d649f7130c6d8bbe78f6520ff5acda"
       }
     },
     "runDetails": {
@@ -22,8 +22,8 @@
         "id": "local:reproduce.sh"
       },
       "metadata": {
-        "invocationId": "19dc3a4bb729d657",
-        "startedOn": "2026-10-01T17:46:00.526587+00:00"
+        "invocationId": "fe00cb12f027cb75",
+        "startedOn": "2026-10-01T17:46:39.856814+00:00"
       }
     }
   }

@@ -1,4 +1,4 @@
-"""Derived from OECD AI Principles / AI: Clause 2."""
+"""Derived from OECD AI Principles / AI: Human Rights."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

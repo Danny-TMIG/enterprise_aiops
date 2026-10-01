@@ -1,4 +1,4 @@
-"""Derived from NIST SP 800-53 / NIST: AC Access."""
+"""Derived from NIST SP 800-53 / NIST: CM Config."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

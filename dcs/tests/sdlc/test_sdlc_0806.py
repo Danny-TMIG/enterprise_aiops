@@ -1,4 +1,4 @@
-"""Derived from ISO 13485 / ISO: Clause 1."""
+"""Derived from ISO 13485 / ISO: 6 Resources."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

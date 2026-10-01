@@ -1,4 +1,4 @@
-"""Derived from NIST CSF 2.0 / NIST: GV Govern."""
+"""Derived from NIST CSF 2.0 / NIST: RC Recover."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

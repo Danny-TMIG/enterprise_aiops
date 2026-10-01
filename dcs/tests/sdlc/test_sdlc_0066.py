@@ -1,4 +1,4 @@
-"""Derived from OpenSSF Scorecard / Supply: Clause 2."""
+"""Derived from OpenSSF Scorecard / Supply: Branch-Protection."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

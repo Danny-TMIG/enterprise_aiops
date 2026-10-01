@@ -1,4 +1,4 @@
-"""Derived from CCPA / Privacy: Clause 1."""
+"""Derived from CCPA / Privacy: Notice."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

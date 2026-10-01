@@ -1,4 +1,4 @@
-"""Derived from FedRAMP Rev 5 / US-Gov: IR."""
+"""Derived from FedRAMP Rev 5 / US-Gov: SI."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

@@ -1,4 +1,4 @@
-"""Derived from SLSA 1.0 / Supply: Level 4."""
+"""Derived from SLSA 1.0 / Supply: Level 3."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

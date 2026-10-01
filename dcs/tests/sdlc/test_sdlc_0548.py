@@ -1,4 +1,4 @@
-"""Derived from SPDX 2.3 / Supply: Package."""
+"""Derived from SPDX 2.3 / Supply: Relationship."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

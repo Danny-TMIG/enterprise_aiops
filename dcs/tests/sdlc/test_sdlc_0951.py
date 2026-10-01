@@ -1,4 +1,4 @@
-"""Derived from The Update Framework / Signing: Clause 2."""
+"""Derived from The Update Framework / Signing: Timestamp."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

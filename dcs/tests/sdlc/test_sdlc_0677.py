@@ -1,4 +1,4 @@
-"""Derived from PMI Agile Practice Guide / PMI: Clause 3."""
+"""Derived from PMI Agile Practice Guide / PMI: Lifecycle."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

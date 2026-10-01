@@ -1,4 +1,4 @@
-"""Derived from GDPR / Privacy: Art15 Access."""
+"""Derived from GDPR / Privacy: Art25 Design."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

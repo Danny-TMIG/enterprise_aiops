@@ -1,4 +1,4 @@
-"""Derived from ISO 9001 / ISO: 5 Leadership."""
+"""Derived from ISO 9001 / ISO: 4 Context."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

@@ -1,4 +1,4 @@
-"""Derived from ISO/IEC 12207 / ISO: 6.3 Software Reuse."""
+"""Derived from ISO/IEC 12207 / ISO: 6.4 Software Services."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

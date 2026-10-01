@@ -1,4 +1,4 @@
-"""Derived from MISRA C:2023 / Automotive: Clause 4."""
+"""Derived from MISRA C:2023 / Automotive: Dir 1-4."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

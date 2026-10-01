@@ -1,4 +1,4 @@
-"""Derived from FIPS 140-3 / US-Gov: Level 3."""
+"""Derived from FIPS 140-3 / US-Gov: Level 1."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

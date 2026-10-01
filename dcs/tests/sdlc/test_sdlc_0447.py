@@ -1,4 +1,4 @@
-"""Derived from EN 50128 / CENELEC: Clause 1."""
+"""Derived from EN 50128 / CENELEC: SW Design."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

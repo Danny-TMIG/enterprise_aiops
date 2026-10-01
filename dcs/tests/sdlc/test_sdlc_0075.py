@@ -1,4 +1,4 @@
-"""Derived from CSA CCM v4 / Cloud: Clause 1."""
+"""Derived from CSA CCM v4 / Cloud: DSP."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

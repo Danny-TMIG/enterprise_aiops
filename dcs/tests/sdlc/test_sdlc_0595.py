@@ -1,4 +1,4 @@
-"""Derived from ITIL 4 / ITIL: Continual Improvement."""
+"""Derived from ITIL 4 / ITIL: Practices."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

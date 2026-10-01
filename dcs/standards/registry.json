@@ -2,164 +2,180 @@
   "registry": {
     "ANSI/ISA-62443": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Requirements",
+        "Zones",
+        "Conduits",
+        "SL"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "requirements",
+        "zones",
+        "conduits",
+        "sl"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "zone_diagram",
+        "assessment"
       ]
     },
     "AWS Well-Architected": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Operational",
+        "Security",
+        "Reliability",
+        "Performance",
+        "Cost",
+        "Sustainability"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "ops",
+        "security",
+        "reliability",
+        "performance",
+        "cost",
+        "sustainability"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "wa_review",
+        "improvement_plan"
       ]
     },
     "Automotive SPICE 3.1": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "SWE.1-6",
+        "SYS.1-5",
+        "ACQ.1-4",
+        "SPL.1-2",
+        "MAN.3",
+        "SUP.1-10"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "swe",
+        "sys",
+        "acq",
+        "spl",
+        "man",
+        "sup"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "process_assessment",
+        "work_product"
       ]
     },
     "Azure CAF": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Strategy",
+        "Plan",
+        "Ready",
+        "Adopt",
+        "Govern",
+        "Manage"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "strategy",
+        "plan",
+        "ready",
+        "adopt",
+        "govern",
+        "manage"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "caf_assessment",
+        "landing_zone"
       ]
     },
     "BSI IT-Grundschutz": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "ISMS",
+        "Protection Needs",
+        "Measures",
+        "Audit"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "isms",
+        "needs",
+        "measures",
+        "audit"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "grundschutz_catalog",
+        "audit_report"
       ]
     },
     "BSI TR-03161": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Requirements",
+        "Architecture",
+        "Implementation",
+        "Testing"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "req",
+        "arch",
+        "impl",
+        "test"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "tr_report",
+        "test_result"
       ]
     },
     "CCPA": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Notice",
+        "Access",
+        "Deletion",
+        "Opt-Out",
+        "Non-Discrimination"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "notice",
+        "access",
+        "deletion",
+        "optout",
+        "nondiscrim"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "privacy_policy",
+        "request_log"
       ]
     },
     "CISA SSDF": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Prepare",
+        "Protect",
+        "Produce",
+        "Respond"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "prepare",
+        "protect",
+        "produce",
+        "respond"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "ssdf_attest",
+        "vuln_response"
       ]
     },
     "CMMI ACQ 3.0": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "ARD",
+        "AM",
+        "SSAD",
+        "PMC",
+        "RSK"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "requirements",
+        "agreement",
+        "solution",
+        "monitor",
+        "risk"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "acq_record",
+        "review"
       ]
     },
     "CMMI DEV 3.0": {
@@ -190,20 +206,22 @@
     },
     "CMMI SVC 3.0": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "SD Service Delivery",
+        "CAM Capacity",
+        "IRP Incident",
+        "SAM Supplier",
+        "IMT Impl Mgmt"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "service",
+        "capacity",
+        "incident",
+        "supplier",
+        "impl"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "svc_record",
+        "appraisal"
       ]
     },
     "COBIT 2019": {
@@ -228,38 +246,54 @@
     },
     "CSA CCM v4": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "AIS",
+        "BCR",
+        "CCC",
+        "CEK",
+        "DSP",
+        "GRC",
+        "HRS",
+        "IAM",
+        "IPY",
+        "MOS",
+        "SEF",
+        "TVM",
+        "UEM"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "ais",
+        "bcr",
+        "ccc",
+        "cek",
+        "dsp",
+        "grc",
+        "hrs",
+        "iam",
+        "ipy",
+        "mos",
+        "sef",
+        "tvm",
+        "uem"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "ccm_assessment",
+        "control_matrix"
       ]
     },
     "Common Criteria ISO 15408": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Part 1",
+        "Part 2",
+        "Part 3"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "intro",
+        "functional",
+        "assurance"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "st",
+        "cert"
       ]
     },
     "CycloneDX 1.5": {
@@ -304,56 +338,58 @@
     },
     "DO-254": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "DAL A",
+        "DAL B",
+        "DAL C",
+        "DAL D"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "dal_a",
+        "dal_b",
+        "dal_c",
+        "dal_d"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "hdal",
+        "cert_package"
       ]
     },
     "EN 50126": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "RAM",
+        "Safety",
+        "Lifecycle",
+        "Risk"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "ram",
+        "safety",
+        "lifecycle",
+        "risk"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "ram_analysis",
+        "safety_case"
       ]
     },
     "EN 50128": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "SW Requirements",
+        "SW Architecture",
+        "SW Design",
+        "SW Implementation",
+        "SW Verification"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "requirements",
+        "architecture",
+        "design",
+        "impl",
+        "verification"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "sw_safety",
+        "verification_report"
       ]
     },
     "EU AI Act": {
@@ -486,38 +522,36 @@
     },
     "IEC 62304": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Class A",
+        "Class B",
+        "Class C"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "class_a",
+        "class_b",
+        "class_c"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "software_plan",
+        "risk_file"
       ]
     },
     "IEC 62443": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "General",
+        "Policies",
+        "System",
+        "Component"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "general",
+        "policy",
+        "system",
+        "component"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "security_assessment",
+        "cert"
       ]
     },
     "IEEE 1012": {
@@ -540,128 +574,140 @@
     },
     "IEEE 1016": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Stakeholders",
+        "Concerns",
+        "Viewpoints",
+        "Views",
+        "Rationale"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "stakeholders",
+        "concerns",
+        "viewpoints",
+        "views",
+        "rationale"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "sdd",
+        "design_decision"
       ]
     },
     "IEEE 1058": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Overview",
+        "Deliverables",
+        "Schedule",
+        "Budget",
+        "Controls"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "overview",
+        "deliverables",
+        "schedule",
+        "budget",
+        "controls"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "smp",
+        "status_report"
       ]
     },
     "IEEE 1074": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Process Model",
+        "Lifecycle",
+        "Activities",
+        "Integration"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "model",
+        "lifecycle",
+        "activities",
+        "integration"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "process_plan",
+        "activity_record"
       ]
     },
     "IEEE 1220": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Requirements",
+        "Functional",
+        "Physical",
+        "Interface",
+        "Verification"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "requirements",
+        "functional",
+        "physical",
+        "interface",
+        "verification"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "sem",
+        "req_analysis"
       ]
     },
     "IEEE 1471": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Architecture Description",
+        "Stakeholders",
+        "Concerns",
+        "Viewpoints",
+        "Views"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "description",
+        "stakeholders",
+        "concerns",
+        "viewpoints",
+        "views"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "arch_doc",
+        "view_record"
       ]
     },
     "IEEE 1633": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Reliability Program",
+        "Prediction",
+        "Testing",
+        "Growth",
+        "Assessment"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "program",
+        "prediction",
+        "testing",
+        "growth",
+        "assessment"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "reliability_model",
+        "test_report"
       ]
     },
     "IEEE 29119": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Part 1 Concepts",
+        "Part 2 Process",
+        "Part 3 Documentation",
+        "Part 4 Techniques",
+        "Part 5 Keyword"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "concept",
+        "process",
+        "doc",
+        "technique",
+        "keyword"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "test_doc",
+        "results"
       ]
     },
     "IEEE 730": {
@@ -684,38 +730,38 @@
     },
     "IEEE 828": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "4 SCM Plan",
+        "5 SCM Functions",
+        "6 SCM Records"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "plan",
+        "functions",
+        "records"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "scm_plan",
+        "audit_record"
       ]
     },
     "IEEE 829": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Test Plan",
+        "Test Design",
+        "Test Case",
+        "Test Procedure",
+        "Test Report"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "plan",
+        "design",
+        "case",
+        "procedure",
+        "report"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "test_doc",
+        "result_log"
       ]
     },
     "IEEE 830": {
@@ -740,56 +786,64 @@
     },
     "ISO 13485": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "4 QMS",
+        "5 Mgmt",
+        "6 Resources",
+        "7 Product Realization",
+        "8 Measurement"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "qms",
+        "mgmt",
+        "resources",
+        "product",
+        "measurement"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "dhf",
+        "qms_record"
       ]
     },
     "ISO 15408": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Part 1 Intro",
+        "Part 2 Functional",
+        "Part 3 Assurance",
+        "PP",
+        "ST"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "intro",
+        "functional",
+        "assurance",
+        "pp",
+        "st"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "st",
+        "certification_report"
       ]
     },
     "ISO 26262": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Part 3 Concept",
+        "Part 4 System",
+        "Part 5 Hardware",
+        "Part 6 Software",
+        "Part 7 Production",
+        "Part 8 Supporting"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "concept",
+        "system",
+        "hardware",
+        "software",
+        "production",
+        "supporting"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "safety_case",
+        "asil_analysis"
       ]
     },
     "ISO 9001": {
@@ -954,20 +1008,16 @@
     },
     "MISRA C:2023": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Dir 1-4",
+        "Rule 1-21"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "directive",
+        "rule"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "compliance_matrix",
+        "deviation_record"
       ]
     },
     "NIST AI RMF 1.0": {
@@ -1012,38 +1062,40 @@
     },
     "NIST SP 800-160": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Security Design",
+        "Trustworthiness",
+        "Process",
+        "Assurance"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "design",
+        "trust",
+        "process",
+        "assurance"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "engineering_record",
+        "assurance_case"
       ]
     },
     "NIST SP 800-207": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Policy Engine",
+        "Policy Admin",
+        "Policy Enforcement",
+        "SDP",
+        "PEP"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "engine",
+        "admin",
+        "enforcement",
+        "sdp",
+        "pep"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "zero_trust_arch",
+        "policy_record"
       ]
     },
     "NIST SP 800-218 SSDF": {
@@ -1098,20 +1150,22 @@
     },
     "OECD AI Principles": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Inclusive Growth",
+        "Human Rights",
+        "Transparency",
+        "Robustness",
+        "Accountability"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "growth",
+        "rights",
+        "transparency",
+        "robustness",
+        "accountability"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "ai_impact",
+        "governance_record"
       ]
     },
     "OWASP ASVS 4.0": {
@@ -1150,38 +1204,58 @@
     },
     "OWASP MASVS": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "V1 Storage",
+        "V2 Crypto",
+        "V3 Auth",
+        "V4 Network",
+        "V5 Platform",
+        "V6 Code",
+        "V7 Resilience",
+        "V8 Privacy"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "storage",
+        "crypto",
+        "auth",
+        "network",
+        "platform",
+        "code",
+        "resilience",
+        "privacy"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "masvs_report",
+        "test_log"
       ]
     },
     "OWASP Proactive Controls": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "C1 Define",
+        "C2 Leverage",
+        "C3 Secure DB",
+        "C4 Encode",
+        "C5 Validate",
+        "C6 Crypto",
+        "C7 Errors",
+        "C8 Protect",
+        "C9 Log",
+        "C10 Verify"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "define",
+        "leverage",
+        "db",
+        "encode",
+        "validate",
+        "crypto",
+        "errors",
+        "protect",
+        "log",
+        "verify"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "control_impl",
+        "review"
       ]
     },
     "OWASP SAMM 2.0": {
@@ -1206,56 +1280,84 @@
     },
     "OWASP Top 10": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "A01 Access",
+        "A02 Crypto",
+        "A03 Injection",
+        "A04 Design",
+        "A05 Config",
+        "A06 Components",
+        "A07 Auth",
+        "A08 Integrity",
+        "A09 Logging",
+        "A10 SSRF"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "access",
+        "crypto",
+        "injection",
+        "design",
+        "config",
+        "components",
+        "auth",
+        "integrity",
+        "logging",
+        "ssrf"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "finding",
+        "remediation"
       ]
     },
     "OpenSSF Scorecard": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Branch-Protection",
+        "CI-Tests",
+        "Code-Review",
+        "Dangerous-Workflow",
+        "Dependency-Update",
+        "License",
+        "Pinned-Deps",
+        "SAST",
+        "Security-Policy",
+        "Signed-Releases",
+        "Token-Permissions",
+        "Vulnerabilities"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "branch",
+        "ci",
+        "review",
+        "workflow",
+        "dep_update",
+        "license",
+        "pinned",
+        "sast",
+        "policy",
+        "signed",
+        "token",
+        "vulns"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "scorecard",
+        "checks_json"
       ]
     },
     "PCI 3DS": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "ACS",
+        "DS",
+        "3DS Requestor",
+        "SDK"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "acs",
+        "ds",
+        "requestor",
+        "sdk"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "3ds_assessment",
+        "cert"
       ]
     },
     "PCI DSS 4.0": {
@@ -1294,128 +1396,172 @@
     },
     "PCI PIN": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Key Mgmt",
+        "HSM",
+        "Device",
+        "Monitoring"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "key",
+        "hsm",
+        "device",
+        "monitoring"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "pin_audit",
+        "key_ceremony"
       ]
     },
     "PMBOK 7": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Stakeholders",
+        "Team",
+        "Dev Approach",
+        "Planning",
+        "Delivery",
+        "Measurement",
+        "Uncertainty"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "stakeholders",
+        "team",
+        "approach",
+        "planning",
+        "delivery",
+        "measurement",
+        "uncertainty"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "project_charter",
+        "status_report"
       ]
     },
     "PMI Agile Practice Guide": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Agile Mindset",
+        "Lifecycle",
+        "Implementation",
+        "Team",
+        "Practices"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "mindset",
+        "lifecycle",
+        "implementation",
+        "team",
+        "practices"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "agile_artifact",
+        "retrospective"
       ]
     },
     "Protection Profile": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "PP Intro",
+        "Conformance",
+        "Security Problem",
+        "Security Objectives",
+        "SFR",
+        "SAR"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "intro",
+        "conformance",
+        "problem",
+        "objectives",
+        "sfr",
+        "sar"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "pp_doc",
+        "conformance_claim"
       ]
     },
     "SAFe 6.0": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Lean-Agile",
+        "Team Flow",
+        "Agile Product",
+        "Solution Train",
+        "Portfolio",
+        "Leadership"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "lean",
+        "team",
+        "product",
+        "solution",
+        "portfolio",
+        "leadership"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "pi_objective",
+        "art_record"
       ]
     },
     "SEI CERT C": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "PRE",
+        "DCL",
+        "EXP",
+        "INT",
+        "FLP",
+        "ARR",
+        "STR",
+        "MEM",
+        "FIO",
+        "ENV",
+        "CON",
+        "MSC",
+        "POS"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "pre",
+        "dcl",
+        "exp",
+        "int",
+        "flp",
+        "arr",
+        "str",
+        "mem",
+        "fio",
+        "env",
+        "con",
+        "msc",
+        "pos"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "cert_audit",
+        "violation"
       ]
     },
     "SEI CERT C++": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "DCL",
+        "EXP",
+        "CTR",
+        "MEM",
+        "OBJ",
+        "ERR",
+        "CON",
+        "OOP",
+        "MSC"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "dcl",
+        "exp",
+        "ctr",
+        "mem",
+        "obj",
+        "err",
+        "con",
+        "oop",
+        "msc"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "cpp_audit",
+        "violation"
       ]
     },
     "SLSA 1.0": {
@@ -1438,20 +1584,22 @@
     },
     "SOC 2 Type II": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "CC1-9",
+        "A1",
+        "C1",
+        "PI1",
+        "P1-8"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "cc",
+        "availability",
+        "confidentiality",
+        "processing",
+        "privacy"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "soc2_report",
+        "control_test"
       ]
     },
     "SPDX 2.3": {
@@ -1476,92 +1624,95 @@
     },
     "SWIFT CSCF": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "1-8 Controls"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "control1",
+        "control2",
+        "control3",
+        "control4",
+        "control5",
+        "control6",
+        "control7",
+        "control8"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "cscf_attestation",
+        "audit"
       ]
     },
     "Sigstore": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Fulcio",
+        "Rekor",
+        "Cosign",
+        "Policy"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "fulcio",
+        "rekor",
+        "cosign",
+        "policy"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "sig_bundle",
+        "rekor_proof"
       ]
     },
     "TOGAF 10": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "ADM",
+        "BDAT",
+        "Architecture Content",
+        "Enterprise Continuum",
+        "Governance"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "adm",
+        "bdat",
+        "content",
+        "continuum",
+        "governance"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "arch_repo",
+        "compliance"
       ]
     },
     "The Update Framework": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Root",
+        "Targets",
+        "Snapshot",
+        "Timestamp"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "root",
+        "targets",
+        "snapshot",
+        "timestamp"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "tuf_metadata",
+        "key_record"
       ]
     },
     "in-toto 1.0": {
       "clauses": [
-        "Clause 1",
-        "Clause 2",
-        "Clause 3",
-        "Clause 4"
+        "Layout",
+        "Link",
+        "Step",
+        "Inspection"
       ],
       "controls": [
-        "traceable",
-        "reviewed",
-        "approved",
-        "verified"
+        "layout",
+        "link",
+        "step",
+        "inspection"
       ],
       "evidence": [
-        "artifact",
-        "record"
+        "attestation",
+        "layout"
       ]
     }
   },

@@ -1,4 +1,4 @@
-"""Derived from PCI 3DS / FinTech: Clause 1."""
+"""Derived from PCI 3DS / FinTech: 3DS Requestor."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

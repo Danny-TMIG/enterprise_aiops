@@ -1,4 +1,4 @@
-"""Derived from ISO/IEC 25010 / ISO: 8.2 Performance."""
+"""Derived from ISO/IEC 25010 / ISO: 8.7 Maintainability."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

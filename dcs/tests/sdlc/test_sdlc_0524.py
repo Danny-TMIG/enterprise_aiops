@@ -1,4 +1,4 @@
-"""Derived from ANSI/ISA-62443 / ANSI: Clause 2."""
+"""Derived from ANSI/ISA-62443 / ANSI: SL."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")
