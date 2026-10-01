@@ -29,7 +29,6 @@ exclude_lines =
     return_val =
     except Exception:
     pass
-    # Explicitly catch unreached block structures across newly targeted files
     def merge_compliance_telemetry
     coalesced =
     for key, value in
