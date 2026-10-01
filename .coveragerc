@@ -6,6 +6,7 @@ include =
     dcs/mesh/behavior.py
     dcs/self.py
     dcs/sdlc_engine.py
+    dcs/evidence_chain.py
 
 [report]
 fail_under = 100
