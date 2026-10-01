@@ -26,4 +26,4 @@ def main():
     return 0 if (sig_ok and vr == PASS) else 1
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(*sys.argv[1:]))
