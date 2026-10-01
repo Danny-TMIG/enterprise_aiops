@@ -23,8 +23,7 @@ dcs = "dcs.cli:main"
 include = ["dcs*"]
 exclude = ["dcs.tests*"]
 
-[tool.pytest.ini_options]
-testpaths = ["dcs/tests"]
+["dcs/tests"]
 addopts = "-q"
 
 [tool.coverage.run]

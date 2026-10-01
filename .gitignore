@@ -40,3 +40,6 @@ causal_7layer.py
 dendritic_ops.py
 dendritic_seeds.py
 gener.py
+.pytest_cache/
+*.orig
+*.rej
