@@ -15,8 +15,10 @@ A pass is a finite negative — it proves those patterns are absent,
 not that the code is safe in general.
 """
 from __future__ import annotations
-import ast, re, sys
-from typing import Dict, List
+
+import ast
+import re
+import sys
 
 DANGER_NAMES = {"eval", "exec", "compile", "__import__",
                 "globals", "locals"}
@@ -32,13 +34,13 @@ DUNDER_DANGER = {"__globals__", "__builtins__", "__code__",
 _WRITE_RE = re.compile(r"""open\s*\(\s*['"]([^'"]+)['"]\s*,\s*['"][wa]""")
 
 
-def check(source: str) -> Dict[str, object]:
+def check(source: str) -> dict[str, object]:
     try:
         tree = ast.parse(source)
     except SyntaxError:
         return {"parses": False, "safe": False, "count": 1,
                 "violations": ["<syntax>"]}
-    v: List[str] = []
+    v: list[str] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
             f = node.func
@@ -81,9 +83,9 @@ PROMPTS = [
 
 def main() -> int:
     print("-- safety -- 10 prompts --")
+    from app.origami.dispatch import dispatch
     from app.origami.library import get as get_grammar
     from app.origami.swarm import Swarm
-    from app.origami.dispatch import dispatch
     swarm = Swarm(n_workers=1)
     grammar = get_grammar("code_artifact")
     safe = 0

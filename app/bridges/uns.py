@@ -4,8 +4,9 @@ A hierarchical topic tree: enterprise/site/area/line/cell/asset/tag.
 Pure Python. No broker needed for the model layer.
 """
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any
 
 LEVELS = ("enterprise", "site", "area", "line", "cell", "asset", "tag")
 
@@ -14,8 +15,8 @@ LEVELS = ("enterprise", "site", "area", "line", "cell", "asset", "tag")
 class UNSNode:
     level: str
     name: str
-    children: Dict[str, "UNSNode"] = field(default_factory=dict)
-    payload: Optional[Dict[str, Any]] = None
+    children: dict[str, UNSNode] = field(default_factory=dict)
+    payload: dict[str, Any] | None = None
 
     def path(self, root: str = "") -> str:
         return f"{root}/{self.name}" if root else self.name
@@ -37,7 +38,7 @@ class UNSTree:
             node.payload = dict(payload)
         return node
 
-    def prefix(self, path: str) -> List[UNSNode]:
+    def prefix(self, path: str) -> list[UNSNode]:
         """All nodes under a given prefix."""
         parts = [p for p in path.strip("/").split("/") if p]
         node = self.root
@@ -45,7 +46,7 @@ class UNSTree:
             node = node.children.get(name)
             if node is None:
                 return []
-        out: List[UNSNode] = []
+        out: list[UNSNode] = []
 
         def walk(n: UNSNode, acc: str) -> None:
             here = acc + "/" + n.name
@@ -58,8 +59,8 @@ class UNSTree:
     def topic(self, path: str) -> str:
         return f"spBv1.0/{path.replace(' ', '_')}"
 
-    def snapshot(self) -> Dict[str, Any]:
-        def dump(n: UNSNode) -> Dict[str, Any]:
+    def snapshot(self) -> dict[str, Any]:
+        def dump(n: UNSNode) -> dict[str, Any]:
             return {
                 "level": n.level,
                 "name": n.name,
@@ -70,7 +71,7 @@ class UNSTree:
 
 
 # ── runtime binding ────────────────────────────────────────────────
-def runtime_available() -> Tuple[bool, str]:
+def runtime_available() -> tuple[bool, str]:
     try:
         import paho.mqtt.client  # noqa: F401
         return True, "paho-mqtt installed"
@@ -78,7 +79,7 @@ def runtime_available() -> Tuple[bool, str]:
         return False, "paho-mqtt not installed; model layer only"
 
 
-def describe() -> Dict[str, Any]:
+def describe() -> dict[str, Any]:
     ok, why = runtime_available()
     t = UNSTree()
     t.add("acme/plant1/lineA/cell1/robot1/temp", unit="C", value=22.4)

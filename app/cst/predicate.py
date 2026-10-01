@@ -11,8 +11,10 @@ The loop is considered complete only if all four return successfully.
 If undo fails, the loop scores zero — the system has drifted.
 """
 from __future__ import annotations
+
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -28,7 +30,7 @@ class LegitimacyProof:
     non_vacuous: bool
     non_arbitrary: bool
     grounded: bool
-    invariant: Optional[str] = None
+    invariant: str | None = None
     reason: str = ""
 
     @property
@@ -46,14 +48,14 @@ class Capability:
 
 @dataclass
 class CSTLoop:
-    articulate: Callable[[], Optional[Test]]
+    articulate: Callable[[], Test | None]
     justify: Callable[[Test], LegitimacyProof]
     acquire: Callable[[Test], Capability]
     undo: Callable[[Capability], bool]
 
-    completed: List[Dict[str, Any]] = field(default_factory=list)
+    completed: list[dict[str, Any]] = field(default_factory=list)
 
-    def run_once(self) -> Optional[Dict[str, Any]]:
+    def run_once(self) -> dict[str, Any] | None:
         t = self.articulate()
         if t is None:
             return None

@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 
 def _now() -> str:
@@ -12,8 +13,8 @@ def _now() -> str:
 class VerificationClaim:
     claim: str
     subject: str = ""
-    evidence: List[Dict[str, Any]] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    evidence: list[dict[str, Any]] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -21,11 +22,11 @@ class VerificationVerdict:
     vendor: str
     status: str           # PASS | FAIL | UNKNOWN | NOT_RUN | ...
     rationale: str = ""
-    evidence_used: List[str] = field(default_factory=list)
+    evidence_used: list[str] = field(default_factory=list)
     dry_run: bool = False
     ts: str = field(default_factory=_now)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "vendor": self.vendor, "status": self.status,
             "rationale": self.rationale,

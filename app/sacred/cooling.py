@@ -11,9 +11,11 @@ temperatures is the slowest-converging ratio of any Fibonacci-type
 sequence.
 """
 from __future__ import annotations
-import math, random
+
+import math
+import random
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable, List
 
 from app.sacred.constants import PHI_INV, fib
 
@@ -27,7 +29,7 @@ class CoolingTrace:
     final_temp: float
     accepted: int
     rejected: int
-    temperatures: List[float] = field(default_factory=list)
+    temperatures: list[float] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {

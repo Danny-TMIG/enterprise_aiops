@@ -12,9 +12,11 @@ returns a new record. The chain is content-addressed end to end.
     Recreate   generate the successor
 """
 from __future__ import annotations
-import hashlib, time
+
+import hashlib
+import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any
 
 
 def _h(*parts: str) -> str:
@@ -27,7 +29,7 @@ def _h(*parts: str) -> str:
 @dataclass
 class Confession:
     run_digest: str
-    sins: List[dict] = field(default_factory=list)
+    sins: list[dict] = field(default_factory=list)
 
     @property
     def id(self) -> str:
@@ -38,7 +40,7 @@ class Confession:
 @dataclass
 class Separation:
     confession_id: str
-    partitions: Dict[str, List[dict]] = field(default_factory=dict)
+    partitions: dict[str, list[dict]] = field(default_factory=dict)
 
     @property
     def id(self) -> str:
@@ -49,11 +51,11 @@ class Separation:
 @dataclass
 class Witness:
     separation_id: str
-    evidence: Dict[str, str] = field(default_factory=dict)
+    evidence: dict[str, str] = field(default_factory=dict)
 
     @property
     def id(self) -> str:
-        flat: List[str] = []
+        flat: list[str] = []
         for k in sorted(self.evidence.keys()):
             flat.append(k)
             flat.append(self.evidence[k])
@@ -63,11 +65,11 @@ class Witness:
 @dataclass
 class Judgment:
     witness_id: str
-    verdicts: Dict[str, str] = field(default_factory=dict)
+    verdicts: dict[str, str] = field(default_factory=dict)
 
     @property
     def id(self) -> str:
-        flat: List[str] = []
+        flat: list[str] = []
         for k in sorted(self.verdicts.keys()):
             flat.append(k)
             flat.append(self.verdicts[k])
@@ -77,7 +79,7 @@ class Judgment:
 @dataclass
 class Reconciliation:
     judgment_id: str
-    actions: List[str] = field(default_factory=list)
+    actions: list[str] = field(default_factory=list)
 
     @property
     def id(self) -> str:
@@ -114,7 +116,7 @@ def confess(run) -> Confession:
 
 
 def separate(c: Confession) -> Separation:
-    parts: Dict[str, List[dict]] = {}
+    parts: dict[str, list[dict]] = {}
     for s in c.sins:
         for rid in s.get("residuals", []):
             key = rid.split("-")[0] if "-" in rid else rid
@@ -123,7 +125,7 @@ def separate(c: Confession) -> Separation:
 
 
 def witness(sep: Separation) -> Witness:
-    ev: Dict[str, str] = {}
+    ev: dict[str, str] = {}
     for key, items in sep.partitions.items():
         names = sorted(set(i["sin"] for i in items))
         ev[key] = f"{len(items)} sin(s) in class {key}: " + ",".join(names)
@@ -131,14 +133,14 @@ def witness(sep: Separation) -> Witness:
 
 
 def judge(w: Witness) -> Judgment:
-    verdicts: Dict[str, str] = {}
+    verdicts: dict[str, str] = {}
     for key, ev in w.evidence.items():
         verdicts[key] = "PASS" if ev else "UNKNOWN"
     return Judgment(witness_id=w.id, verdicts=verdicts)
 
 
 def reconcile(j: Judgment) -> Reconciliation:
-    actions: List[str] = []
+    actions: list[str] = []
     for key in sorted(j.verdicts.keys()):
         v = j.verdicts[key]
         if v == "PASS":

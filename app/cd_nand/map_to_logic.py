@@ -1,9 +1,10 @@
 """Boolean -> CD embedding. NAND lifts cleanly at every level."""
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Callable, Tuple
 
-from app.cd_nand.cayley import CD, BOOL_ALG, cd_from, alg_at
+from collections.abc import Callable
+from dataclasses import dataclass
+
+from app.cd_nand.cayley import CD, cd_from
 from app.cd_nand.nand import NAND
 
 

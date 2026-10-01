@@ -9,11 +9,9 @@ from __future__ import annotations  # pragma: no cover
 import hashlib  # pragma: no cover
 import json  # pragma: no cover
 import time  # pragma: no cover
-from dataclasses import dataclass, field, asdict  # pragma: no cover
-from pathlib import Path  # pragma: no cover
+from dataclasses import asdict, dataclass  # pragma: no cover
 
 from dcs import rogue  # pragma: no cover
-from dcs.triad.kernel import Kernel  # pragma: no cover
 
 LICENSE_VERSION = "1.0"
 AUTHORITY = "DCS Reference Authority"
@@ -44,7 +42,7 @@ class NonClaims:  # pragma: no cover
     not_self_verifying:  str = ""
 
     @classmethod
-    def load(cls) -> "NonClaims":  # pragma: no cover
+    def load(cls) -> NonClaims:  # pragma: no cover
         from dcs.non_claims import CORRECTED  # pragma: no cover
         return cls(**{k: v["statement"] for k, v in CORRECTED.items()})  # pragma: no cover
 
@@ -77,7 +75,7 @@ class Certification:  # pragma: no cover
                        separators=(",", ":")).encode()
         ).hexdigest()
 
-    def sign(self, key: bytes) -> "Certification":  # pragma: no cover
+    def sign(self, key: bytes) -> Certification:  # pragma: no cover
         self.signature = hashlib.sha256(
             key + self.digest().encode()
         ).hexdigest()

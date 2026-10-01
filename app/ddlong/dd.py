@@ -12,7 +12,7 @@ Reference: Bailey, "High-Precision Floating-Point Arithmetic in
 Scientific Computation", 2005.
 """
 from __future__ import annotations
-import math
+
 from dataclasses import dataclass
 
 
@@ -52,21 +52,21 @@ class DD:
 
     # ── normalisation ──────────────────────────────────────────
     @staticmethod
-    def normalise(hi: float, lo: float) -> "DD":
+    def normalise(hi: float, lo: float) -> DD:
         s, e = quick_two_sum(hi, lo)
         return DD(s, e)
 
     # ── constructors ───────────────────────────────────────────
     @staticmethod
-    def from_float(x: float) -> "DD":
+    def from_float(x: float) -> DD:
         return DD(x, 0.0)
 
     @staticmethod
-    def from_int(x: int) -> "DD":
+    def from_int(x: int) -> DD:
         return DD(float(x), 0.0)
 
     # ── arithmetic ─────────────────────────────────────────────
-    def __add__(self, other) -> "DD":
+    def __add__(self, other) -> DD:
         o = other if isinstance(other, DD) else DD.from_float(float(other))
         s1, s2 = two_sum(self.hi, o.hi)
         t1, t2 = two_sum(self.lo, o.lo)
@@ -76,20 +76,20 @@ class DD:
         s1, s2 = quick_two_sum(s1, s2)
         return DD(s1, s2)
 
-    def __radd__(self, other) -> "DD":
+    def __radd__(self, other) -> DD:
         return self.__add__(other)
 
-    def __neg__(self) -> "DD":
+    def __neg__(self) -> DD:
         return DD(-self.hi, -self.lo)
 
-    def __sub__(self, other) -> "DD":
+    def __sub__(self, other) -> DD:
         o = other if isinstance(other, DD) else DD.from_float(float(other))
         return self + (-o)
 
-    def __rsub__(self, other) -> "DD":
+    def __rsub__(self, other) -> DD:
         return DD.from_float(float(other)) - self
 
-    def __mul__(self, other) -> "DD":
+    def __mul__(self, other) -> DD:
         o = other if isinstance(other, DD) else DD.from_float(float(other))
         p1, p2 = two_prod(self.hi, o.hi)
         p2 += self.hi * o.lo
@@ -97,10 +97,10 @@ class DD:
         p1, p2 = quick_two_sum(p1, p2)
         return DD(p1, p2)
 
-    def __rmul__(self, other) -> "DD":
+    def __rmul__(self, other) -> DD:
         return self.__mul__(other)
 
-    def __truediv__(self, other) -> "DD":
+    def __truediv__(self, other) -> DD:
         o = other if isinstance(other, DD) else DD.from_float(float(other))
         q1 = self.hi / o.hi
         r = self - o * DD.from_float(q1)
@@ -109,7 +109,7 @@ class DD:
         q3 = r.hi / o.hi
         return (DD.from_float(q1) + DD.from_float(q2)) + DD.from_float(q3)
 
-    def __pow__(self, n: int) -> "DD":
+    def __pow__(self, n: int) -> DD:
         if n < 0:
             return DD(1.0, 0.0) / (self ** (-n))
         result = DD(1.0, 0.0)
@@ -128,7 +128,7 @@ class DD:
     def to_float(self) -> float:
         return self.hi
 
-    def __abs__(self) -> "DD":
+    def __abs__(self) -> DD:
         return DD(abs(self.hi), abs(self.lo)) if self.hi >= 0 else -self
 
     def __eq__(self, other) -> bool:

@@ -1,11 +1,12 @@
 """Node + route(intent, graph)."""
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
+
+from typing import Any
 
 
 class Node:
     def __init__(self, id: str = "", kind: str = "unknown", name: str = "",
-                 file: str = "", line: int = 0, extra: Optional[list] = None,
+                 file: str = "", line: int = 0, extra: list | None = None,
                  **kwargs):
         self.id = id
         self.kind = kind
@@ -22,9 +23,9 @@ def _nodes(graph):
     return n.values() if isinstance(n, dict) else n
 
 
-def route(intent: str, graph) -> List[Dict[str, Any]]:
+def route(intent: str, graph) -> list[dict[str, Any]]:
     tokens = [t for t in (intent or "").lower().split() if t]
-    out: List[Dict[str, Any]] = []
+    out: list[dict[str, Any]] = []
     for node in _nodes(graph):
         name = str(getattr(node, "name", "") or "")
         if not name:

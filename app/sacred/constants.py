@@ -9,9 +9,9 @@ The defining identity:  PHI^2 = PHI + 1
 Equivalently:           PHI_INV^2 = 1 - PHI_INV
 """
 from __future__ import annotations
+
 import math
-from functools import lru_cache
-from typing import List
+from functools import cache
 
 PHI: float = (1.0 + math.sqrt(5.0)) / 2.0     # 1.6180339887498949
 PHI_INV: float = PHI - 1.0                    # 0.6180339887498949
@@ -24,7 +24,7 @@ assert abs(PHI_INV * PHI_INV - (1.0 - PHI_INV)) < 1e-15
 
 
 # ── Fibonacci ──────────────────────────────────────────────────
-@lru_cache(maxsize=None)
+@cache
 def fib(n: int) -> int:
     """The n-th Fibonacci number, F(0)=0, F(1)=1."""
     if n < 0:
@@ -34,7 +34,7 @@ def fib(n: int) -> int:
     return fib(n - 1) + fib(n - 2)
 
 
-def fib_seq(n: int) -> List[int]:
+def fib_seq(n: int) -> list[int]:
     """[F(0), F(1), ..., F(n)]."""
     return [fib(k) for k in range(n + 1)]
 

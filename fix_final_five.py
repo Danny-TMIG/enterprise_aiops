@@ -1,4 +1,3 @@
-import re
 
 # 1. Inspect and fix app/main.py
 with open("app/main.py", "r") as f:

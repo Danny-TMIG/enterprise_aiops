@@ -2,11 +2,15 @@
 import json
 from pathlib import Path
 
-import pytest
-
 from dcs.evidence_chain import (
-    BLOCKED, FAIL, NOT_RUN, PARTIAL, PASS,
-    EvidenceChain, EvidenceRecord, _file_sha, _sha,
+    BLOCKED,
+    FAIL,
+    PARTIAL,
+    PASS,
+    EvidenceChain,
+    EvidenceRecord,
+    _file_sha,
+    _sha,
 )
 
 HERE = Path(__file__).resolve().parent

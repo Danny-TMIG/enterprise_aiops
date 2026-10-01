@@ -1,11 +1,14 @@
 """Hardened C2 server, SQLite-backed."""
 from __future__ import annotations
-import json, sqlite3, threading, time
+
+import json
+import sqlite3
+import threading
+import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from app.botnetmastery.models import Bot, Task  # noqa: F401
-
+from app.botnetmastery.models import Bot, Task
 
 _SCHEMA = """
 PRAGMA journal_mode = WAL;
@@ -100,7 +103,7 @@ class C2Server:
         d["bot_id"] = d["id"]
         return d
 
-    def list_bots(self, status: Optional[str] = None) -> List[Dict[str, Any]]:
+    def list_bots(self, status: str | None = None) -> list[dict[str, Any]]:
         with self._lock:
             if status is None:
                 rows = self._conn.execute(
@@ -125,7 +128,7 @@ class C2Server:
         return task.id
 
     def pending_tasks(self,
-                      bot_id: Optional[str] = None) -> List[Dict[str, Any]]:
+                      bot_id: str | None = None) -> list[dict[str, Any]]:
         with self._lock:
             if bot_id is None:
                 rows = self._conn.execute(
@@ -138,7 +141,7 @@ class C2Server:
                     (bot_id,)).fetchall()
         return [dict(r) for r in rows]
 
-    def dispatch(self, bot_id: str) -> Optional[Dict[str, Any]]:
+    def dispatch(self, bot_id: str) -> dict[str, Any] | None:
         if self.kill_switch_engaged():
             return None
         with self._lock:
@@ -171,7 +174,7 @@ class C2Server:
                 (now, task_id))
         return cur.lastrowid
 
-    def results_for(self, bot_id: str) -> List[Dict[str, Any]]:
+    def results_for(self, bot_id: str) -> list[dict[str, Any]]:
         with self._lock:
             rows = self._conn.execute(
                 "SELECT * FROM results WHERE bot_id=? ORDER BY id",
@@ -180,7 +183,7 @@ class C2Server:
 
     # ── control ─────────────────────────────────────────────
     def engage_kill_switch(self,
-                           reason: str = "manual") -> Dict[str, Any]:
+                           reason: str = "manual") -> dict[str, Any]:
         with self._lock:
             now = time.time()
             self._conn.execute(
@@ -237,7 +240,7 @@ class C2Controller:
             for b in bots:
                 self.add_bot(b)
 
-    def add_bot(self, bot) -> "BotModel":
+    def add_bot(self, bot) -> BotModel:
         self.bots[bot.id] = bot
         return bot
 

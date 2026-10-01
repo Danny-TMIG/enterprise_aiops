@@ -7,9 +7,9 @@ touches. It dissolves when the pulse matches a node it lands on
 with > 2 nodes.
 """
 from __future__ import annotations
+
 import random
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 from app.octet.graph import OctetGraph
 from app.octet.hyper import _components
@@ -19,15 +19,15 @@ from app.octet.hyper import _components
 class Jellyfish:
     id: str
     ttl: int = 8
-    pulse: Optional[OctetGraph] = None
-    route: List[int] = field(default_factory=list)
+    pulse: OctetGraph | None = None
+    route: list[int] = field(default_factory=list)
     delivered: bool = False
 
     @property
     def alive(self) -> bool:
         return self.ttl > 0 and not self.delivered
 
-    def tick(self, g: OctetGraph, rng: random.Random) -> Optional["Jellyfish"]:
+    def tick(self, g: OctetGraph, rng: random.Random) -> Jellyfish | None:
         self.ttl -= 1
         ids = sorted(g.nodes.keys())
         if not ids:
@@ -64,7 +64,7 @@ class Jellyfish:
 class Bloom:
     def __init__(self, n: int = 3, seed: int = 0):
         self.rng = random.Random(seed)
-        self.members: List[Jellyfish] = [
+        self.members: list[Jellyfish] = [
             Jellyfish(id=f"jf-{i}", ttl=6 + i) for i in range(n)
         ]
 
@@ -82,7 +82,7 @@ class Bloom:
                 new.append(child)
         self.members.extend(new)
 
-    def snapshot(self) -> List[dict]:
+    def snapshot(self) -> list[dict]:
         return [{"id": j.id, "ttl": j.ttl,
                  "delivered": j.delivered,
                  "route_len": len(j.route)} for j in self.members]

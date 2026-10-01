@@ -5,8 +5,9 @@ Wire format: LeanDojo repo-dataset / theorem trace.
     response: {"status": "passed|failed", "proof": "...", "steps": [...]}
 """
 from __future__ import annotations
+
 import re
-from typing import Any, Dict, List
+from typing import Any
 
 from app.proprietary.base import ProprietaryObject
 
@@ -19,8 +20,8 @@ _THEOREM_RE = re.compile(
 _BY_PREFIX = re.compile(r"^\s*by\s+(.*)$", re.DOTALL)
 
 
-def _split_tactics(tactic_block: str) -> List[str]:
-    out: List[str] = []
+def _split_tactics(tactic_block: str) -> list[str]:
+    out: list[str] = []
     for raw in tactic_block.splitlines():
         s = raw.strip()
         if not s:
@@ -29,7 +30,7 @@ def _split_tactics(tactic_block: str) -> List[str]:
     return out
 
 
-def _local_trace(payload: Dict[str, Any]) -> Dict[str, Any]:
+def _local_trace(payload: dict[str, Any]) -> dict[str, Any]:
     thm = payload.get("theorem", "")
     if not thm:
         return {"status": "failed", "error": "empty theorem"}

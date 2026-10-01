@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Install MESH: taxonomies × TRIAD × UCS as one verifiable pipeline."""
-import os, shutil, subprocess, sys
+import os
+import shutil
+import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 

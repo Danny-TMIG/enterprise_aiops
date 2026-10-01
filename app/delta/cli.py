@@ -1,11 +1,13 @@
 """Demo the delta pipeline against the dominion workloads."""
 from __future__ import annotations
-import json, sys
-from app.delta.model import FixtureModel
-from app.delta.loop import run_loops
-from app.delta.curriculum import CurriculumWriter
-from app.delta import workloads as wl
 
+import json
+import sys
+
+from app.delta import workloads as wl
+from app.delta.curriculum import CurriculumWriter
+from app.delta.loop import run_loops
+from app.delta.model import FixtureModel
 
 A_FIXTURES = [
     ("count",   "def count_words(s):\n    return len(s.split())\n"),

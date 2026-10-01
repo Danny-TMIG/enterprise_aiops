@@ -1,12 +1,12 @@
 """End-to-end slice: intent -> code -> train -> SBOM -> sign -> policy -> braid -> CD."""
 from __future__ import annotations
-import json, time
+
 
 def test_01_intent_to_code():
-    from app.reconfig.interpreter import interpret
-    from app.reconfig.rules import apply_rules
     from app.reconfig.codeal import from_tasks
     from app.reconfig.emit import emit_all
+    from app.reconfig.interpreter import interpret
+    from app.reconfig.rules import apply_rules
     ir = interpret("count the words in postgres and store the results")
     tasks, _ = apply_rules(ir)
     assert tasks, "no tasks from intent"
@@ -24,7 +24,7 @@ def test_02_parallel_grid():
     assert any(t.rate == 0.0 for t in tiles)
 
 def test_03_cd_nand_all_levels():
-    from app.cd_nand.compute import verify_all_levels, nand_cd
+    from app.cd_nand.compute import nand_cd, verify_all_levels
     r = verify_all_levels(6)
     assert r["ok"], r["failures"]
     for a in (False, True):
@@ -32,8 +32,9 @@ def test_03_cd_nand_all_levels():
             assert nand_cd(a, b, 3) == (not (a and b))
 
 def test_04_sbom():
-    from app.supply.sbom import build_sbom, sbom_digest
     from pathlib import Path
+
+    from app.supply.sbom import build_sbom, sbom_digest
     sbom = build_sbom("enterprise_aiops", "0.1.0", Path.cwd())
     assert sbom["bomFormat"] == "CycloneDX"
     assert sbom["specVersion"] == "1.5"
@@ -46,7 +47,7 @@ def test_04_sbom():
     assert d == sbom_digest(sbom)
 
 def test_05_sign_and_verify():
-    from app.supply.sign import generate_key, sign, verify, key_id
+    from app.supply.sign import generate_key, key_id, sign, verify
     key = generate_key()
     assert len(key) == 32
     payload = b"hello"
@@ -57,10 +58,11 @@ def test_05_sign_and_verify():
     assert len(key_id(key)) == 16
 
 def test_06_attestation():
+    from pathlib import Path
+
+    from app.supply.attest import build_attestation, verify_attestation
     from app.supply.sbom import build_sbom
     from app.supply.sign import generate_key
-    from app.supply.attest import build_attestation, verify_attestation
-    from pathlib import Path
     sbom = build_sbom("enterprise_aiops", "0.1.0", Path.cwd())
     key = generate_key()
     att = build_attestation(sbom, key)
@@ -72,7 +74,7 @@ def test_06_attestation():
     assert not verify_attestation(att, key)
 
 def test_07_policy():
-    from app.policy.parser import parse_policy, evaluate
+    from app.policy.parser import evaluate, parse_policy
     # rules are ordered: most specific first, catch-all last.
     # the engine is first-match-wins, so "escalate_medium" must
     # appear before "allow_low" to fire on severity==2 + known resource.
@@ -102,7 +104,7 @@ def test_08_policy_rejects_code():
         raise AssertionError(f"policy should have rejected: {bad}")
 
 def test_09_braid():
-    from app.braid.parser import parse_workflow, compile_workflow
+    from app.braid.parser import compile_workflow, parse_workflow
     src = (
         'workflow demo {\n'
         '  source a = fetch("http://x")\n'
@@ -122,7 +124,7 @@ def test_09_braid():
     assert plan["tasks"][2]["inputs"] == ["a","b"]
 
 def test_10_braid_rejects_undefined():
-    from app.braid.parser import parse_workflow, compile_workflow
+    from app.braid.parser import compile_workflow, parse_workflow
     src = (
         'workflow bad {\n'
         '  source a = fetch("http://x")\n'
@@ -146,8 +148,10 @@ def test_11_cli_round_trip():
     assert main(["braid"]) == 0
 
 def test_12_atlas_grounded():
-    from app.atlas.algorithms import validate as av, ALGORITHMS
-    from app.atlas.moats import validate as mv, all_moats
+    from app.atlas.algorithms import ALGORITHMS
+    from app.atlas.algorithms import validate as av
+    from app.atlas.moats import all_moats
+    from app.atlas.moats import validate as mv
     a = av(); assert a["ok"], a["invalid_residuals"]
     m = mv(); assert m["ok"], m["invalid_residuals"]
     assert len(ALGORITHMS) == 40

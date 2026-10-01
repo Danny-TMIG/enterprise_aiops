@@ -4,9 +4,11 @@ A graph-shaped IR. Every target language (Python, SQL, MQL, RL,
 ML) compiles to the same Code-AL graph. The graph hashes.
 """
 from __future__ import annotations
-import hashlib, json
-from dataclasses import dataclass, field, asdict
-from typing import Any, Dict, List, Optional
+
+import hashlib
+import json
+from dataclasses import asdict, dataclass, field
+from typing import Any
 
 OPS = {
     "LOAD", "FETCH", "STORE", "COUNT", "SUM", "FILTER", "JOIN",
@@ -24,8 +26,8 @@ def _h(s: str) -> str:
 class CAInstruction:
     id: str
     op: str
-    slots: Dict[str, str] = field(default_factory=dict)     # name → ref | literal
-    residue: List[str] = field(default_factory=list)
+    slots: dict[str, str] = field(default_factory=dict)     # name → ref | literal
+    residue: list[str] = field(default_factory=list)
 
     def to_canonical(self) -> str:
         return json.dumps(
@@ -39,14 +41,14 @@ class CAInstruction:
 @dataclass
 class CAProgram:
     name: str
-    instructions: List[CAInstruction] = field(default_factory=list)
-    residue: List[str] = field(default_factory=list)
+    instructions: list[CAInstruction] = field(default_factory=list)
+    residue: list[str] = field(default_factory=list)
 
     def hash(self) -> str:
         body = "\n".join(i.to_canonical() for i in self.instructions)
         return _h(f"ca/{self.name}/{body}")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "hash": self.hash(),
@@ -55,11 +57,11 @@ class CAProgram:
         }
 
 
-def from_tasks(name: str, tasks: List[Any]) -> CAProgram:
+def from_tasks(name: str, tasks: list[Any]) -> CAProgram:
     prog = CAProgram(name=name)
     for t in tasks:
         op = t.op if t.op in OPS else "EMIT"
-        slots: Dict[str, str] = {}
+        slots: dict[str, str] = {}
         for i, inp in enumerate(t.inputs):
             slots[f"in{i}"] = inp
         for i, out in enumerate(t.outputs):

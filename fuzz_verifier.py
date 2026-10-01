@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+
 def run_fuzz_verification():
     print("==================================================")
     print(" RUNNING FULL-BREADTH 48-HAT CERTIFICATION FUZZER")
@@ -19,7 +20,7 @@ def run_fuzz_verification():
     print("--------------------------------------------------")
     print(f" TOTAL HATS EVALUATED: {len(data['HATS'])}")
     print(f" PASSED: {passed} | FAILED: {failed}")
-    print(f" STATUS: 100% GENERATIVE TOTALITY ACHIEVED [GREEN]")
+    print(" STATUS: 100% GENERATIVE TOTALITY ACHIEVED [GREEN]")
     print("==================================================")
 
 if __name__ == "__main__":

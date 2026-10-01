@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
-from typing import Dict, Any
+from typing import Any
+
 
 @dataclass
 class CPVO:
@@ -16,4 +17,4 @@ class Manifest:
     project_name: str = "enterprise_aiops"
     tier: str = "sovereign"
     cpvo: CPVO = field(default_factory=CPVO)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)

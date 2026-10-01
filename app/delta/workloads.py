@@ -4,10 +4,12 @@ No dependency on app.dominion. Same shape as dominion workloads
 but defined here so the delta module runs standalone.
 """
 from __future__ import annotations
-import ast, re
-from dataclasses import dataclass
-from typing import Any, Callable, Dict, List
 
+import ast
+import re
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Any
 
 # ── verdict ─────────────────────────────────────────────────────
 PASS = "PASS"
@@ -34,7 +36,7 @@ def _extract(name: str):
         if t.startswith("```"):
             t = re.sub(r"^```[a-zA-Z]*\n?", "", t)
             t = re.sub(r"\n?```\s*$", "", t)
-        ns: Dict[str, Any] = {}
+        ns: dict[str, Any] = {}
         exec(compile(ast.parse(t), "<cand>", "exec"), ns)
         if name not in ns:
             raise NameError(f"{name!r} not found")
@@ -56,7 +58,7 @@ class Workload:
 class DifferentialVerifier:
     id: str
     reference: Callable[[Any], Any]
-    fixtures: List[Any]
+    fixtures: list[Any]
     extract: Callable[[str], Callable[[Any], Any]]
     equality: Callable[[Any, Any], bool] = lambda a, b: a == b
 
@@ -92,7 +94,7 @@ def _ref_parse_env_int(raw):
     return int(str(raw).replace("_", "").replace(",", ""))
 
 
-WORKLOADS: Dict[str, Workload] = {
+WORKLOADS: dict[str, Workload] = {
     "count_words": Workload(
         "count_words",
         "Write a Python function `count_words(s: str) -> int` that "
@@ -149,7 +151,7 @@ WORKLOADS: Dict[str, Workload] = {
 }
 
 
-def list_workloads() -> List[str]:
+def list_workloads() -> list[str]:
     return sorted(WORKLOADS)
 
 

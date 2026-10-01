@@ -18,11 +18,15 @@ The mesh runs every query in parallel; findings are normalized to
 (q, table, row_id, detail). No global lock — read-only.
 """
 from __future__ import annotations
-import json, re, sqlite3, time
+
+import json
+import sqlite3
+import time
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, asdict, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 DB = ROOT / "data" / "fabric.sqlite3"
@@ -76,7 +80,7 @@ def ensure_schema() -> sqlite3.Connection:
     return con
 
 
-def seed_demo(n_bots: int = 24) -> Dict[str, int]:
+def seed_demo(n_bots: int = 24) -> dict[str, int]:
     """Seed the botnetmesh tables. Idempotent per-id."""
     con = ensure_schema()
     now = time.time()
@@ -121,13 +125,13 @@ MQL_OPS = {
 }
 
 
-def compile_mql(table: str, filt: Dict[str, Any],
-                projection: Optional[List[str]] = None,
-                limit: Optional[int] = None) -> Tuple[str, List[Any]]:
+def compile_mql(table: str, filt: dict[str, Any],
+                projection: list[str] | None = None,
+                limit: int | None = None) -> tuple[str, list[Any]]:
     """Mongo-style filter -> SQL. Values are bound, not interpolated."""
     cols = ", ".join(projection) if projection else "*"
-    where: List[str] = []
-    params: List[Any] = []
+    where: list[str] = []
+    params: list[Any] = []
     for key, val in (filt or {}).items():
         if isinstance(val, dict):
             for op, arg in val.items():
@@ -155,7 +159,7 @@ def compile_mql(table: str, filt: Dict[str, Any],
     return sql, params
 
 
-def run_mql(table: str, filt: Dict[str, Any], **kw) -> List[Dict[str, Any]]:
+def run_mql(table: str, filt: dict[str, Any], **kw) -> list[dict[str, Any]]:
     sql, params = compile_mql(table, filt, **kw)
     con = ensure_schema()
     cur = con.execute(sql, params)
@@ -165,7 +169,7 @@ def run_mql(table: str, filt: Dict[str, Any], **kw) -> List[Dict[str, Any]]:
     return rows
 
 
-def run_sql(sql: str, params: Sequence[Any] = ()) -> List[Dict[str, Any]]:
+def run_sql(sql: str, params: Sequence[Any] = ()) -> list[dict[str, Any]]:
     con = ensure_schema()
     cur = con.execute(sql, tuple(params))
     cols = [d[0] for d in cur.description] if cur.description else []
@@ -181,10 +185,10 @@ class Finding:
     table: str
     row_id: str
     detail: str = ""
-    data: Dict[str, Any] = field(default_factory=dict)
+    data: dict[str, Any] = field(default_factory=dict)
 
 
-def q_silent_bots() -> List[Finding]:
+def q_silent_bots() -> list[Finding]:
     """Bots that haven't checked in for over 300 seconds."""
     rows = run_sql(
         "SELECT id, last_seen FROM bots "
@@ -194,7 +198,7 @@ def q_silent_bots() -> List[Finding]:
             for r in rows]
 
 
-def q_orphan_tasks() -> List[Finding]:
+def q_orphan_tasks() -> list[Finding]:
     """Tasks whose bot no longer exists."""
     rows = run_sql(
         "SELECT t.id, t.bot_id FROM tasks t "
@@ -204,7 +208,7 @@ def q_orphan_tasks() -> List[Finding]:
             for r in rows]
 
 
-def q_queued_long() -> List[Finding]:
+def q_queued_long() -> list[Finding]:
     """Tasks stuck in queued for over 600 seconds."""
     rows = run_sql(
         "SELECT id, queued_at FROM tasks "
@@ -214,7 +218,7 @@ def q_queued_long() -> List[Finding]:
             for r in rows]
 
 
-def q_failed_tasks() -> List[Finding]:
+def q_failed_tasks() -> list[Finding]:
     """Tasks whose result has success=0."""
     rows = run_sql(
         "SELECT t.id, r.payload FROM tasks t "
@@ -224,7 +228,7 @@ def q_failed_tasks() -> List[Finding]:
             for r in rows]
 
 
-def q_terminated_with_tasks() -> List[Finding]:
+def q_terminated_with_tasks() -> list[Finding]:
     """Terminated bots that still have queued tasks."""
     rows = run_sql(
         "SELECT b.id AS bid, COUNT(t.id) AS n FROM bots b "
@@ -236,7 +240,7 @@ def q_terminated_with_tasks() -> List[Finding]:
                     data={"queued": r["n"]}) for r in rows]
 
 
-def q_success_ratio() -> List[Finding]:
+def q_success_ratio() -> list[Finding]:
     """Bots whose result success ratio is below 0.5."""
     rows = run_sql(
         "SELECT bot_id, AVG(success) AS s, COUNT(*) AS n FROM results "
@@ -249,11 +253,11 @@ def q_success_ratio() -> List[Finding]:
 # ── mesh: run CQL + SQL + MQL in parallel ────────────────────────
 @dataclass
 class MeshResult:
-    cql: Dict[str, List[Finding]] = field(default_factory=dict)
-    sql: Dict[str, List[Dict[str, Any]]] = field(default_factory=dict)
-    mql: Dict[str, List[Dict[str, Any]]] = field(default_factory=dict)
+    cql: dict[str, list[Finding]] = field(default_factory=dict)
+    sql: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
+    mql: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "cql": {k: [asdict(f) for f in v] for k, v in self.cql.items()},
             "sql": self.sql,
@@ -261,7 +265,7 @@ class MeshResult:
         }
 
 
-CQL_QUERIES: Dict[str, Callable[[], List[Finding]]] = {
+CQL_QUERIES: dict[str, Callable[[], list[Finding]]] = {
     "silent_bots":           q_silent_bots,
     "orphan_tasks":          q_orphan_tasks,
     "queued_long":           q_queued_long,
@@ -270,7 +274,7 @@ CQL_QUERIES: Dict[str, Callable[[], List[Finding]]] = {
     "success_ratio":         q_success_ratio,
 }
 
-SQL_QUERIES: Dict[str, Tuple[str, Sequence[Any]]] = {
+SQL_QUERIES: dict[str, tuple[str, Sequence[Any]]] = {
     "bot_os_counts": (
         "SELECT os, COUNT(*) n FROM bots GROUP BY os ORDER BY n DESC", ()),
     "task_status": (
@@ -280,7 +284,7 @@ SQL_QUERIES: Dict[str, Tuple[str, Sequence[Any]]] = {
         "ORDER BY registered_at ASC LIMIT 5", ()),
 }
 
-MQL_QUERIES: Dict[str, Tuple[str, Dict[str, Any]]] = {
+MQL_QUERIES: dict[str, tuple[str, dict[str, Any]]] = {
     "active_linux":   ("bots", {"status": "active", "os": "linux"}),
     "recent_bots":    ("bots", {"last_seen": {"$gt": time.time() - 300}}),
     "ping_tasks":     ("tasks", {"cmd": "ping"}),
@@ -322,7 +326,7 @@ def _self_register() -> None:
         return
 
     @register("botnetmesh")
-    def _entry(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _entry(*args: Any, **kwargs: Any) -> dict[str, Any]:
         ensure_schema()
         seed = seed_demo()
         mesh = run_mesh()
@@ -338,6 +342,14 @@ def _self_register() -> None:
 _self_register()
 
 __all__ = [
-    "ensure_schema", "seed_demo", "compile_mql", "run_mql", "run_sql",
-    "run_mesh", "CQL_QUERIES", "SQL_QUERIES", "MQL_QUERIES", "Finding",
+    "CQL_QUERIES",
+    "MQL_QUERIES",
+    "SQL_QUERIES",
+    "Finding",
+    "compile_mql",
+    "ensure_schema",
+    "run_mesh",
+    "run_mql",
+    "run_sql",
+    "seed_demo",
 ]

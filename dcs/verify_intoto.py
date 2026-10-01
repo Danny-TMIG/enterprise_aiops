@@ -50,7 +50,9 @@ def verify(path: Path, external_pubkey: str | None = None) -> int:  # pragma: no
 
     try:
         from cryptography.exceptions import InvalidSignature  # pragma: no cover
-        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey  # pragma: no cover
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PublicKey,  # pragma: no cover
+        )
     except ImportError:  # pragma: no cover
         print("FAIL: cryptography not installed; cannot verify")
         return 1  # pragma: no cover

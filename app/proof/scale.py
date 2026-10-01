@@ -1,6 +1,9 @@
 """Claim 4: one M4 Max is one M4 Max."""
 from __future__ import annotations
-import os, sys, time
+
+import os
+import sys
+import time
 from pathlib import Path
 
 
@@ -15,8 +18,8 @@ def model_size() -> tuple:
 
 
 def measure_throughput() -> tuple:
-    from app.dispatch.models.local_mlx import LocalMLXProvider, _mlx_available
     from app.dispatch.models.base import ModelRequest
+    from app.dispatch.models.local_mlx import LocalMLXProvider, _mlx_available
     if not _mlx_available():
         return 0.0, "MLX unavailable"
     p = LocalMLXProvider("scale-bench")
@@ -47,18 +50,18 @@ def main() -> int:
         print(f"  artifacts/hour (4 workers): {per_hour * 4:.0f}")
     else:
         per_hour = 0
-        print(f"  artifacts/hour: unmeasurable")
+        print("  artifacts/hour: unmeasurable")
 
     print(f"  CPU count: {os.cpu_count()}")
-    print(f"  parallelism: 1 MLX model, single GPU")
-    print(f"  horizontal scaling: N/A without distributed runtime")
-    print(f"  failure domain: 1 machine")
+    print("  parallelism: 1 MLX model, single GPU")
+    print("  horizontal scaling: N/A without distributed runtime")
+    print("  failure domain: 1 machine")
     print()
     if tps > 0:
         print(f"  verdict: ceiling = 1 machine × {tps:.0f} tok/s × "
               f"{per_hour:.0f} artifacts/h")
     else:
-        print(f"  verdict: throughput unmeasurable on this host")
+        print("  verdict: throughput unmeasurable on this host")
     return 0
 
 

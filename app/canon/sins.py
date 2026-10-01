@@ -12,8 +12,9 @@ grounded in residual IDs from the register.
     Sloth     refuses to attempt
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Tuple
+
+from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -22,7 +23,7 @@ class SinSpec:
     name: str
     description: str
     detection: str
-    residual_ids: Tuple[str, ...]
+    residual_ids: tuple[str, ...]
     remedy: str
 
 
@@ -31,7 +32,7 @@ class SinRecord:
     sin: str
     subject: str
     evidence: str
-    residuals: List[str]
+    residuals: list[str]
     remedy: str
 
     def to_dict(self):
@@ -41,7 +42,7 @@ class SinRecord:
                 "remedy": self.remedy}
 
 
-SIN_SPECS: Tuple[SinSpec, ...] = (
+SIN_SPECS: tuple[SinSpec, ...] = (
     SinSpec(1, "Pride",
             "The solver claims competence it has not earned.",
             "rate == 1.0 on too few trials, or rate == 0.0 on too few",
@@ -81,8 +82,8 @@ SIN_SPECS: Tuple[SinSpec, ...] = (
 
 
 # ── detectors ───────────────────────────────────────────────────
-def detect_pride(run, min_trials: int = 4) -> List[SinRecord]:
-    out: List[SinRecord] = []
+def detect_pride(run, min_trials: int = 4) -> list[SinRecord]:
+    out: list[SinRecord] = []
     for t in run.tiles:
         if t.trials < min_trials and (t.rate == 1.0 or t.rate == 0.0):
             out.append(SinRecord(
@@ -95,8 +96,8 @@ def detect_pride(run, min_trials: int = 4) -> List[SinRecord]:
 
 
 def detect_greed(run, cost_threshold_ms: float = 2000.0
-                 ) -> List[SinRecord]:
-    out: List[SinRecord] = []
+                 ) -> list[SinRecord]:
+    out: list[SinRecord] = []
     for t in run.tiles:
         if t.passes == 0:
             continue
@@ -111,8 +112,8 @@ def detect_greed(run, cost_threshold_ms: float = 2000.0
     return out
 
 
-def detect_lust(run, min_trials: int = 4) -> List[SinRecord]:
-    out: List[SinRecord] = []
+def detect_lust(run, min_trials: int = 4) -> list[SinRecord]:
+    out: list[SinRecord] = []
     for t in run.tiles:
         if t.rate == 0.0 and t.trials >= min_trials:
             out.append(SinRecord(
@@ -124,10 +125,10 @@ def detect_lust(run, min_trials: int = 4) -> List[SinRecord]:
     return out
 
 
-def detect_envy(run_a, run_b) -> List[SinRecord]:
+def detect_envy(run_a, run_b) -> list[SinRecord]:
     """Envy needs a pair. Same kind, one solver at 1.0, one at 0.0."""
-    out: List[SinRecord] = []
-    by_kind: Dict[str, List[Any]] = {}
+    out: list[SinRecord] = []
+    by_kind: dict[str, list[Any]] = {}
     for t in run_a.tiles:
         by_kind.setdefault(t.kind, []).append(t)
     for kind, tiles in by_kind.items():
@@ -147,11 +148,11 @@ def detect_envy(run_a, run_b) -> List[SinRecord]:
 
 
 def detect_gluttony(run, share_threshold: float = 0.90
-                   ) -> List[SinRecord]:
+                   ) -> list[SinRecord]:
     total = sum(t.duration_ms for t in run.tiles)
     if total <= 0:
         return []
-    out: List[SinRecord] = []
+    out: list[SinRecord] = []
     for t in run.tiles:
         if t.duration_ms / total > share_threshold:
             out.append(SinRecord(
@@ -164,9 +165,9 @@ def detect_gluttony(run, share_threshold: float = 0.90
     return out
 
 
-def detect_wrath(run) -> List[SinRecord]:
-    out: List[SinRecord] = []
-    by_puzzle: Dict[tuple, List[Any]] = {}
+def detect_wrath(run) -> list[SinRecord]:
+    out: list[SinRecord] = []
+    by_puzzle: dict[tuple, list[Any]] = {}
     for o in run.outcomes:
         key = (o.kind, o.difficulty, o.puzzle_id)
         by_puzzle.setdefault(key, []).append(o)
@@ -185,8 +186,8 @@ def detect_wrath(run) -> List[SinRecord]:
     return out
 
 
-def detect_sloth(run) -> List[SinRecord]:
-    out: List[SinRecord] = []
+def detect_sloth(run) -> list[SinRecord]:
+    out: list[SinRecord] = []
     for o in run.outcomes:
         if o.duration_ms == 0.0 and not o.passed:
             out.append(SinRecord(
@@ -210,7 +211,7 @@ DETECTORS = {
 }
 
 
-def enumerate_sins() -> List[dict]:
+def enumerate_sins() -> list[dict]:
     return [{
         "index": s.index, "name": s.name,
         "description": s.description,
@@ -220,8 +221,8 @@ def enumerate_sins() -> List[dict]:
     } for s in SIN_SPECS]
 
 
-def detect_all(runs: List[Any]) -> List[SinRecord]:
-    out: List[SinRecord] = []
+def detect_all(runs: list[Any]) -> list[SinRecord]:
+    out: list[SinRecord] = []
     single = ["Pride", "Greed", "Lust", "Gluttony", "Wrath", "Sloth"]
     for run in runs:
         for name in single:

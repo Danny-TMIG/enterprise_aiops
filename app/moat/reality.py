@@ -1,12 +1,13 @@
-from typing import Dict, Any
+from typing import Any
 
-def score_subsystem(rel: str, path: Any = None, content: str = "") -> Dict[str, Any]:
+
+def score_subsystem(rel: str, path: Any = None, content: str = "") -> dict[str, Any]:
     if hasattr(path, "read_text"):
         content = path.read_text()
     score_val = 1.0 if content else 0.0
     return {"subsystem": rel, "score": score_val}
 
-def score_all(root: str, scope: str = "app", **kwargs) -> Dict[str, Any]:
+def score_all(root: str, scope: str = "app", **kwargs) -> dict[str, Any]:
     return {
         "scope": scope,
         "root": root,
@@ -20,7 +21,7 @@ def score_all(root: str, scope: str = "app", **kwargs) -> Dict[str, Any]:
     }
 
 class RealityProbeWrapper:
-    def __init__(self, data: Dict[str, Any]):
+    def __init__(self, data: dict[str, Any]):
         self._data = data
 
     def score(self) -> float:

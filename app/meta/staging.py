@@ -1,10 +1,10 @@
 """Staging — atomic patches with snapshot + rollback."""
 from __future__ import annotations
+
 import difflib
 import shutil
 import time
 from pathlib import Path
-from typing import Dict, List, Optional
 
 
 class Staging:
@@ -50,7 +50,7 @@ class Staging:
             fromfile=f"a/{target}", tofile=f"b/{target}",
         ))
 
-    def staged_source(self, target: str) -> Optional[str]:
+    def staged_source(self, target: str) -> str | None:
         p = self._staged(target)
         return p.read_text() if p.exists() else None
 

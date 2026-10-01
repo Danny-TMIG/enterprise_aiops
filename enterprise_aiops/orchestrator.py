@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent))
 from inference_bridge import InferenceStateBridge
 
+
 async def main():
     bridge = InferenceStateBridge("universal_ops_ledger.jsonl")
     print("[*] Dispatching verification query to local MLX server...")

@@ -1,8 +1,9 @@
-import numpy as np
 import hashlib
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+
+import numpy as np
+
 
 class PrismVerdict(str, Enum):
     # Epistemological & Bayesian
@@ -139,7 +140,7 @@ class PrismStep:
     posterior_top: tuple
     entropy: float
     verdict: PrismVerdict
-    query: Optional[int] = None
+    query: int | None = None
     synthesised: tuple = ()
     brier: float = 0.0
     certificate: str = ""

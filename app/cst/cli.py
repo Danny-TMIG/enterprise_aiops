@@ -11,11 +11,13 @@ a valid acquisition: the artifact exists, is syntactically parsed,
 and can be reverted.
 """
 from __future__ import annotations
-import json, os, sys
 
-from app.cst.predicate import CSTLoop, Test, LegitimacyProof, Capability
+import json
+import os
+import sys
+
+from app.cst.predicate import Capability, CSTLoop, LegitimacyProof, Test
 from app.cst.score import k, report
-
 
 TARGETS = [
     # name, baseline, target
@@ -61,8 +63,8 @@ def acquire(t: Test) -> Capability:
     """Try to produce an artifact that satisfies the intent."""
     os.environ.setdefault("MLX_DISABLE", "1")
     try:
-        from app.origami.library import get as get_grammar
         from app.origami.dispatch import dispatch
+        from app.origami.library import get as get_grammar
         from app.origami.swarm import Swarm
 
         g = get_grammar("code_artifact")
@@ -74,7 +76,6 @@ def acquire(t: Test) -> Capability:
                           artifact=getattr(r, "code", ""),
                           detail=getattr(r, "text", "")[:120])
     except Exception as e:
-        import traceback
         print(f"      acquire error for {t.name}: {type(e).__name__}: {e}")
         return Capability(test_name=t.name, acquired=False,
                           detail=f"acquire failed: {e}")

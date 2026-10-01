@@ -6,10 +6,10 @@ disciplines. The four kernel slots — Δ distinction, Π persistence,
 Λ linkage, τ transformation — recur in every discipline.
 """
 from __future__ import annotations  # pragma: no cover
-import json  # pragma: no cover
-from collections import defaultdict, Counter  # pragma: no cover
-from pathlib import Path  # pragma: no cover
 
+import json  # pragma: no cover
+from collections import defaultdict  # pragma: no cover
+from pathlib import Path  # pragma: no cover
 
 # ══════════════════════════════════════════════════════════════════
 # 1. DISCIPLINES — 12 fields

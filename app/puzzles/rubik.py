@@ -1,15 +1,15 @@
 """Rubik's cube (2x2). Moves are generated, scramble rejects canceling sequences."""
 from __future__ import annotations
+
 import random
 from collections import deque
 from dataclasses import dataclass
 from functools import lru_cache
 from itertools import product
-from typing import Dict, List, Tuple
 
 from app.puzzles.tree import DecisionTree
 
-SOLVED: Tuple[int, ...] = (0, 1, 2, 3, 4, 5, 6, 7)
+SOLVED: tuple[int, ...] = (0, 1, 2, 3, 4, 5, 6, 7)
 
 # Corner permutation for a single clockwise face turn (8 corners, index = position).
 _BASE = {
@@ -19,19 +19,19 @@ _BASE = {
 }
 
 
-def _inverse(sigma: Tuple[int, ...]) -> Tuple[int, ...]:
+def _inverse(sigma: tuple[int, ...]) -> tuple[int, ...]:
     inv = [0] * len(sigma)
     for i, s in enumerate(sigma):
         inv[s] = i
     return tuple(inv)
 
 
-def _compose(a: Tuple[int, ...], b: Tuple[int, ...]) -> Tuple[int, ...]:
+def _compose(a: tuple[int, ...], b: tuple[int, ...]) -> tuple[int, ...]:
     return tuple(b[a[i]] for i in range(8))
 
 
 # Moves generated from faces, not hand-written.
-MOVES: Dict[str, Tuple[int, ...]] = {}
+MOVES: dict[str, tuple[int, ...]] = {}
 for _f, _v in _BASE.items():
     MOVES[_f] = _v
     MOVES[_f + "'"] = _inverse(_v)
@@ -45,14 +45,14 @@ def _same_face(m1: str, m2: str) -> bool:
     return m1.rstrip("'2") == m2.rstrip("'2")
 
 
-def apply_move(sigma: Tuple[int, ...], state: Tuple[int, ...]) -> Tuple[int, ...]:
+def apply_move(sigma: tuple[int, ...], state: tuple[int, ...]) -> tuple[int, ...]:
     return tuple(state[sigma[i]] for i in range(8))
 
 
 @lru_cache(maxsize=1)
 def _distance_table():
-    dist: Dict[Tuple[int, ...], int] = {SOLVED: 0}
-    parent: Dict[Tuple[int, ...], Tuple[Tuple[int, ...], str]] = {}
+    dist: dict[tuple[int, ...], int] = {SOLVED: 0}
+    parent: dict[tuple[int, ...], tuple[tuple[int, ...], str]] = {}
     q = deque([SOLVED])
     while q:
         s = q.popleft()
@@ -66,7 +66,7 @@ def _distance_table():
     return dist, parent
 
 
-def scramble(n_moves: int = 11, seed: int = 0) -> Tuple[int, ...]:
+def scramble(n_moves: int = 11, seed: int = 0) -> tuple[int, ...]:
     """Return a state reachable in exactly `n_moves` non-canceling moves.
 
     Guarantees: no two consecutive moves share a face, and the final state
@@ -91,14 +91,14 @@ def scramble(n_moves: int = 11, seed: int = 0) -> Tuple[int, ...]:
     )
 
 
-def solve_cube(state: Tuple[int, ...]) -> dict:
+def solve_cube(state: tuple[int, ...]) -> dict:
     """BFS parent chain, emitting inverse moves (walk order = forward order)."""
     dist, parent = _distance_table()
     if state not in dist:
         return {"solved": False, "nodes": 0, "scramble": state,
                 "note": "state not reachable"}
 
-    path: List[str] = []
+    path: list[str] = []
     cur = state
     while cur != SOLVED:
         prev, move = parent[cur]
@@ -124,7 +124,7 @@ def solve_cube(state: Tuple[int, ...]) -> dict:
 
 @dataclass
 class RubikCube(DecisionTree):
-    goal: Tuple[int, ...] = SOLVED
+    goal: tuple[int, ...] = SOLVED
 
     def initial(self):
         return self.goal

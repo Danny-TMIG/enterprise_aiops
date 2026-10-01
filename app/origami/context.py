@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any
 
 
 class DoubleDouble:
@@ -12,7 +12,7 @@ class DoubleDouble:
     return f"DoubleDouble({self.high}, {self.low})"
 
 
-def shard(data: List[Any], chunks: int = 2) -> List[List[Any]]:
+def shard(data: list[Any], chunks: int = 2) -> list[list[Any]]:
   """Shards a dataset or payload into chunks."""
   if chunks <= 0 or not data:
     return [data]

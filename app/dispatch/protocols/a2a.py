@@ -12,10 +12,12 @@ The mesh presents itself as an A2A agent so external orchestrators
 invoke it as a verification backend.
 """
 from __future__ import annotations
+
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 
 def _now() -> str:
@@ -28,12 +30,12 @@ class AgentCard:
     description: str = "Vendor-agnostic verification backend for orchestrators"
     url: str = "http://127.0.0.1:8000/dis/a2a"
     version: str = "0.1.0"
-    capabilities: List[str] = field(default_factory=lambda: [
+    capabilities: list[str] = field(default_factory=lambda: [
         "verification", "proving", "scanning", "evidence",
     ])
-    skills: List[Dict[str, Any]] = field(default_factory=list)
+    skills: list[dict[str, Any]] = field(default_factory=list)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "description": self.description,
@@ -50,12 +52,12 @@ class AgentCard:
 @dataclass
 class A2AServer:
     card: AgentCard
-    handlers: Dict[str, Callable[[Dict[str, Any]], Any]] = field(default_factory=dict)
-    tasks: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    handlers: dict[str, Callable[[dict[str, Any]], Any]] = field(default_factory=dict)
+    tasks: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     def skill(self, name: str, description: str,
-              schema: Optional[Dict[str, Any]] = None) -> Callable:
-        def deco(fn: Callable[[Dict[str, Any]], Any]) -> Callable:
+              schema: dict[str, Any] | None = None) -> Callable:
+        def deco(fn: Callable[[dict[str, Any]], Any]) -> Callable:
             self.card.skills.append({
                 "id": name, "name": name, "description": description,
                 "inputSchema": schema or {"type": "object"},
@@ -64,7 +66,7 @@ class A2AServer:
             return fn
         return deco
 
-    def handle(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def handle(self, method: str, params: dict[str, Any]) -> dict[str, Any]:
         if method == "tasks/send":
             return self._send(params)
         if method == "tasks/get":
@@ -80,7 +82,7 @@ class A2AServer:
             return self.tasks[tid]
         raise ValueError(f"unknown method: {method}")
 
-    def _send(self, params: Dict[str, Any]) -> Dict[str, Any]:
+    def _send(self, params: dict[str, Any]) -> dict[str, Any]:
         tid = params.get("id") or f"task-{uuid.uuid4().hex[:12]}"
         skill_id = (params.get("skill") or
                     (params.get("message") or {}).get("skill") or
@@ -106,7 +108,7 @@ class A2AServer:
         task["finishedAt"] = _now()
         return task
 
-    def jsonrpc(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+    def jsonrpc(self, payload: dict[str, Any]) -> dict[str, Any]:
         rid = payload.get("id")
         try:
             result = self.handle(payload.get("method", ""),
@@ -122,22 +124,22 @@ class A2AClient:
     server: A2AServer
     next_id: int = 1
 
-    def _rpc(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def _rpc(self, method: str, params: dict[str, Any]) -> dict[str, Any]:
         payload = {"jsonrpc": "2.0", "id": self.next_id,
                    "method": method, "params": params}
         self.next_id += 1
         return self.server.jsonrpc(payload)
 
-    def card(self) -> Dict[str, Any]:
+    def card(self) -> dict[str, Any]:
         return self.server.card.to_dict()
 
-    def send(self, skill: str, params: Dict[str, Any],
-             id_: Optional[str] = None) -> Dict[str, Any]:
+    def send(self, skill: str, params: dict[str, Any],
+             id_: str | None = None) -> dict[str, Any]:
         r = self._rpc("tasks/send", {"id": id_, "skill": skill, "params": params})
         return r.get("result") or r.get("error") or {}
 
-    def get(self, id_: str) -> Dict[str, Any]:
+    def get(self, id_: str) -> dict[str, Any]:
         return self._rpc("tasks/get", {"id": id_})
 
-    def cancel(self, id_: str) -> Dict[str, Any]:
+    def cancel(self, id_: str) -> dict[str, Any]:
         return self._rpc("tasks/cancel", {"id": id_})

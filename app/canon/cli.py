@@ -1,10 +1,11 @@
 """Seven sins · ten commandments · book of genesis."""
 from __future__ import annotations
-import json, sys
 
-from app.canon.sins import enumerate_sins, detect_all, SIN_SPECS
-from app.canon.commandments import enumerate_commandments, audit
+import sys
+
+from app.canon.commandments import audit, enumerate_commandments
 from app.canon.genesis import genesis
+from app.canon.sins import SIN_SPECS, detect_all, enumerate_sins
 from app.residual import register as R
 from app.train.core import TrainConfig
 from app.train.driver import TrainDriver

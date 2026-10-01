@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Run the qualification profile for evidence_capture and produce a signed record."""
-import json, subprocess, sys
+import json
+import subprocess
+import sys
 from pathlib import Path
+
 ROOT = Path(__file__).resolve().parent.parent
 PROFILE = ROOT / "governance/qualification/profiles/evidence_capture.json"
 STORE = ROOT / "dcs/evidence/qualifications"
@@ -17,7 +20,7 @@ def load_key():
 
 def main():
     sys.path.insert(0, str(ROOT))
-    from dcs.evidence_chain import EvidenceChain, PASS
+    from dcs.evidence_chain import PASS, EvidenceChain
     profile = json.loads(PROFILE.read_text())
     impl = ROOT / profile["implementation"]
     test = ROOT / profile["test"]

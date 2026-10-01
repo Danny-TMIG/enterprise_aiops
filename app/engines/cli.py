@@ -1,9 +1,10 @@
 """Demo: parallel dynamic difference engines."""
 from __future__ import annotations
-import json, sys
 
-from app.engines.kinds import KINDS, SOLVERS, list_kinds, list_solvers
+import sys
+
 from app.engines.driver import Driver
+from app.engines.kinds import list_kinds, list_solvers
 
 
 def _hdr(t):
@@ -43,7 +44,7 @@ def main():
         print(f"    generations:  {d_['generations']}")
         print(f"    dominant:     {d_['dominant']}")
         print(f"    improving:    {d_['improving']}")
-        print(f"    latest delta:")
+        print("    latest delta:")
         for pair, val in sorted(d_["latest_delta"].items()):
             print(f"      {pair:24s} {val:+.3f}")
     print()

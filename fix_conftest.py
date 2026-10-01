@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 def clean_conftests():
     fixture_code = '''import sys
 import pytest

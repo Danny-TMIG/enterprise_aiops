@@ -1,11 +1,15 @@
 """Run a standard against a reference; produce evidence."""
 from __future__ import annotations
-import importlib, time, traceback
+
+import importlib
+import time
+import traceback
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from dcs.evidence import Bundle, RequirementResult, digest_of
-from dcs.standard import Standard, Requirement
+from dcs.standard import Standard
 
 
 def _resolve(dotted: str) -> Callable[[], Any]:
@@ -18,7 +22,6 @@ def _resolve(dotted: str) -> Callable[[], Any]:
 
 
 def _reference_meta(root: Path) -> dict:
-    import subprocess
     version = "0.0.0"
     py = root / "app/__init__.py"
     if py.exists():

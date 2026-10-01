@@ -5,7 +5,14 @@ from __future__ import annotations  # pragma: no cover
 from collections.abc import Callable, Iterable  # pragma: no cover
 from typing import Any  # pragma: no cover
 
-from dcs.triad.lattice import FAIL, PASS, UNKNOWN, VState, fold_v, join_know  # pragma: no cover
+from dcs.triad.lattice import (  # pragma: no cover
+    FAIL,
+    PASS,
+    UNKNOWN,
+    VState,
+    fold_v,
+    join_know,
+)
 
 
 def equivalence(a: Any, b: Any, *, eq: Callable[[Any, Any], bool]) -> VState:  # pragma: no cover

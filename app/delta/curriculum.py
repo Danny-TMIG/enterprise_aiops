@@ -1,9 +1,12 @@
 """Emit the harder training set."""
 from __future__ import annotations
-import hashlib, json, time
+
+import hashlib
+import json
+import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from app.delta.delta import Delta
 from app.delta.filter import filter_delta
@@ -64,8 +67,8 @@ class CurriculumWriter:
         for p in (self.sft_path, self.dpo_path, self.rejected_path):
             p.touch(exist_ok=True)
 
-    def emit(self, deltas: List[Delta],
-             workloads_by_id: Dict[str, Any]) -> Dict[str, int]:
+    def emit(self, deltas: list[Delta],
+             workloads_by_id: dict[str, Any]) -> dict[str, int]:
         sft_n = dpo_n = rej_n = 0
         for d in deltas:
             workload = workloads_by_id.get(d.workload_id)
@@ -110,10 +113,10 @@ class CurriculumWriter:
 
         return {"sft": sft_n, "dpo": dpo_n, "rejected": rej_n}
 
-    def _to_dict(self, obj, kind: str) -> Dict[str, Any]:
+    def _to_dict(self, obj, kind: str) -> dict[str, Any]:
         d = asdict(obj); d["kind"] = kind; d["id"] = obj.id
         return d
 
-    def _append(self, path: Path, obj: Dict[str, Any]) -> None:
+    def _append(self, path: Path, obj: dict[str, Any]) -> None:
         with path.open("a") as f:
             f.write(json.dumps(obj) + "\n")

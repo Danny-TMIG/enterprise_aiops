@@ -11,19 +11,20 @@ Reachability to Z:   every chain whose tail is Z.
 A to Z:              every chain whose head is A and tail is Z.
 """
 from __future__ import annotations
-from collections import defaultdict, deque
-from typing import Dict, Iterator, List, Set, Tuple
+
+from collections import defaultdict
+from collections.abc import Iterator
 
 from app.transchain.atoms import ALPHABET
 from app.transchain.chain import Chain
 from app.transchain.gen import all_chains
 
 
-def prefix_edges(alpha: Tuple[str, ...] = ALPHABET,
+def prefix_edges(alpha: tuple[str, ...] = ALPHABET,
                  max_len: int | None = None
-                 ) -> Iterator[Tuple[Chain, Chain]]:
+                 ) -> Iterator[tuple[Chain, Chain]]:
     top = max_len if max_len is not None else len(alpha)
-    prev: List[Chain] = []
+    prev: list[Chain] = []
     for c in all_chains(alpha, max_len=top):
         if prev and len(prev[0]) == len(c):
             prev.append(c)
@@ -48,10 +49,10 @@ def prefix_edges(alpha: Tuple[str, ...] = ALPHABET,
             prev = [c]
 
 
-def _edges_simple(alpha: Tuple[str, ...], max_len: int
-                  ) -> List[Tuple[Chain, Chain]]:
+def _edges_simple(alpha: tuple[str, ...], max_len: int
+                  ) -> list[tuple[Chain, Chain]]:
     """Direct: for each chain c and each letter x not in c, edge c -> c+x."""
-    out: List[Tuple[Chain, Chain]] = []
+    out: list[tuple[Chain, Chain]] = []
     for c in all_chains(alpha, max_len=max_len):
         for x in alpha:
             if x in c.seq:
@@ -60,14 +61,14 @@ def _edges_simple(alpha: Tuple[str, ...], max_len: int
     return out
 
 
-def transitive_closure(alpha: Tuple[str, ...] = ALPHABET,
+def transitive_closure(alpha: tuple[str, ...] = ALPHABET,
                        max_len: int | None = None
-                       ) -> Dict[str, Set[str]]:
+                       ) -> dict[str, set[str]]:
     top = max_len if max_len is not None else len(alpha)
-    reach: Dict[str, Set[str]] = defaultdict(set)
+    reach: dict[str, set[str]] = defaultdict(set)
     edges = _edges_simple(alpha, top)
-    adj: Dict[str, List[str]] = defaultdict(list)
-    nodes: Set[str] = set()
+    adj: dict[str, list[str]] = defaultdict(list)
+    nodes: set[str] = set()
     for u, v in edges:
         adj[u.id].append(v.id)
         nodes.add(u.id); nodes.add(v.id)
@@ -85,7 +86,7 @@ def transitive_closure(alpha: Tuple[str, ...] = ALPHABET,
     return reach
 
 
-def reachability(alpha: Tuple[str, ...] = ALPHABET,
+def reachability(alpha: tuple[str, ...] = ALPHABET,
                  max_len: int | None = None,
                  head: str | None = None,
                  tail: str | None = None
@@ -99,14 +100,14 @@ def reachability(alpha: Tuple[str, ...] = ALPHABET,
         yield c
 
 
-def trans_all(alpha: Tuple[str, ...] = ALPHABET,
+def trans_all(alpha: tuple[str, ...] = ALPHABET,
               max_len: int | None = None
-              ) -> Dict[str, object]:
+              ) -> dict[str, object]:
     top = max_len if max_len is not None else len(alpha)
     n = len(alpha)
     nodes = 0
     edges = 0
-    by_len: Dict[int, int] = {}
+    by_len: dict[int, int] = {}
     for c in all_chains(alpha, max_len=top):
         nodes += 1
         by_len[len(c)] = by_len.get(len(c), 0) + 1

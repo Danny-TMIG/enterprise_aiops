@@ -5,6 +5,7 @@ compiler uses, and the student's output fails the same verifier.
 We re-run the verifier here; we do not trust the probe's cache.
 """
 from __future__ import annotations
+
 from dataclasses import dataclass
 
 from app.delta.delta import Delta

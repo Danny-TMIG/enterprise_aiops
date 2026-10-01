@@ -1,4 +1,3 @@
-import re
 
 # 1. Patch app/main.py to add /cluster/status if not present
 with open("app/main.py", "r") as f:

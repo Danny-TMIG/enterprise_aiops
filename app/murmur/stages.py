@@ -1,14 +1,22 @@
 """The nine stages. Every tick runs them in order, per agent."""
 from __future__ import annotations
-import importlib
-import random
-from typing import Any, Dict, List, Optional
 
-from app.murmur.state import (
-    Signal, Situation, Forecast, Decision, Effect, Coordination,
-    Allocation, Verdict, Update, AgentState,
-)
+import importlib
+from typing import Any
+
 from app.murmur.connectors import call as tool_call
+from app.murmur.state import (
+    AgentState,
+    Allocation,
+    Coordination,
+    Decision,
+    Effect,
+    Forecast,
+    Signal,
+    Situation,
+    Update,
+    Verdict,
+)
 
 
 def _swarm():
@@ -18,7 +26,7 @@ def _swarm():
         return None
 
 
-def sense(state: AgentState, ctx: Dict[str, Any]) -> Signal:
+def sense(state: AgentState, ctx: dict[str, Any]) -> Signal:
     src = ctx.get("source", "local")
     kind = ctx.get("kind", "drift")
     base = state.baseline.get("signal", 0.0)
@@ -61,7 +69,7 @@ def decide(fc: Forecast, sit: Situation, state: AgentState) -> Decision:
 
 
 def act(d: Decision, state: AgentState,
-        tool: Optional[str] = None) -> Effect:
+        tool: str | None = None) -> Effect:
     if tool:
         res = tool_call(tool, "act",
                         {"summary": d.verb, "params": d.params})
@@ -70,7 +78,7 @@ def act(d: Decision, state: AgentState,
     return Effect(verb=d.verb, ok=True, detail="local")
 
 
-def coordinate(state: AgentState, peers: List[AgentState]) -> Coordination:
+def coordinate(state: AgentState, peers: list[AgentState]) -> Coordination:
     overlap = 0
     for p in peers:
         if abs(p.position.get("signal", 0.0)

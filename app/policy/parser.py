@@ -9,9 +9,12 @@ EXPR is a Python expression tree restricted to:
 Attribute access, calls, comprehensions, lambdas, subscript are rejected.
 """
 from __future__ import annotations
-import ast, re
+
+import ast
+import re
 from dataclasses import dataclass
-from typing import Any, Dict, List, Tuple
+from typing import Any
+
 
 @dataclass
 class Policy:
@@ -42,7 +45,7 @@ def _check_node(n):
         if isinstance(child, ast.UnaryOp) and not isinstance(child.op, _ALLOWED_UNARY):
             raise ValueError(f"banned unary: {type(child.op).__name__}")
 
-def parse_policy(src: str) -> List[Policy]:
+def parse_policy(src: str) -> list[Policy]:
     out = []
     for line in src.strip().splitlines():
         line = line.strip()
@@ -58,7 +61,7 @@ def parse_policy(src: str) -> List[Policy]:
                           message=msg or "", tree=tree))
     return out
 
-def evaluate(policies: List[Policy], ctx: Dict[str, Any]) -> Dict[str, Any]:
+def evaluate(policies: list[Policy], ctx: dict[str, Any]) -> dict[str, Any]:
     """Return the first matching rule's action. If none match: default deny."""
     for p in policies:
         code = compile(p.tree, "<policy>", "eval")

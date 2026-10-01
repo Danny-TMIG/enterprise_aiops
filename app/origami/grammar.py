@@ -1,4 +1,5 @@
-from typing import Optional, Dict, List, Union, Any
+from typing import Any
+
 
 class Symbol:
     def __init__(self, name: str):
@@ -7,14 +8,14 @@ class Symbol:
         return f"Symbol({self.name!r})"
 
 class Production:
-    def __init__(self, left: str, right: List[str]):
+    def __init__(self, left: str, right: list[str]):
         self.left = left
         self.right = right
     def __repr__(self):
         return f"Production({self.left!r} -> {self.right!r})"
 
 class OrigamiGrammar:
-    def __init__(self, rules: Optional[Dict[str, List[str]]] = None):
+    def __init__(self, rules: dict[str, list[str]] | None = None):
         self.rules = rules or {}
     def add_rule(self, lhs: str, rhs: str):
         if lhs not in self.rules:
@@ -31,7 +32,7 @@ class LoadedGrammar:
         return f"LoadedGrammar(start_symbol={self.start_symbol!r})"
 
 class WeightedGrammar:
-    def __init__(self, rules: Optional[Dict[str, List[tuple[str, float]]]] = None):
+    def __init__(self, rules: dict[str, list[tuple[str, float]]] | None = None):
         self.rules = rules or {}
     def add_rule(self, non_terminal: str, production: str, weight: float = 1.0):
         if non_terminal not in self.rules:

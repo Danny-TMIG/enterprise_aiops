@@ -1,16 +1,17 @@
 """Multiple comparison control."""
 from __future__ import annotations
-from typing import Any, Dict, List
+
+from typing import Any
 
 
-def bonferroni(alpha: float, m: int) -> Dict[str, Any]:
+def bonferroni(alpha: float, m: int) -> dict[str, Any]:
     if m <= 0:
         return {"available": True, "alpha_prime": alpha, "m": 0}
     return {"available": True, "alpha_prime": round(alpha / m, 8), "m": m}
 
 
-def benjamini_hochberg(p_values: List[float],
-                       alpha: float = 0.05) -> Dict[str, Any]:
+def benjamini_hochberg(p_values: list[float],
+                       alpha: float = 0.05) -> dict[str, Any]:
     m = len(p_values)
     if m == 0:
         return {"available": True, "rejected": [], "m": 0, "k_max": 0}

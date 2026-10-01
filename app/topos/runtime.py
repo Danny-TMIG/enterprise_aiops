@@ -6,15 +6,15 @@ Seed workflow's states map to morphisms in T; each completed run
 adds arrows to T's Relational axis.
 """
 from __future__ import annotations
-import os
-from typing import Any, Dict, List, Optional
 
-from app.topos.category import Object
-from app.topos.topos import Topos
-from app.topos.axes import Axes
+from typing import Any
+
 from app.topos.adjunction import construct_verify_adjunction
+from app.topos.axes import Axes
+from app.topos.category import Object
 from app.topos.self_similar import SelfSimilarity
 from app.topos.skills import SIGNATURE
+from app.topos.topos import Topos
 
 
 def _build_T() -> Topos:
@@ -61,10 +61,10 @@ class ToposRuntime:
             construct=lambda i: {"artifact_of": i},
             verify=lambda a: {"proof_of": a},
         )
-        self._runs: List[Dict[str, Any]] = []
+        self._runs: list[dict[str, Any]] = []
 
     # ── wiring to Mesh Seed ────────────────────────────────────
-    def record_seed_run(self, wf_dict: Dict[str, Any]) -> None:
+    def record_seed_run(self, wf_dict: dict[str, Any]) -> None:
         """Each completed Seed run becomes a morphism chain in T."""
         intent = wf_dict.get("intent") or {}
         spec = wf_dict.get("spec") or {}
@@ -94,7 +94,7 @@ class ToposRuntime:
         })
 
     # ── status ─────────────────────────────────────────────────
-    def status(self) -> Dict[str, Any]:
+    def status(self) -> dict[str, Any]:
         return {
             "signature": {"name": SIGNATURE["name"],
                           "count": SIGNATURE["count"]},
@@ -112,7 +112,7 @@ class ToposRuntime:
         }
 
 
-_RT: Optional[ToposRuntime] = None
+_RT: ToposRuntime | None = None
 
 
 def get_topos() -> ToposRuntime:

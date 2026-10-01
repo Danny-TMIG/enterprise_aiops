@@ -2,9 +2,11 @@
 import json
 import tempfile
 from pathlib import Path
+
 import pytest
+
+from dcs.sdlc_engine import BELNAP_STATES, REQUIRED_FIELDS, SDLCEngine
 from dcs.self import MANIFESTS
-from dcs.sdlc_engine import SDLCEngine, REQUIRED_FIELDS, BELNAP_STATES
 
 
 def _sdlc_path():

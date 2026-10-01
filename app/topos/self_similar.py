@@ -10,11 +10,11 @@ They all share the same Ω and the same terminal 1. The embedding
 and the classifier ⊤.
 """
 from __future__ import annotations
-from typing import Any, Dict
 
-from app.topos.category import Category, Morphism, Object
-from app.topos.topos import Topos, TERMINAL_ID, OMEGA_ID
-from app.topos.skills import SIGNATURE, LANGS, ALGOS
+from typing import Any
+
+from app.topos.category import Category, Object
+from app.topos.topos import Topos
 
 
 def embed(C: Category) -> Topos:
@@ -34,11 +34,11 @@ def is_topos(C: Category) -> bool:
     return isinstance(C, Topos) and C.is_topos()
 
 
-def lift_axes(T: Topos) -> Dict[str, Topos]:
+def lift_axes(T: Topos) -> dict[str, Topos]:
     """Every axis is itself a topos, sharing T's Ω."""
     from app.topos.axes import Axes
     axes = Axes(T)
-    out: Dict[str, Topos] = {}
+    out: dict[str, Topos] = {}
     for name, c in (("Forward", axes.F),
                     ("Inverse", axes.G),
                     ("Relational", axes.R)):
@@ -54,11 +54,11 @@ class SelfSimilarity:
         self.T = T
         self.axes = lift_axes(T)
 
-    def all_topoi(self) -> Dict[str, Topos]:
+    def all_topoi(self) -> dict[str, Topos]:
         return {"T": self.T, **self.axes}
 
-    def verify(self) -> Dict[str, Any]:
-        checks: Dict[str, Any] = {}
+    def verify(self) -> dict[str, Any]:
+        checks: dict[str, Any] = {}
         for name, Ta in self.all_topoi().items():
             checks[name] = Ta.is_topos()
         # shared classifier
@@ -69,7 +69,7 @@ class SelfSimilarity:
         checks["all_ok"] = all(checks.values())
         return checks
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "topoi": {n: Ta.stats() for n, Ta in self.all_topoi().items()},
             "verification": self.verify(),

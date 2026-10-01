@@ -1,8 +1,10 @@
 """Apoptosispoiesis — form by programmed death."""
 from __future__ import annotations  # pragma: no cover
+
 import random  # pragma: no cover
 from dataclasses import dataclass, field  # pragma: no cover
-from dcs.triad.lattice import PASS, FAIL, UNKNOWN, CONFLICT, VState  # pragma: no cover
+
+from dcs.triad.lattice import CONFLICT, FAIL, PASS, UNKNOWN, VState  # pragma: no cover
 
 
 @dataclass

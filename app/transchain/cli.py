@@ -1,16 +1,20 @@
 """Demonstrate the full trans-chain lattice."""
 from __future__ import annotations
-import sys
-from itertools import islice
 
-from app.transchain.atoms import ALPHABET, letters
+import sys
+
+from app.transchain.atoms import letters
 from app.transchain.chain import Chain
+from app.transchain.crisscross import cross_all, zigzag
 from app.transchain.gen import (
-    chains_of_length, all_chains, counts, total_count, P,
+    P,
+    all_chains,
     chains_a_to_z,
+    chains_of_length,
+    counts,
+    total_count,
 )
-from app.transchain.crisscross import zigzag, cross_all
-from app.transchain.trans import trans_all, transitive_closure
+from app.transchain.trans import trans_all
 
 
 def _hdr(t: str) -> None:
@@ -37,8 +41,8 @@ def _full_26_table() -> None:
         print(f"  depth {k:2d}: {c[k]:>32,d}")
     print(f"  total: {total_count(26):>32,d}")
     print(f"  26!  = {P(26, 26):>32,d}")
-    print(f"  note: only depths up to ~8 are enumerable in finite time.")
-    print(f"        all depths are countable, generatable, traversable.")
+    print("  note: only depths up to ~8 are enumerable in finite time.")
+    print("        all depths are countable, generatable, traversable.")
     print()
 
 

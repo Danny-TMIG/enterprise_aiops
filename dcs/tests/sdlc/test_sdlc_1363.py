@@ -1,6 +1,7 @@
 """Derived from ISO/IEC 25010 / ISO: 8.4 Usability."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

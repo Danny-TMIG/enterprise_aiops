@@ -1,7 +1,6 @@
-import json  # pragma: no cover
 import hashlib  # pragma: no cover
 import inspect  # pragma: no cover
-from pathlib import Path  # pragma: no cover
+import json  # pragma: no cover
 
 __version__ = "2.0.0"
 

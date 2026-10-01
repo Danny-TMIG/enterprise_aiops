@@ -7,14 +7,18 @@ here, its residual is recorded and its witness payload is the
 name of the artifact it would produce.
 """
 from __future__ import annotations
-import ast, hashlib, json, re, subprocess, sys, tempfile, time
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+
+import hashlib
+import re
+import time
+from collections.abc import Callable
+from dataclasses import dataclass
 
 from app.chain.witness import Witness
 from app.dominion.verdict import (
-    Verdict, PASS, FAIL, UNKNOWN, ERROR,
+    FAIL,
+    PASS,
+    Verdict,
 )
 
 
@@ -24,7 +28,7 @@ class Role:
     phase: str
     name: str
     arity: int
-    input_kind: List[str]
+    input_kind: list[str]
     output_kind: str
     residual: str
     fn: Callable[..., Witness]
@@ -39,7 +43,7 @@ def _r01_intender(intent_text: str) -> Witness:
     )
 
 
-def _r02_chooser(candidates: List[Witness]) -> Witness:
+def _r02_chooser(candidates: list[Witness]) -> Witness:
     """Select one. Rule: first non-empty wins. Chooser is external."""
     chosen = None
     for c in candidates:
@@ -108,7 +112,7 @@ def _r06_wellformer(formal: Witness) -> Witness:
     Lean-style declarations. We do not invoke Lean; we check the
     structure (comments, def, keywords)."""
     text = str(formal.payload or "")
-    ok = bool(re.search(r"^\s*(def|theorem|lemma|axiom)\b", text, re.M))
+    ok = bool(re.search(r"^\s*(def|theorem|lemma|axiom)\b", text, re.MULTILINE))
     verdict = PASS if ok else FAIL
     return Witness(
         role_id="R06", kind="WellFormedness",
@@ -146,7 +150,7 @@ def _r08_decomposer(design: Witness) -> Witness:
     )
 
 
-def _r09_composer(subs: List[Witness]) -> Witness:
+def _r09_composer(subs: list[Witness]) -> Witness:
     """N-ary composition. Produces a single composed solution name."""
     names = [(s.payload or {}).get("module", s.role_id) for s in subs]
     return Witness(
@@ -162,7 +166,7 @@ def _r10_compiler(design: Witness) -> Witness:
     """Compile a design to a small Code-AL program. Delegates to
     app.reconfig when available; falls back to a minimal record."""
     try:
-        from app.reconfig.codeal import from_tasks, CAProgram, CAInstruction
+        from app.reconfig.codeal import from_tasks
         tasks = []
         for m in (design.payload or {}).get("modules", []):
             class _T: pass
@@ -249,7 +253,7 @@ def _r15_pruner(cands: Witness) -> Witness:
 
 
 # ── Phase 6: Proof ──────────────────────────────────────────────
-def _r16_prover(parts: List[Witness]) -> Witness:
+def _r16_prover(parts: list[Witness]) -> Witness:
     """Arity 2: (spec, artifact). Emits a proof term stub; the
     residual is that the prover may fail."""
     spec, artifact = (parts + [None, None])[:2]
@@ -277,7 +281,7 @@ def _r17_checker(proof: Witness) -> Witness:
     )
 
 
-def _r18_refuter(parts: List[Witness]) -> Witness:
+def _r18_refuter(parts: list[Witness]) -> Witness:
     """Arity 2. Emits a counterexample stub. Refuter may fail."""
     spec, artifact = (parts + [None, None])[:2]
     ce = {"spec": spec.id if spec else None,
@@ -289,7 +293,7 @@ def _r18_refuter(parts: List[Witness]) -> Witness:
 
 
 # ── Phase 7: Build ──────────────────────────────────────────────
-def _r19_builder(parts: List[Witness]) -> Witness:
+def _r19_builder(parts: list[Witness]) -> Witness:
     """Arity 2: (source, environment). We hash the source and
     record the environment. No subprocess build in the demo."""
     source, env = (parts + [None, None])[:2]
@@ -305,7 +309,7 @@ def _r19_builder(parts: List[Witness]) -> Witness:
     )
 
 
-def _r20_linker(objects: List[Witness]) -> Witness:
+def _r20_linker(objects: list[Witness]) -> Witness:
     """N-ary. Symbol resolution across objects."""
     symbols = []
     for o in objects:
@@ -340,7 +344,7 @@ def _r22_loader(artifact: Witness) -> Witness:
                    residue=["T-22"], inputs=[artifact.id])
 
 
-def _r23_executor(parts: List[Witness]) -> Witness:
+def _r23_executor(parts: list[Witness]) -> Witness:
     """Arity 2: (image, input). Emits a trace stub."""
     image, inp = (parts + [None, None])[:2]
     trace = [{"step": 0, "op": "load", "ok": bool(image)},
@@ -403,7 +407,7 @@ def _r30_archiver(ledger: Witness) -> Witness:
 
 
 # ── Phase 11: Governance ────────────────────────────────────────
-def _r31_governor(parts: List[Witness]) -> Witness:
+def _r31_governor(parts: list[Witness]) -> Witness:
     """Arity 2: (policy, evidence)."""
     policy, evidence = (parts + [None, None])[:2]
     dec = {"policy": policy.id if policy else None,
@@ -414,7 +418,7 @@ def _r31_governor(parts: List[Witness]) -> Witness:
                    inputs=[p.id for p in parts if p])
 
 
-def _r32_auditor(parts: List[Witness]) -> Witness:
+def _r32_auditor(parts: list[Witness]) -> Witness:
     evidence, policy = (parts + [None, None])[:2]
     finding = {"evidence": evidence.id if evidence else None,
                "policy": policy.id if policy else None,
@@ -424,7 +428,7 @@ def _r32_auditor(parts: List[Witness]) -> Witness:
                    inputs=[p.id for p in parts if p])
 
 
-def _r33_adjudicator(parts: List[Witness]) -> Witness:
+def _r33_adjudicator(parts: list[Witness]) -> Witness:
     dispute, evidence = (parts + [None, None])[:2]
     res = {"dispute": dispute.id if dispute else None,
            "evidence": evidence.id if evidence else None,
@@ -454,7 +458,7 @@ def _r36_successor(system: Witness) -> Witness:
 
 
 # ── registry ────────────────────────────────────────────────────
-def _registry() -> Dict[str, Role]:
+def _registry() -> dict[str, Role]:
     def R(rid, phase, name, arity, in_kinds, out_kind, residual, fn):
         return Role(rid, phase, name, arity, in_kinds, out_kind, residual, fn)
 
@@ -498,7 +502,7 @@ def _registry() -> Dict[str, Role]:
     ]}
 
 
-ROLES: Dict[str, Role] = _registry()
+ROLES: dict[str, Role] = _registry()
 
 
 def get(rid: str) -> Role:
@@ -507,8 +511,8 @@ def get(rid: str) -> Role:
     return ROLES[rid]
 
 
-def by_phase() -> Dict[str, List[Role]]:
-    out: Dict[str, List[Role]] = {}
+def by_phase() -> dict[str, list[Role]]:
+    out: dict[str, list[Role]] = {}
     for r in ROLES.values():
         out.setdefault(r.phase, []).append(r)
     return out

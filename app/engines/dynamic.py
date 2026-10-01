@@ -8,9 +8,8 @@ The thresholds and step are configurable. The controller keeps
 a history so you can see the difficulty trajectory.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Dict, List
 
+from dataclasses import dataclass, field
 
 LEVELS = ("easy", "medium", "hard")
 
@@ -38,16 +37,16 @@ class DifficultyState:
 class Controller:
     high: float = 0.85
     low: float = 0.25
-    state: Dict[str, DifficultyState] = field(default_factory=dict)
-    _interval: Dict[str, list] = field(default_factory=dict)
-    history: List[Dict[str, str]] = field(default_factory=list)
+    state: dict[str, DifficultyState] = field(default_factory=dict)
+    _interval: dict[str, list] = field(default_factory=dict)
+    history: list[dict[str, str]] = field(default_factory=list)
 
     def initialise(self, kinds) -> None:
         for k in kinds:
             self.state[k] = DifficultyState(kind=k, level="medium")
         self.history.append({k: s.level for k, s in self.state.items()})
 
-    def step(self, rate_by_kind: Dict[str, float]) -> Dict[str, str]:
+    def step(self, rate_by_kind: dict[str, float]) -> dict[str, str]:
         """Narrow the difficulty interval by φ per step.
 
         For each kind, we hold a continuous difficulty value d in
@@ -83,7 +82,7 @@ class Controller:
         self.history.append(snap)
         return snap
 
-    def current(self) -> Dict[str, str]:
+    def current(self) -> dict[str, str]:
         return {k: s.level for k, s in self.state.items()}
 
     def to_dict(self) -> dict:

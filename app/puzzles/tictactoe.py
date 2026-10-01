@@ -1,7 +1,7 @@
 """Tic-tac-toe as a decision tree."""
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+
+from dataclasses import dataclass
 
 from app.puzzles.tree import DecisionTree
 
@@ -18,10 +18,10 @@ WIN_LINES = [
 
 @dataclass(frozen=True)
 class TTState:
-    board: Tuple[int, ...]
+    board: tuple[int, ...]
     to_move: int   # X or O
 
-    def winner(self) -> Optional[int]:
+    def winner(self) -> int | None:
         for a, b, c in WIN_LINES:
             if self.board[a] != EMPTY and self.board[a] == self.board[b] == self.board[c]:
                 return self.board[a]
@@ -36,7 +36,7 @@ class TicTacToe(DecisionTree):
     def initial(self) -> TTState:
         return TTState(board=(EMPTY,) * 9, to_move=X)
 
-    def actions(self, s: TTState) -> List[int]:
+    def actions(self, s: TTState) -> list[int]:
         return [i for i, v in enumerate(s.board) if v == EMPTY]
 
     def apply(self, s: TTState, a: int) -> TTState:

@@ -1,5 +1,6 @@
 from hypothesis.stateful import RuleBasedStateMachine, bundle, rule
 
+
 class EnterpriseStateVerifier(RuleBasedStateMachine):
     def __init__(self):
         super().__init__()

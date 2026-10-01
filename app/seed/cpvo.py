@@ -1,6 +1,5 @@
 """CPVO meter + record. Works with the manifest CPVORates."""
 from __future__ import annotations
-from typing import Optional
 
 from app.seed.manifest import CPVORates, Manifest  # noqa: F401
 
@@ -19,7 +18,7 @@ class CPVORecord:
 
 
 class CPVOMeter:
-    def __init__(self, rates: Optional[CPVORates] = None, **kwargs):
+    def __init__(self, rates: CPVORates | None = None, **kwargs):
         self.rates = rates or CPVORates()
         for k, v in kwargs.items():
             setattr(self, k, v)

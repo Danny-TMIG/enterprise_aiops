@@ -1,16 +1,17 @@
 """Meta-loop — propose, review, apply, verify, rollback."""
 from __future__ import annotations
+
 import ast
 import json
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from app.meta.observer import Observation, observe
-from app.meta.staging import Staging
-from app.meta.proposer import propose
 from app.meta import human as human_mod
+from app.meta.observer import Observation, observe
+from app.meta.proposer import propose
+from app.meta.staging import Staging
 
 
 @dataclass
@@ -18,8 +19,8 @@ class IterationResult:
     iteration: int
     accepted: bool
     reason: str
-    before: Optional[Dict[str, Any]] = None
-    after: Optional[Dict[str, Any]] = None
+    before: dict[str, Any] | None = None
+    after: dict[str, Any] | None = None
     diff_len: int = 0
     elapsed_s: float = 0.0
 
@@ -32,7 +33,7 @@ def _parses(source: str) -> bool:
         return False
 
 
-def _summarize(obs: Observation) -> Dict[str, Any]:
+def _summarize(obs: Observation) -> dict[str, Any]:
     return {
         "mean": round(obs.mean, 4),
         "axis_pass": obs.axis_pass,
@@ -43,10 +44,10 @@ def _summarize(obs: Observation) -> Dict[str, Any]:
 def iterate(target: str,
             harness: str = "usefulness",
             max_iters: int = 5,
-            auto: Optional[str] = None,
+            auto: str | None = None,
             root: str = ".",
             swarm=None,
-            log_path: str = ".meta_stage/loop.jsonl") -> List[IterationResult]:
+            log_path: str = ".meta_stage/loop.jsonl") -> list[IterationResult]:
     if swarm is None:
         from app.origami.swarm import Swarm
         swarm = Swarm(n_workers=1)
@@ -55,7 +56,7 @@ def iterate(target: str,
     log_p = Path(root) / log_path
     log_p.parent.mkdir(parents=True, exist_ok=True)
 
-    results: List[IterationResult] = []
+    results: list[IterationResult] = []
     real = Path(root) / target
 
     for i in range(max_iters):

@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Build the full schema. Real SQLite file. Survives restart."""
 from __future__ import annotations
-import hashlib, json, sys
+
+import hashlib
+import json
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from app.core.schema import GAPS, ddl, TABLE_NAMES
+from app.core.schema import GAPS, TABLE_NAMES, ddl
 
 ROOT = Path(__file__).resolve().parent.parent
 DB = ROOT / "data" / "fabric.sqlite3"

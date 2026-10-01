@@ -1,9 +1,8 @@
-import json
 import base64
-import pathlib
-import pytest
-import dcs.verify as verify
-import dcs.verify_intoto as verify_intoto
+import json
+
+from dcs import verify, verify_intoto
+
 
 def test_verify_with_signature_and_nacl(tmp_path, monkeypatch):
     mock_payload = tmp_path / "valid_signature_envelope.json"

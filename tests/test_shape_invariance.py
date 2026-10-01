@@ -10,6 +10,7 @@ Three tests:
                                   residual register's contents
 """
 from __future__ import annotations
+
 import dataclasses
 import sys
 

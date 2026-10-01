@@ -10,10 +10,17 @@ else.
 Self-registers as capability `quantum_learning`.
 """
 from __future__ import annotations
-import hashlib, json, os, random, re, subprocess, sys, time
-from dataclasses import dataclass, field, asdict
+
+import hashlib
+import os
+import random
+import re
+import subprocess
+import sys
+from collections.abc import Callable, Sequence
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 PY = sys.executable
@@ -41,7 +48,7 @@ class Sample:
     seed: int = 0
 
     @staticmethod
-    def from_test_id(tid: str, seed: int = 0) -> "Sample":
+    def from_test_id(tid: str, seed: int = 0) -> Sample:
         h = hashlib.sha1(tid.encode()).hexdigest()[:10]
         return Sample(id=h, kind="test", payload=tid, seed=seed)
 
@@ -64,7 +71,7 @@ class Mutation:
     diff: str = ""
     committed: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -74,9 +81,9 @@ class Report:
     committed: int
     refused: int
     final_status: str
-    mutations: List[Mutation] = field(default_factory=list)
+    mutations: list[Mutation] = field(default_factory=list)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
         d["mutations"] = [m.to_dict() for m in self.mutations]
         return d
@@ -114,12 +121,12 @@ class EvolutionSpace:
     """E: sigma' |= eps. Samples drawn before mutation, held out."""
 
     def __init__(self, samples: Sequence[Sample],
-                 rng: Optional[random.Random] = None):
+                 rng: random.Random | None = None):
         self._pool = list(samples)
         self._rng = rng or random.Random(0)
         self._used: set = set()
 
-    def sample(self) -> Optional[Sample]:
+    def sample(self) -> Sample | None:
         fresh = [s for s in self._pool if s.id not in self._used]
         if not fresh:
             return None
@@ -148,14 +155,14 @@ class EvolutionSpace:
 @dataclass
 class Snapshot:
     tests: Sequence[str]
-    files: Dict[Path, bytes] = field(default_factory=dict)
+    files: dict[Path, bytes] = field(default_factory=dict)
 
     def restore(self) -> None:
         _restore(self.files)
 
 
-def _snapshot(root: Path, tests: Sequence[str]) -> Dict[Path, bytes]:
-    out: Dict[Path, bytes] = {}
+def _snapshot(root: Path, tests: Sequence[str]) -> dict[Path, bytes]:
+    out: dict[Path, bytes] = {}
     seen: set = set()
     for t in tests:
         p = (root / t).resolve()
@@ -180,13 +187,13 @@ def _snapshot(root: Path, tests: Sequence[str]) -> Dict[Path, bytes]:
     return out
 
 
-def _restore(snap: Dict[Path, bytes]) -> None:
+def _restore(snap: dict[Path, bytes]) -> None:
     for f, data in snap.items():
         f.parent.mkdir(parents=True, exist_ok=True)
         f.write_bytes(data)
 
 
-def _changed_ok(root: Path, snap: Dict[Path, bytes]) -> bool:
+def _changed_ok(root: Path, snap: dict[Path, bytes]) -> bool:
     for f, data in snap.items():
         if not f.exists() or f.read_bytes() != data:
             return False
@@ -202,7 +209,7 @@ def _hash_tree(root: Path, tests: Sequence[str]) -> str:
     return h.hexdigest()[:16]
 
 
-def _diff(snap: Dict[Path, bytes]) -> str:
+def _diff(snap: dict[Path, bytes]) -> str:
     out = []
     for f, old in snap.items():
         if f.exists() and f.read_bytes() != old:
@@ -215,7 +222,7 @@ LINE_RE = re.compile(
     r"^(?P<file>[^:\n]+\.py):(?P<line>\d+): (?P<exc>\w+): (?P<msg>.*)$")
 
 
-def _first_failure(output: str) -> Optional[Failure]:
+def _first_failure(output: str) -> Failure | None:
     for ln in output.splitlines():
         m = LINE_RE.match(ln.strip())
         if m:
@@ -225,7 +232,7 @@ def _first_failure(output: str) -> Optional[Failure]:
 
 
 # ── mutation operator ───────────────────────────────────────────────
-Fixer = Callable[[Failure, Snapshot], Optional[Callable[[], None]]]
+Fixer = Callable[[Failure, Snapshot], Callable[[], None] | None]
 
 
 def mutate(state: Any, failure: Failure, sample: Sample,
@@ -310,9 +317,16 @@ class QuantumLoop:
 
 
 __all__ = [
-    "ClosureSpace", "EvolutionSpace", "QuantumLoop",
-    "Failure", "Sample", "Verdict", "Mutation", "Report",
-    "Snapshot", "mutate",
+    "ClosureSpace",
+    "EvolutionSpace",
+    "Failure",
+    "Mutation",
+    "QuantumLoop",
+    "Report",
+    "Sample",
+    "Snapshot",
+    "Verdict",
+    "mutate",
 ]
 
 
@@ -324,7 +338,7 @@ def _self_register() -> None:
         return
 
     @register("quantum_learning")
-    def _entrypoint(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _entrypoint(*args: Any, **kwargs: Any) -> dict[str, Any]:
         return {
             "module": "app.core.quantum_learning",
             "classes": ["ClosureSpace", "EvolutionSpace", "QuantumLoop"],

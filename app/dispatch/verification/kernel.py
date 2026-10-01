@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from app.dispatch.verification.base import Prover, ProverResult
 
 
@@ -28,7 +29,9 @@ class Lean4Kernel(Prover):
                 error="lean binary not on PATH",
                 evidence=[{"type": "source", "value": lean_src[:200]}],
             )
-        import subprocess, tempfile, os
+        import os
+        import subprocess
+        import tempfile
         with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False) as f:
             f.write(lean_src)
             path = f.name

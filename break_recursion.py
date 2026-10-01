@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-import ast, os, re, shutil, subprocess, sys, time
+import ast
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -25,12 +31,12 @@ save("dcs/conform.py")
 s = p.read_text()
 
 if "_CONFORM_ACTIVE" not in s:
-    m = re.search(r'^(def |class )', s, re.M)
+    m = re.search(r'^(def |class )', s, re.MULTILINE)
     if m:
         s = s[:m.start()] + "_CONFORM_ACTIVE = False\n\n" + s[m.start():]
 
 # rename the run() definition, keep callers working via alias at end
-s, n = re.subn(r'^def run\(', 'def _run_inner(', s, count=1, flags=re.M)
+s, n = re.subn(r'^def run\(', 'def _run_inner(', s, count=1, flags=re.MULTILINE)
 assert n == 1, "no `def run(` found in dcs/conform.py"
 
 s += '''

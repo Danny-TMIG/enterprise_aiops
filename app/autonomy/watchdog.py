@@ -1,9 +1,12 @@
 """Watchdog — periodically samples probes and feeds the decision engine."""
 from __future__ import annotations
-import threading, time
+
+import threading
+import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 from app.autonomy.decisions import Decision, DecisionEngine
 
@@ -15,28 +18,28 @@ def _now() -> str:
 @dataclass
 class Probe:
     name: str
-    fn: Callable[[], Dict[str, Any]]
+    fn: Callable[[], dict[str, Any]]
     interval_s: float = 5.0
 
 
 class Watchdog:
-    def __init__(self, engine: Optional[DecisionEngine] = None, probes: Optional[List[Probe]] = None):
+    def __init__(self, engine: DecisionEngine | None = None, probes: list[Probe] | None = None):
         if engine is None:
             from app.autonomy.decisions import DecisionEngine
             engine = DecisionEngine()
         self.engine = engine
-        self.probes: List[Probe] = probes or []
-        self._thread: Optional[threading.Thread] = None
+        self.probes: list[Probe] = probes or []
+        self._thread: threading.Thread | None = None
         self._stop = threading.Event()
-        self._last: Dict[str, Dict[str, Any]] = {}
-        self._decisions: List[Decision] = []
+        self._last: dict[str, dict[str, Any]] = {}
+        self._decisions: list[Decision] = []
 
-    def add(self, probe: Probe) -> "Watchdog":
+    def add(self, probe: Probe) -> Watchdog:
         self.probes.append(probe)
         return self
 
-    def snapshot(self) -> Dict[str, Any]:
-        obs: Dict[str, Any] = {"ts": _now()}
+    def snapshot(self) -> dict[str, Any]:
+        obs: dict[str, Any] = {"ts": _now()}
         for p in self.probes:
             try:
                 obs[p.name] = p.fn()
@@ -44,7 +47,7 @@ class Watchdog:
                 obs[p.name] = {"ok": False, "error": type(exc).__name__}
         return obs
 
-    def step(self) -> List[Decision]:
+    def step(self) -> list[Decision]:
         obs = self.snapshot()
         self._last = obs
         ds = self.engine.evaluate_all(obs) if self.engine is not None else []
@@ -72,14 +75,14 @@ class Watchdog:
                 pass
             time.sleep(1.0)
 
-    def last_observation(self) -> Dict[str, Any]:
+    def last_observation(self) -> dict[str, Any]:
         return self._last
 
-    def recent_decisions(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def recent_decisions(self, limit: int = 50) -> list[dict[str, Any]]:
         return [d.to_dict() for d in self._decisions[-limit:]]
 
 
-    def pulse(self) -> Dict[str, Any]:
+    def pulse(self) -> dict[str, Any]:
         """Synchronous sample: run probes, evaluate, return the observation.
 
         Unlike `step()`, which returns the list of Decisions, `pulse`

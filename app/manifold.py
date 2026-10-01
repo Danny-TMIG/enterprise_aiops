@@ -1,10 +1,12 @@
-import time
-import json
 import hashlib
-import asyncio
-from typing import Dict, Any, Callable, List
-from fastapi import Request, HTTPException
+import json
+import time
+from collections.abc import Callable
+from typing import Any
+
 import mlx.core as mx
+from fastapi import HTTPException
+
 
 class EnterpriseStateMachine:
     """
@@ -14,7 +16,7 @@ class EnterpriseStateMachine:
     def __init__(self):
         self._lock = False
         self.state = "INTENT_CAPTURED"
-        self.audit_ledger: List[Dict[str, Any]] = []
+        self.audit_ledger: list[dict[str, Any]] = []
 
     def acquire_lock(self, pipeline_id: str) -> bool:
         if self._lock:
@@ -48,11 +50,11 @@ class QuantizedManifoldRouter:
     latent space projection over unified memory tensors.
     """
     def __init__(self):
-        self.centroids: Dict[str, mx.array] = {}
-        self.handlers: Dict[str, Callable] = {}
+        self.centroids: dict[str, mx.array] = {}
+        self.handlers: dict[str, Callable] = {}
         self.state_machine = EnterpriseStateMachine()
 
-    def register_manifold(self, intent_name: str, reference_vector: List[int], handler: Callable) -> None:
+    def register_manifold(self, intent_name: str, reference_vector: list[int], handler: Callable) -> None:
         """
         Register a capability centroid quantized to INT8 in unified memory.
         """
@@ -68,7 +70,7 @@ class QuantizedManifoldRouter:
         raw_ints = [b % 128 - 64 for b in extended]  # map to signed int8 range
         return mx.array(raw_ints, dtype=mx.int8)
 
-    async def resolve_and_dispatch(self, raw_intent_string: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    async def resolve_and_dispatch(self, raw_intent_string: str, payload: dict[str, Any]) -> dict[str, Any]:
         """
         Dissolves URL paths by executing parallel quantized dot-product scoring
         across all registered manifold centroids in unified memory.

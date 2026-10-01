@@ -16,13 +16,12 @@ map. We define a canonical encoder: bytes → chain of ε nodes
 deterministic.
 """
 from __future__ import annotations
-import hashlib
-from dataclasses import dataclass, field
-from typing import Any, Dict, List
 
-from app.combinator.graph import Graph, G, D, E
-from app.combinator.reduce import normalise
+from dataclasses import dataclass, field
+
 from app.combinator.canonical import hash_graph
+from app.combinator.graph import E, G, Graph
+from app.combinator.reduce import normalise
 
 
 def bytes_to_graph(b: bytes) -> Graph:
@@ -47,9 +46,9 @@ def bytes_to_graph(b: bytes) -> Graph:
 class FixedPoint:
     iterations: int
     stable: bool
-    hashes: List[str] = field(default_factory=list)
-    steps: List[int] = field(default_factory=list)
-    terminated: List[bool] = field(default_factory=list)
+    hashes: list[str] = field(default_factory=list)
+    steps: list[int] = field(default_factory=list)
+    terminated: list[bool] = field(default_factory=list)
 
 
 def self_apply(seed: Graph, max_iterations: int = 6) -> FixedPoint:

@@ -1,24 +1,26 @@
 """Autonomous runtime — one process-wide instance."""
 from __future__ import annotations
+
 import os
-from typing import Any, Dict, Optional
+from typing import Any
 
 from app.autonomy.decisions import DecisionEngine
 from app.autonomy.healer import Healer
-from app.autonomy.watchdog import Probe, Watchdog
 from app.autonomy.policies import POLICIES
+from app.autonomy.watchdog import Probe, Watchdog
 
-_RUNTIME: Optional["Runtime"] = None
+_RUNTIME: Runtime | None = None
 
 
-def _probe_db() -> Dict[str, Any]:
+def _probe_db() -> dict[str, Any]:
     from app.db.health import db_health
     return db_health()
 
 
-def _probe_metrics() -> Dict[str, Any]:
+def _probe_metrics() -> dict[str, Any]:
     # Lightweight self-observed metrics. No external I/O.
-    import resource, os
+    import os
+    import resource
     rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     # macOS reports bytes, Linux reports KB
     rss_mb = rss / (1024 * 1024) if rss > 1024 * 1024 else rss / 1024
@@ -29,7 +31,7 @@ def _probe_metrics() -> Dict[str, Any]:
     }
 
 
-def _probe_kill_switch() -> Dict[str, Any]:
+def _probe_kill_switch() -> dict[str, Any]:
     # Simulated; the C2 kill switch is per-instance, so we expose
     # a process-wide env-controlled view.
     engaged = os.environ.get("TMIG_KILL_SWITCH", "0") == "1"
@@ -57,7 +59,7 @@ class Runtime:
     def stop(self) -> None:
         self.watchdog.stop()
 
-    def step(self) -> Dict[str, Any]:
+    def step(self) -> dict[str, Any]:
         decisions = self.watchdog.step()
         applied = []
         for d in decisions:
@@ -85,8 +87,8 @@ class AutonomyRuntime:
     SystemHealer (runs registered health checks and applies fixes).
     """
     def __init__(self, watchdog=None, healer=None):
-        from app.autonomy.watchdog import Watchdog
         from app.autonomy.healer import SystemHealer
+        from app.autonomy.watchdog import Watchdog
         self.watchdog = watchdog or Watchdog()
         self.healer = healer or SystemHealer()
         self.steps: int = 0

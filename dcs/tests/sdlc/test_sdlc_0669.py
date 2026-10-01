@@ -1,6 +1,7 @@
 """Derived from OWASP Top 10 / OWASP: A02 Crypto."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

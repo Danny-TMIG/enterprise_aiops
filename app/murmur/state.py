@@ -1,8 +1,9 @@
 """State — the smallest thing an agent carries between ticks."""
 from __future__ import annotations
+
 import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -10,7 +11,7 @@ class Signal:
     source: str
     kind: str
     value: float
-    payload: Dict[str, Any] = field(default_factory=dict)
+    payload: dict[str, Any] = field(default_factory=dict)
     ts: float = field(default_factory=time.time)
 
 
@@ -19,7 +20,7 @@ class Situation:
     label: str
     confidence: float
     deviation: float
-    features: Dict[str, float] = field(default_factory=dict)
+    features: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -33,7 +34,7 @@ class Forecast:
 @dataclass
 class Decision:
     verb: str
-    params: Dict[str, Any] = field(default_factory=dict)
+    params: dict[str, Any] = field(default_factory=dict)
     urgency: float = 0.0
 
 
@@ -42,15 +43,15 @@ class Effect:
     verb: str
     ok: bool
     detail: str = ""
-    tool: Optional[str] = None
+    tool: str | None = None
     ts: float = field(default_factory=time.time)
 
 
 @dataclass
 class Coordination:
-    peers: List[str] = field(default_factory=list)
+    peers: list[str] = field(default_factory=list)
     overlaps: int = 0
-    delegates: List[str] = field(default_factory=list)
+    delegates: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -77,13 +78,13 @@ class Update:
 @dataclass
 class AgentState:
     agent_id: str
-    position: Dict[str, float] = field(default_factory=dict)
-    velocity: Dict[str, float] = field(default_factory=dict)
-    baseline: Dict[str, float] = field(default_factory=dict)
-    thresholds: Dict[str, float] = field(default_factory=dict)
-    weights: Dict[str, float] = field(default_factory=dict)
-    last_effect: Optional[Effect] = None
-    last_verdict: Optional[Verdict] = None
+    position: dict[str, float] = field(default_factory=dict)
+    velocity: dict[str, float] = field(default_factory=dict)
+    baseline: dict[str, float] = field(default_factory=dict)
+    thresholds: dict[str, float] = field(default_factory=dict)
+    weights: dict[str, float] = field(default_factory=dict)
+    last_effect: Effect | None = None
+    last_verdict: Verdict | None = None
     ticks: int = 0
     last_tick_ts: float = field(default_factory=time.time)
 

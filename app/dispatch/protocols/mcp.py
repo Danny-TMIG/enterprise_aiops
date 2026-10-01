@@ -10,9 +10,10 @@ The mesh exposes its own capabilities as MCP tools — nothing here
 depends on the Anthropic SDK.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
 
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from typing import Any
 
 PROTOCOL_VERSION = "2024-11-05"
 
@@ -21,10 +22,10 @@ PROTOCOL_VERSION = "2024-11-05"
 class MCPTool:
     name: str
     description: str
-    input_schema: Dict[str, Any]
-    fn: Callable[[Dict[str, Any]], Any]
+    input_schema: dict[str, Any]
+    fn: Callable[[dict[str, Any]], Any]
 
-    def descriptor(self) -> Dict[str, Any]:
+    def descriptor(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "description": self.description,
@@ -36,13 +37,13 @@ class MCPTool:
 class MCPServer:
     name: str = "tmig-mesh"
     version: str = "0.1.0"
-    tools: Dict[str, MCPTool] = field(default_factory=dict)
+    tools: dict[str, MCPTool] = field(default_factory=dict)
 
-    def register(self, tool: MCPTool) -> "MCPServer":
+    def register(self, tool: MCPTool) -> MCPServer:
         self.tools[tool.name] = tool
         return self
 
-    def handle(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def handle(self, method: str, params: dict[str, Any]) -> dict[str, Any]:
         if method == "initialize":
             return {
                 "protocolVersion": PROTOCOL_VERSION,
@@ -68,7 +69,7 @@ class MCPServer:
                      "text": f"tool error: {type(exc).__name__}"}]}
         raise ValueError(f"unknown method: {method}")
 
-    def jsonrpc(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+    def jsonrpc(self, payload: dict[str, Any]) -> dict[str, Any]:
         rid = payload.get("id")
         try:
             result = self.handle(payload.get("method", ""),
@@ -93,18 +94,18 @@ class MCPClient:
     server: MCPServer
     next_id: int = 1
 
-    def _rpc(self, method: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def _rpc(self, method: str, params: dict[str, Any]) -> dict[str, Any]:
         payload = {"jsonrpc": "2.0", "id": self.next_id,
                    "method": method, "params": params}
         self.next_id += 1
         return self.server.jsonrpc(payload)
 
-    def initialize(self) -> Dict[str, Any]:
+    def initialize(self) -> dict[str, Any]:
         return self._rpc("initialize", {})
 
-    def list_tools(self) -> List[Dict[str, Any]]:
+    def list_tools(self) -> list[dict[str, Any]]:
         r = self._rpc("tools/list", {})
         return r.get("result", {}).get("tools", [])
 
-    def call(self, name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+    def call(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         return self._rpc("tools/call", {"name": name, "arguments": arguments})

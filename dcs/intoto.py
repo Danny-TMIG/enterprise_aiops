@@ -66,7 +66,9 @@ def to_dsse(statement: dict) -> dict:  # pragma: no cover
         return envelope  # pragma: no cover
 
     try:
-        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey  # pragma: no cover
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PrivateKey,  # pragma: no cover
+        )
 
         key_hex = Path(key_path).read_text().strip()
         priv = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(key_hex))

@@ -1,32 +1,26 @@
 """Universal bootstrap manager for dispatchpatch subpackages and registries."""
 
-from app.dispatchpatch.evidence.registry import EvidenceRegistry
 from app.dispatchpatch.evidence.aar import AAREvidence
 from app.dispatchpatch.evidence.novafabric import NovaFabricEvidence
-
-from app.dispatchpatch.models.registry import ModelRegistry
+from app.dispatchpatch.evidence.registry import EvidenceRegistry
 from app.dispatchpatch.models.local_mlx import LocalMLXModel
-
-from app.dispatchpatch.orchestration.registry import OrchestratorRegistry
+from app.dispatchpatch.models.registry import ModelRegistry
 from app.dispatchpatch.orchestration.google import GoogleOrchestrator
 from app.dispatchpatch.orchestration.microsoft import MicrosoftOrchestrator
+from app.dispatchpatch.orchestration.registry import OrchestratorRegistry
 from app.dispatchpatch.orchestration.salesforce import SalesforceOrchestrator
 from app.dispatchpatch.orchestration.servicenow import ServiceNowOrchestrator
-
 from app.dispatchpatch.protocols.a2a import A2AProtocol
 from app.dispatchpatch.protocols.mcp import MCPProtocol
-
-from app.dispatchpatch.scan.registry import ScanRegistry
+from app.dispatchpatch.runtime import run_dispatch_patch
 from app.dispatchpatch.scan.codacy import CodacyScan
 from app.dispatchpatch.scan.codeql import CodeQLScan
-
-from app.dispatchpatch.verification.registry import VerificationRegistry
+from app.dispatchpatch.scan.registry import ScanRegistry
 from app.dispatchpatch.verification.kernel import KernelVerification
 from app.dispatchpatch.verification.lean4agent import Lean4AgentVerification
 from app.dispatchpatch.verification.leandojo import LeanDojoVerification
 from app.dispatchpatch.verification.prove2me import Prove2MeVerification
-
-from app.dispatchpatch.runtime import run_dispatch_patch
+from app.dispatchpatch.verification.registry import VerificationRegistry
 
 
 class DispatchPatchBootstrap:

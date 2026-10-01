@@ -17,11 +17,14 @@ Built-in queries:
     Q8  dead_home       home path that no longer exists on disk
 """
 from __future__ import annotations
-import importlib, json, sqlite3, threading
+
+import json
+import sqlite3
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 DB = ROOT / "data" / "fabric.sqlite3"
@@ -32,7 +35,7 @@ class Finding:
     q: str
     code: str = ""
     detail: str = ""
-    data: Dict[str, Any] = field(default_factory=dict)
+    data: dict[str, Any] = field(default_factory=dict)
 
 
 # ── helpers ─────────────────────────────────────────────────────
@@ -52,12 +55,12 @@ def _impl_present(code: str) -> bool:
 
 
 # ── Q1: real rows with no registered impl ────────────────────────
-def q1_ghost_real() -> List[Finding]:
+def q1_ghost_real() -> list[Finding]:
     con = _con()
     rows = [r[0] for r in con.execute(
         "SELECT code FROM capabilities WHERE status='real' ORDER BY code")]
     con.close()
-    out: List[Finding] = []
+    out: list[Finding] = []
     for code in rows:
         if not _impl_present(code):
             out.append(Finding(q="ghost_real", code=code))
@@ -65,13 +68,13 @@ def q1_ghost_real() -> List[Finding]:
 
 
 # ── Q2: real rows whose home file does not exist ─────────────────
-def q2_orphan_home() -> List[Finding]:
+def q2_orphan_home() -> list[Finding]:
     con = _con()
     rows = list(con.execute(
         "SELECT code, home FROM capabilities WHERE status='real' "
         "AND home!='' ORDER BY code"))
     con.close()
-    out: List[Finding] = []
+    out: list[Finding] = []
     for code, home in rows:
         p = ROOT / home
         if not p.exists():
@@ -82,7 +85,7 @@ def q2_orphan_home() -> List[Finding]:
 
 
 # ── Q3: real rows never dispatched in ledger ─────────────────────
-def q3_no_dispatch() -> List[Finding]:
+def q3_no_dispatch() -> list[Finding]:
     con = _con()
     real = [r[0] for r in con.execute(
         "SELECT code FROM capabilities WHERE status='real' ORDER BY code")]
@@ -101,7 +104,7 @@ def q3_no_dispatch() -> List[Finding]:
 
 
 # ── Q4: aspirational rows with a registered impl ─────────────────
-def q4_stale_asp() -> List[Finding]:
+def q4_stale_asp() -> list[Finding]:
     con = _con()
     asp = [r[0] for r in con.execute(
         "SELECT code FROM capabilities WHERE status='aspirational' ORDER BY code")]
@@ -110,14 +113,14 @@ def q4_stale_asp() -> List[Finding]:
 
 
 # ── Q5: every generated fn code and its _IMPL state ──────────────
-def q5_genmod_gap() -> List[Finding]:
+def q5_genmod_gap() -> list[Finding]:
     con = _con()
     rows = list(con.execute(
         "SELECT code, home FROM capabilities "
         "WHERE home LIKE 'app/generated/%' OR code LIKE 'genmod_%' "
         "ORDER BY code"))
     con.close()
-    out: List[Finding] = []
+    out: list[Finding] = []
     for code, home in rows:
         ok = _impl_present(code)
         if not ok:
@@ -127,7 +130,7 @@ def q5_genmod_gap() -> List[Finding]:
 
 
 # ── Q6: N real rows sharing one home file ────────────────────────
-def q6_dup_home() -> List[Finding]:
+def q6_dup_home() -> list[Finding]:
     con = _con()
     rows = list(con.execute(
         "SELECT home, COUNT(*), GROUP_CONCAT(code) FROM capabilities "
@@ -149,11 +152,11 @@ def q6_dup_home() -> List[Finding]:
 
 
 # ── Q7: gaps in events.seq ───────────────────────────────────────
-def q7_chain_gap() -> List[Finding]:
+def q7_chain_gap() -> list[Finding]:
     con = _con()
     seqs = [r[0] for r in con.execute("SELECT seq FROM events ORDER BY seq")]
     con.close()
-    out: List[Finding] = []
+    out: list[Finding] = []
     expected = 1
     for s in seqs:
         if s != expected:
@@ -165,12 +168,12 @@ def q7_chain_gap() -> List[Finding]:
 
 
 # ── Q8: home path referenced but missing on disk ─────────────────
-def q8_dead_home() -> List[Finding]:
+def q8_dead_home() -> list[Finding]:
     con = _con()
     rows = list(con.execute(
         "SELECT DISTINCT home FROM capabilities WHERE home!='' ORDER BY home"))
     con.close()
-    out: List[Finding] = []
+    out: list[Finding] = []
     for (home,) in rows:
         p = ROOT / home
         if not p.exists():
@@ -178,7 +181,7 @@ def q8_dead_home() -> List[Finding]:
     return out
 
 
-QUERIES: Dict[str, Callable[[], List[Finding]]] = {
+QUERIES: dict[str, Callable[[], list[Finding]]] = {
     "Q1_ghost_real":  q1_ghost_real,
     "Q2_orphan_home": q2_orphan_home,
     "Q3_no_dispatch": q3_no_dispatch,
@@ -190,8 +193,8 @@ QUERIES: Dict[str, Callable[[], List[Finding]]] = {
 }
 
 
-def run_all(*, workers: int = 8) -> Dict[str, List[Finding]]:
-    results: Dict[str, List[Finding]] = {}
+def run_all(*, workers: int = 8) -> dict[str, list[Finding]]:
+    results: dict[str, list[Finding]] = {}
     with ThreadPoolExecutor(max_workers=workers) as ex:
         fut = {ex.submit(fn): name for name, fn in QUERIES.items()}
         for f in as_completed(fut):
@@ -210,7 +213,7 @@ def _self_register() -> None:
         return
 
     @register("swarm")
-    def _entry(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _entry(*args: Any, **kwargs: Any) -> dict[str, Any]:
         which = kwargs.get("which")
         if which:
             fn = QUERIES.get(which)
@@ -226,4 +229,4 @@ def _self_register() -> None:
 
 _self_register()
 
-__all__ = ["QUERIES", "run_all", "Finding"]
+__all__ = ["QUERIES", "Finding", "run_all"]

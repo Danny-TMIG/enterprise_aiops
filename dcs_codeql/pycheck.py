@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """DCS grounded-claims checker. Walks dcs/ only. Skips third-party."""
 from __future__ import annotations
-import ast, sys
+
+import ast
+import sys
 from pathlib import Path
 
 SKIP_DIRS = {".venv", "site-packages", "__pycache__", ".lanes",

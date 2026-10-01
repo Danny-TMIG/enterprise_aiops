@@ -1,6 +1,9 @@
 """Walk models — memory, exclusion, persistence, dimensionality."""
-import math, random
+import math
+import random
+
 from dcs.generate import requirement
+
 
 def correlated_walk(n=500, kappa=0.9, seed=0):
     rng = random.Random(seed)
@@ -93,6 +96,7 @@ def test_persistent_far():
              section="nature.walk", hats=["SCI","QT"], criticality="SHOULD")
 def test_levy_2d_heavy_tail():
     import random
+
     from dcs.nature.foraging import levy_step
     rng = random.Random(4)
     steps = [abs(levy_step(rng, 1.5)) for _ in range(5000)]

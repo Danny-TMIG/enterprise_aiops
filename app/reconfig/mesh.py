@@ -1,8 +1,8 @@
 """The mesh: capability-advertising nodes and content-addressed packets."""
 
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
 
 from app.reconfig.codeal import CAProgram
 
@@ -10,7 +10,7 @@ from app.reconfig.codeal import CAProgram
 @dataclass
 class Node:
     id: str
-    capabilities: List[str]
+    capabilities: list[str]
     load: int = 0
 
 
@@ -19,18 +19,18 @@ class Packet:
     id: str
     program: CAProgram
     origin: str
-    route: List[str] = field(default_factory=list)
+    route: list[str] = field(default_factory=list)
 
 
 class Mesh:
     def __init__(self) -> None:
-        self.nodes: Dict[str, Node] = {}
-        self.inflight: List[Packet] = []
+        self.nodes: dict[str, Node] = {}
+        self.inflight: list[Packet] = []
 
     def register(self, node: Node) -> None:
         self.nodes[node.id] = node
 
-    def route(self, p: Packet) -> Optional[Node]:
+    def route(self, p: Packet) -> Node | None:
         """Deterministic: pick the least-loaded node that advertises
         every op present in the program."""
         ops = {i.op for i in p.program.instructions}

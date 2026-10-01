@@ -1,14 +1,10 @@
 from __future__ import annotations
-import argparse, json, sys
-from pathlib import Path
 
-from app.botnetmastery.c2 import C2Server
-from app.botnetmastery.simulation import Simulation
+import argparse
 
 
 def main(
 argv=None):
-    import argparse
     parser = argparse.ArgumentParser(prog="botnetmastery")
     parser.add_argument("command", nargs="?", default="status")
     parser.parse_args(argv)

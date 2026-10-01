@@ -1,6 +1,7 @@
 """Derived from OWASP Proactive Controls / OWASP: C3 Secure DB."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

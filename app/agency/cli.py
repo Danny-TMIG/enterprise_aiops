@@ -5,12 +5,8 @@ records. The gate returns a Decision using the atlas's own
 RESULT STATES.
 """
 from __future__ import annotations
-import hashlib, json, os, sys, tempfile, time
-from pathlib import Path
 
-from app.agency.primitives import Agency, License, Certification, Expertise
-from app.agency.registry import Registry
-from app.agency.gate import gate
+import hashlib
 
 
 def _h(*p: str) -> str:

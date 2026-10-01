@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Deterministic SBOM: sha256 of every source file under app/ and scripts/."""
 from __future__ import annotations
-import hashlib, json, os, sys
+
+import hashlib
+import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent

@@ -1,7 +1,6 @@
 """Auto-generated capabilities implementations."""
 from __future__ import annotations
-import math
-import json
+
 
 def run_adversarial_0(*args, **kwargs):
     return {'ok': True, 'code': 'adversarial', 'args': args, 'kwargs': kwargs}

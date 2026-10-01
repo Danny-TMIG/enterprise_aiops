@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 
 def _now() -> str:
@@ -12,11 +13,11 @@ def _now() -> str:
 class ScanResult:
     scanner: str
     status: str
-    findings: List[Dict[str, Any]] = field(default_factory=list)
+    findings: list[dict[str, Any]] = field(default_factory=list)
     error: Optional[str] = None
     ts: str = field(default_factory=_now)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "scanner": self.scanner, "status": self.status,
             "findings": self.findings, "error": self.error, "ts": self.ts,

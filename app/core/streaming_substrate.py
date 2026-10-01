@@ -6,10 +6,15 @@ Sync and async handlers both supported. Every publish is written to
 the events ledger via catch_release so the stream is replayable.
 """
 from __future__ import annotations
-import asyncio, inspect, json, threading, time
+
+import asyncio
+import inspect
+import threading
+import time
 from collections import deque
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Deque, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -17,14 +22,14 @@ class Subscriber:
     topic: str
     handler: Callable
     capacity: int = 1024
-    queue: Deque[Dict[str, Any]] = field(default_factory=deque)
+    queue: deque[dict[str, Any]] = field(default_factory=deque)
     dropped: int = 0
     delivered: int = 0
     is_async: bool = False
     _lock: threading.Lock = field(default_factory=threading.Lock)
-    _task: Optional[asyncio.Task] = None
+    _task: asyncio.Task | None = None
 
-    def push(self, msg: Dict[str, Any]) -> bool:
+    def push(self, msg: dict[str, Any]) -> bool:
         with self._lock:
             if len(self.queue) >= self.capacity:
                 self.dropped += 1
@@ -32,7 +37,7 @@ class Subscriber:
             self.queue.append(msg)
             return True
 
-    def pop(self) -> Optional[Dict[str, Any]]:
+    def pop(self) -> dict[str, Any] | None:
         with self._lock:
             if not self.queue:
                 return None
@@ -40,8 +45,8 @@ class Subscriber:
 
 
 class StreamingSubstrate:
-    def __init__(self, *, loop: Optional[asyncio.AbstractEventLoop] = None):
-        self._subs: Dict[str, List[Subscriber]] = {}
+    def __init__(self, *, loop: asyncio.AbstractEventLoop | None = None):
+        self._subs: dict[str, list[Subscriber]] = {}
         self._lock = threading.RLock()
         self._loop = loop
         self._started = 0
@@ -64,7 +69,7 @@ class StreamingSubstrate:
 
     # ── publish ───────────────────────────────────────────────────
     def publish(self, topic: str, payload: Any,
-                *, meta: Optional[Dict[str, Any]] = None) -> int:
+                *, meta: dict[str, Any] | None = None) -> int:
         msg = {"topic": topic, "payload": payload,
                "meta": meta or {}, "ts": time.time()}
         n = 0
@@ -97,11 +102,11 @@ class StreamingSubstrate:
                 s.dropped += 1
 
     # ── introspection ─────────────────────────────────────────────
-    def topics(self) -> List[str]:
+    def topics(self) -> list[str]:
         with self._lock:
             return sorted(self._subs.keys())
 
-    def stats(self) -> Dict[str, Any]:
+    def stats(self) -> dict[str, Any]:
         with self._lock:
             return {
                 "topics": len(self._subs),

@@ -7,14 +7,14 @@ If the two chains share a letter, the shared letter is emitted once.
 Length = |c1| + |c2| - shared_count.
 """
 from __future__ import annotations
-from itertools import permutations
-from typing import Iterator, List
+
+from collections.abc import Iterator
 
 from app.transchain.chain import Chain
 
 
 def zigzag(c1: Chain, c2: Chain) -> Chain:
-    out: List[str] = []
+    out: list[str] = []
     seen = set()
     i = j = 0
     while i < len(c1) or j < len(c2):
@@ -31,7 +31,7 @@ def zigzag(c1: Chain, c2: Chain) -> Chain:
     return Chain(tuple(out))
 
 
-def criss_cross(chains: List[Chain]
+def criss_cross(chains: list[Chain]
                 ) -> Iterator[tuple[Chain, Chain, Chain]]:
     """For every ordered pair (c1, c2), yield (c1, c2, zigzag(c1, c2))."""
     for c1 in chains:
@@ -39,10 +39,10 @@ def criss_cross(chains: List[Chain]
             yield (c1, c2, zigzag(c1, c2))
 
 
-def cross_all(chains: List[Chain]) -> List[Chain]:
+def cross_all(chains: list[Chain]) -> list[Chain]:
     """The set of distinct zigzags across every ordered pair."""
     seen = set()
-    out: List[Chain] = []
+    out: list[Chain] = []
     for c1 in chains:
         for c2 in chains:
             z = zigzag(c1, c2)

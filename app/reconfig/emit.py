@@ -1,9 +1,8 @@
 """Emit concrete code from a CAPProgram."""
 
 from __future__ import annotations
-from typing import Any, Dict, List
 
-from app.reconfig.codeal import CAProgram, CAInstruction
+from app.reconfig.codeal import CAProgram
 
 
 def emit_python(prog: CAProgram) -> str:
@@ -24,14 +23,14 @@ def emit_python(prog: CAProgram) -> str:
                 tgt = slots.get("target", "memory")
                 lines.append(f"    env.get('store_{tgt}', env.setdefault)('{src}', state.get('{src}'))")
             case "TRAIN":
-                lines.append(f"    state['model'] = env['trainer'].fit(env.get('data', []))")
+                lines.append("    state['model'] = env['trainer'].fit(env.get('data', []))")
             case "EVALUATE":
-                lines.append(f"    state['metrics'] = env['evaluator'](state['model'])")
+                lines.append("    state['metrics'] = env['evaluator'](state['model'])")
             case "SCHEDULE":
                 every = slots.get("every", "daily")
                 lines.append(f"    state['schedule'] = '{every}'")
             case "FETCH":
-                lines.append(f"    state['events'] = env['source'].read()")
+                lines.append("    state['events'] = env['source'].read()")
             case "FILTER":
                 by = slots.get("by", "key")
                 lines.append(f"    state['matched'] = [e for e in state['events'] if e.get('{by}')]")
@@ -39,7 +38,7 @@ def emit_python(prog: CAProgram) -> str:
                 to = slots.get("to", "slack")
                 lines.append(f"    state['routed'] = env['router'].send('{to}', state['matched'])")
             case "RECORD":
-                lines.append(f"    env['evidence'].record(state.get('routed', state))")
+                lines.append("    env['evidence'].record(state.get('routed', state))")
             case _:
                 lines.append(f"    # op {ins.op} slots={slots}")
     lines.append("    return state")
@@ -118,7 +117,7 @@ def emit_rl(prog: CAProgram) -> str:
     )
 
 
-def emit_all(prog: CAProgram) -> Dict[str, str]:
+def emit_all(prog: CAProgram) -> dict[str, str]:
     return {
         "python": emit_python(prog),
         "sql":    emit_sql(prog),

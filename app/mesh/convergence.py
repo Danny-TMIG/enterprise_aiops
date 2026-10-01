@@ -1,8 +1,10 @@
 """Convergence validator for mesh subsystem probes."""
 from __future__ import annotations
-import asyncio, time
+
+import asyncio
+import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
 
 
 @dataclass
@@ -38,7 +40,7 @@ class MeshConvergenceValidator:
     async def assert_converges(self, probe_fn: Callable,
                                 expected: float = 1.0,
                                 subsystem: str = "unknown",
-                                timeout: Optional[float] = None
+                                timeout: float | None = None
                                 ) -> ConvergenceMetrics:
         t0 = time.time()
         deadline = t0 + (timeout if timeout is not None

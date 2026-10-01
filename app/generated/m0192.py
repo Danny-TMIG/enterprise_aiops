@@ -1,6 +1,7 @@
 """Auto-generated from capabilities DB."""
 from __future__ import annotations
 
+
 def impl_genmod_m0192_inc(a=None, b=None, x=None, xs=None, **kw):
     return {'ok': True, 'code': 'genmod_m0192_inc'}
 

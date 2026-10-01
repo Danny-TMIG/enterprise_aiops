@@ -21,12 +21,13 @@ Three demonstrations:
      oracle" from the earlier stack, but with no LLM and no cache.
 """
 from __future__ import annotations
+
 import sys
 
-from app.combinator.graph import Graph, G, D, E
-from app.combinator.reduce import normalise_with_trace, step, normalise
-from app.combinator.canonical import hash_graph, normal_form_id
-from app.combinator.selfref import self_apply, bytes_to_graph
+from app.combinator.canonical import hash_graph
+from app.combinator.graph import D, G, Graph
+from app.combinator.reduce import normalise, normalise_with_trace, step
+from app.combinator.selfref import bytes_to_graph, self_apply
 from app.combinator.substrate import RAMSubstrate, StreamingSubstrate
 
 
@@ -123,8 +124,8 @@ def demo_confluence() -> None:
     print(f"  same-order hash:    {h2}")
     print(f"  agree:              {h1 == h2}")
     print(f"  both terminated:    {term1}")
-    print(f"  note: the confluence theorem guarantees h1 == h2 for")
-    print(f"        any two fair reduction orders. We verify it here.")
+    print("  note: the confluence theorem guarantees h1 == h2 for")
+    print("        any two fair reduction orders. We verify it here.")
 
 
 def demo_substrate() -> None:

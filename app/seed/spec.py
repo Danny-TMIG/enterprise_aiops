@@ -1,8 +1,10 @@
 from __future__ import annotations
-import hashlib, json
+
+import hashlib
+import json
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 from app.seed.intent import Intent
 
@@ -17,7 +19,7 @@ class Invariant:
     statement: str
     kind: str = "property"    # property | safety | liveness | type
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"name": self.name, "statement": self.statement, "kind": self.kind}
 
 
@@ -26,14 +28,14 @@ class Spec:
     intent_id: str
     what: str
     where: str
-    invariants: List[Invariant] = field(default_factory=list)
-    acceptance: List[str] = field(default_factory=list)
-    out_of_scope: List[str] = field(default_factory=list)
+    invariants: list[Invariant] = field(default_factory=list)
+    acceptance: list[str] = field(default_factory=list)
+    out_of_scope: list[str] = field(default_factory=list)
     frozen: bool = False
     frozen_at: str = ""
     id: str = ""
 
-    def freeze(self) -> "Spec":
+    def freeze(self) -> Spec:
         self.frozen = True
         self.frozen_at = _now()
         self.id = self._hash()
@@ -49,7 +51,7 @@ class Spec:
         }, sort_keys=True)
         return "spec-" + hashlib.sha256(blob.encode()).hexdigest()[:12]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id, "intent_id": self.intent_id,
             "what": self.what, "where": self.where,

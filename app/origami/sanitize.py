@@ -1,5 +1,6 @@
 """Sanitize leaf values from the model."""
 from __future__ import annotations
+
 import re
 
 _ID_CHARS = re.compile(r"[^A-Za-z0-9_]")

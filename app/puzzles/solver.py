@@ -1,17 +1,18 @@
 """Backtracking solver with MRV and forward checking."""
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from app.puzzles.grid import Grid, VarId
 
 
 @dataclass
 class Solution:
-    assignment: Dict[VarId, Any]
+    assignment: dict[VarId, Any]
     nodes: int
     complete: bool
-    trace: List[str] = field(default_factory=list)
+    trace: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {"assignment": dict(self.assignment),
@@ -83,7 +84,7 @@ def solve_fc(grid: Grid, max_nodes: int = 1_000_000) -> Solution:
         for v in c.scope:
             neighbors[v].update(scope - {v})
 
-    assignment: Dict[VarId, Any] = {}
+    assignment: dict[VarId, Any] = {}
     nodes = [0]
 
     def pick_mrv():

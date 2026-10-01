@@ -11,9 +11,8 @@ Each rule touches only the two participants and their aux wires.
 No global state is consulted. No history. No floats.
 """
 from __future__ import annotations
-from typing import Optional
 
-from app.combinator.graph import Graph, G, D, E, Port
+from app.combinator.graph import D, E, G, Graph
 
 
 # ── annihilations ───────────────────────────────────────────────

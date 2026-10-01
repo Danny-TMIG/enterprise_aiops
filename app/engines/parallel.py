@@ -5,10 +5,10 @@ For CPU-bound solver work, swap ThreadPoolExecutor for
 ProcessPoolExecutor; the interface is identical.
 """
 from __future__ import annotations
+
 import concurrent.futures as cf
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from dataclasses import dataclass
 
 from app.engines.kinds import KINDS, SOLVERS
 
@@ -72,20 +72,20 @@ def _run_one(kind_name: str, solver_name: str, difficulty: str,
                        f"{type(e).__name__}: {e}")
 
 
-def run_grid(difficulty_by_kind: Dict[str, str],
+def run_grid(difficulty_by_kind: dict[str, str],
              puzzles_per_tile: int = 4,
              seed: int = 0,
-             max_workers: Optional[int] = None,
-             kinds: Optional[List[str]] = None,
-             solvers_by_kind: Optional[Dict[str, List[str]]] = None
-             ) -> Tuple[List[Outcome], List[Tile]]:
+             max_workers: int | None = None,
+             kinds: list[str] | None = None,
+             solvers_by_kind: dict[str, list[str]] | None = None
+             ) -> tuple[list[Outcome], list[Tile]]:
     """Run every (kind, solver, puzzle) concurrently.
 
     Returns (outcomes, tiles).
     """
     kinds = kinds or list(KINDS.keys())
-    futures: List[Tuple[cf.Future, str, str]] = []
-    outcomes: List[Outcome] = []
+    futures: list[tuple[cf.Future, str, str]] = []
+    outcomes: list[Outcome] = []
 
     if USE_PROCESSES:
         import multiprocessing as mp
@@ -112,7 +112,7 @@ def run_grid(difficulty_by_kind: Dict[str, str],
                                         0.0, f"{type(e).__name__}: {e}"))
 
     # aggregate into tiles
-    tiles: Dict[Tuple[str, str], Tile] = {}
+    tiles: dict[tuple[str, str], Tile] = {}
     for o in outcomes:
         key = (o.kind, o.solver)
         t = tiles.get(key)

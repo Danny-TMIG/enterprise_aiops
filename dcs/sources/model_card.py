@@ -57,7 +57,7 @@ def limitations_documented() -> Attestation:  # pragma: no cover
     body = _read()
     if body is None:  # pragma: no cover
         return Attestation(REQ_LIM, B.U, "model_card", "no model card found")  # pragma: no cover
-    has_limits = bool(re.search(r"limitations?|limits|failure modes?", body, re.I))
+    has_limits = bool(re.search(r"limitations?|limits|failure modes?", body, re.IGNORECASE))
     return Attestation(  # pragma: no cover
         REQ_LIM, B.T if has_limits else B.F, "model_card",
         "limitations section present" if has_limits else "no limitations section",

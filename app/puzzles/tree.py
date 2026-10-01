@@ -19,9 +19,11 @@ All solvers take a tree and return a `SearchResult` with the
 winning path (or best move) plus a node count.
 """
 from __future__ import annotations
-import math, random
+
+import math
+import random
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Protocol
+from typing import Any, Protocol
 
 State = Any
 Action = Any
@@ -29,7 +31,7 @@ Action = Any
 
 class DecisionTree(Protocol):
     def initial(self) -> State: ...
-    def actions(self, s: State) -> List[Action]: ...
+    def actions(self, s: State) -> list[Action]: ...
     def apply(self, s: State, a: Action) -> State: ...
     def is_terminal(self, s: State) -> bool: ...
     def reward(self, s: State, player: int) -> float: ...
@@ -39,12 +41,12 @@ class DecisionTree(Protocol):
 @dataclass
 class SearchResult:
     found: bool
-    path: List[Action] = field(default_factory=list)
-    terminal_state: Optional[State] = None
+    path: list[Action] = field(default_factory=list)
+    terminal_state: State | None = None
     reward: float = 0.0
     nodes: int = 0
     depth: int = 0
-    best_action: Optional[Action] = None
+    best_action: Action | None = None
 
     def to_dict(self) -> dict:
         return {
@@ -119,8 +121,7 @@ def ida_star(tree: DecisionTree, max_depth: int = 64,
             path.pop()
             if res is not None:
                 return -1, res
-            if t < mn:
-                mn = t
+            mn = min(mn, t)
         return mn, None
 
     start = tree.initial()
@@ -210,12 +211,12 @@ def alpha_beta(tree: DecisionTree, max_depth: int = 32
 class _Node:
     state: State
     player: int
-    parent: Optional["_Node"] = None
-    action: Optional[Action] = None
-    children: List["_Node"] = field(default_factory=list)
+    parent: _Node | None = None
+    action: Action | None = None
+    children: list[_Node] = field(default_factory=list)
     visits: int = 0
     value: float = 0.0
-    untried: List[Action] = field(default_factory=list)
+    untried: list[Action] = field(default_factory=list)
 
 
 def mcts(tree: DecisionTree, iterations: int = 2000,

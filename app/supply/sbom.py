@@ -1,12 +1,16 @@
 """CycloneDX 1.5 SBOM. Real scan, real SHA-256 over every .py."""
 from __future__ import annotations
-import hashlib, json, time, uuid
+
+import hashlib
+import json
+import time
+import uuid
 from pathlib import Path
-from typing import Dict, List
+
 
 def _h(b: bytes) -> str: return hashlib.sha256(b).hexdigest()
 
-def scan_components(root: Path) -> List[Dict]:
+def scan_components(root: Path) -> list[dict]:
     out = []
     for p in sorted(root.rglob("*.py")):
         s = str(p)
@@ -20,7 +24,7 @@ def scan_components(root: Path) -> List[Dict]:
                                   {"name":"size","value":str(len(raw))}]})
     return out
 
-def build_sbom(name: str, version: str, root: Path | None = None) -> Dict:
+def build_sbom(name: str, version: str, root: Path | None = None) -> dict:
     root = root or Path.cwd()
     return {"bomFormat":"CycloneDX","specVersion":"1.5",
             "serialNumber":f"urn:uuid:{uuid.uuid4()}","version":1,
@@ -28,5 +32,5 @@ def build_sbom(name: str, version: str, root: Path | None = None) -> Dict:
                         "component":{"type":"application","name":name,"version":version}},
             "components":scan_components(root)}
 
-def sbom_digest(sbom: Dict) -> str:
+def sbom_digest(sbom: dict) -> str:
     return _h(json.dumps(sbom, sort_keys=True).encode())

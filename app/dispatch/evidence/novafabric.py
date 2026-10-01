@@ -1,6 +1,8 @@
 from __future__ import annotations
-from typing import Any, Dict
-from app.dispatch.evidence.base import EvidenceStore, EvidenceRecord
+
+from typing import Any
+
+from app.dispatch.evidence.base import EvidenceRecord, EvidenceStore
 
 
 class NovaFabricStore(EvidenceStore):
@@ -8,12 +10,12 @@ class NovaFabricStore(EvidenceStore):
     Locally we persist to memory + compute a stable content hash."""
     name = "novafabric"
     def __init__(self) -> None:
-        self._log: Dict[str, Dict[str, Any]] = {}
+        self._log: dict[str, dict[str, Any]] = {}
 
-    def _record(self, r: EvidenceRecord) -> Dict[str, Any]:
+    def _record(self, r: EvidenceRecord) -> dict[str, Any]:
         self._log[r.id] = r.to_dict()
         return {"store": self.name, "status": "PASS",
                 "id": r.id, "hash": r.hash}
 
-    def get(self, id_: str) -> Dict[str, Any]:
+    def get(self, id_: str) -> dict[str, Any]:
         return self._log.get(id_) or {}

@@ -1,13 +1,14 @@
 import logging
-from typing import Dict, Any, Tuple
-from mlx_lm import load, generate
+from typing import Any
+
+from mlx_lm import generate, load
 
 logging.basicConfig(level=logging.INFO)
 
 class OrthogonalMoAOrchestrator:
     def __init__(self):
         # 8-Expert Orthogonal Mapping across Apple M4 Max unified memory
-        self.expert_models: Dict[str, str] = {
+        self.expert_models: dict[str, str] = {
             "router": "mlx-community/Qwen2.5-7B-Instruct-4bit",
             "coder": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
             "topology": "mlx-community/DeepSeek-R1-Distill-Qwen-7B-4bit",
@@ -17,7 +18,7 @@ class OrthogonalMoAOrchestrator:
             "critic": "mlx-community/Qwen2.5-7B-Instruct-4bit",
             "schema": "mlx-community/Qwen2.5-7B-Instruct-4bit",
         }
-        self.loaded_cache: Dict[str, Tuple[Any, Any]] = {}
+        self.loaded_cache: dict[str, tuple[Any, Any]] = {}
 
     def get_expert(self, role: str):
         if role not in self.loaded_cache:

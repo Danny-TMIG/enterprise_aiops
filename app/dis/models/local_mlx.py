@@ -4,7 +4,8 @@ Importable even when mlx is not installed; `load()` and `generate()`
 degrade gracefully and report `loaded=False`.
 """
 from __future__ import annotations
-from typing import Any, Optional
+
+from typing import Any
 
 
 class LocalMLX:
@@ -17,7 +18,7 @@ class LocalMLX:
 
     def load(self) -> bool:
         try:
-            import mlx_lm  # noqa: F401
+            import mlx_lm
         except ImportError:
             self._model = None
             return False

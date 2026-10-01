@@ -1,6 +1,7 @@
 """Install mesh routes on any FastAPI app (idempotent)."""
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import Any
 
 from fastapi import Body
 
@@ -12,7 +13,7 @@ def install(app) -> None:
 
     if "/mesh/status" not in existing:
         @app.get("/mesh/status")
-        def _mesh_status() -> Dict[str, Any]:
+        def _mesh_status() -> dict[str, Any]:
             from app.mesh.runtime import get_mesh
             m = get_mesh()
             return {"status": "active",
@@ -21,10 +22,10 @@ def install(app) -> None:
 
     if "/mesh/route" not in existing:
         @app.post("/mesh/route")
-        def _mesh_route(payload: Dict[str, Any] = Body(default_factory=dict)
-                        ) -> Dict[str, Any]:
-            from app.mesh.runtime import get_mesh
+        def _mesh_route(payload: dict[str, Any] = Body(default_factory=dict)
+                        ) -> dict[str, Any]:
             from app.mesh.router import route as _r
+            from app.mesh.runtime import get_mesh
             intent = str(payload.get("intent", ""))
             limit = int(payload.get("limit", 10) or 10)
             m = get_mesh()
@@ -33,8 +34,8 @@ def install(app) -> None:
 
     if "/mesh/rebuild" not in existing:
         @app.post("/mesh/rebuild")
-        def _mesh_rebuild(payload: Dict[str, Any] = Body(default_factory=dict)
-                          ) -> Dict[str, Any]:
+        def _mesh_rebuild(payload: dict[str, Any] = Body(default_factory=dict)
+                          ) -> dict[str, Any]:
             from app.mesh.runtime import get_mesh
             m = get_mesh()
             return {"status": "rebuilt", "stats": m.graph.stats()}

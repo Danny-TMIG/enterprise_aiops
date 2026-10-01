@@ -1,14 +1,13 @@
 """Human gate — accept, reject, or edit a staged patch."""
 from __future__ import annotations
+
 import os
 import subprocess
-import sys
 from pathlib import Path
-from typing import Optional
 
 
 def review(target: str, diff: str, before, staged_path: Path,
-           auto: Optional[str] = None) -> str:
+           auto: str | None = None) -> str:
     """Return 'accept', 'reject', or 'edit'.
 
     `auto` may be set to 'accept' or 'reject' to bypass the prompt

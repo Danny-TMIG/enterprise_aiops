@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import base64, hashlib, hmac, os, sys
+
+import base64
+import hashlib
+import hmac
+import os
+import sys
 from pathlib import Path
 
 KEY_ENV = "AIOPS_SBOM_KEY"

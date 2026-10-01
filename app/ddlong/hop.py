@@ -12,11 +12,10 @@ the codec a jitter margin that a fixed carrier does not.
 Uses DD arithmetic internally so a long schedule does not drift.
 """
 from __future__ import annotations
-import hashlib, math, random, time
-from dataclasses import dataclass, field
-from typing import Dict, List, Tuple
 
-from app.ddlong.dd import DD
+import math
+import random
+from dataclasses import dataclass, field
 
 # Lattice dimensions. Both are powers of two so phase and freq
 # indices are exact and DD accumulation is exact.
@@ -60,7 +59,7 @@ class Hop:
 
 @dataclass
 class HoppingSchedule:
-    hops: List[Hop] = field(default_factory=list)
+    hops: list[Hop] = field(default_factory=list)
     hop_period: float = 1e-3       # seconds per hop
     seed: int = 0
 
@@ -109,7 +108,7 @@ def hop_encode(payload: bytes,
         bits.append(b & 0xF)
 
     rng = _prng(seed)
-    hops: List[Hop] = []
+    hops: list[Hop] = []
     t = 0.0
     prev_f = 0
     prev_p = 0
@@ -139,7 +138,7 @@ def hop_decode(schedule: HoppingSchedule,
         return b""
     rng = _prng(schedule.seed)
     noise_rng = random.Random(schedule.seed ^ 0xA5A5A5A5)
-    out: List[int] = []
+    out: list[int] = []
     prev_f = 0
     prev_p = 0
     tol = math.pi / (N_PHASE / 2)

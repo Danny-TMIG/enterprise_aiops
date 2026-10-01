@@ -119,7 +119,7 @@ class Kernel:  # pragma: no cover
     ) -> VState:
         if relation is None:  # pragma: no cover
   # pragma: no cover
-            def relation(x, y):  # noqa: E731  # pragma: no cover
+            def relation(x, y):  # pragma: no cover
                 return x == y  # pragma: no cover
   # pragma: no cover
         if mode == "equivalence":  # pragma: no cover

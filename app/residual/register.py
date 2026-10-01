@@ -5,11 +5,10 @@ Transcribed from the source document. Each entry is
 Classes are given in CLASSES below.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
 
+from dataclasses import dataclass
 
-CLASSES: Dict[str, str] = {
+CLASSES: dict[str, str] = {
     "I":   "Thread",
     "II":  "Mathematical",
     "III": "Logical",
@@ -37,7 +36,7 @@ CLASSES: Dict[str, str] = {
 }
 
 # (class_id, residual_id, name, source, arity)
-ENTRIES: List[tuple] = [
+ENTRIES: list[tuple] = [
     # ── Part I — Thread ──────────────────────────────────────
     ("I","T-01","Intent Chain (R01 has no input)","Genesis regress",0),
     ("I","T-02","Chooser Intent set (R02)","Selection is external",1),
@@ -469,14 +468,14 @@ class Residual:
     arity: object
 
 
-def _build() -> Dict[str, Residual]:
-    out: Dict[str, Residual] = {}
+def _build() -> dict[str, Residual]:
+    out: dict[str, Residual] = {}
     for cid, rid, name, source, arity in ENTRIES:
         out[rid] = Residual(cid, CLASSES[cid], rid, name, source, arity)
     return out
 
 
-REGISTER: Dict[str, Residual] = _build()
+REGISTER: dict[str, Residual] = _build()
 TOTAL: int = len(REGISTER)
 
 
@@ -486,11 +485,11 @@ def get(rid: str) -> Residual:
     return REGISTER[rid]
 
 
-def by_class(class_id: str) -> List[Residual]:
+def by_class(class_id: str) -> list[Residual]:
     return [r for r in REGISTER.values() if r.class_id == class_id]
 
 
-def search(substr: str) -> List[Residual]:
+def search(substr: str) -> list[Residual]:
     s = substr.lower()
     return [r for r in REGISTER.values()
             if s in r.name.lower() or s in r.source.lower()]

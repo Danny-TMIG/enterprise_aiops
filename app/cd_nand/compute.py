@@ -8,8 +8,10 @@ So NAND is (a*b) + 1 using only CD mul/add at any level.
 Verified exhaustively against app.cd_nand.nand.NAND.
 """
 from __future__ import annotations
+
 from app.cd_nand.cayley import cd_from
 from app.cd_nand.map_to_logic import cd_to_truth
+
 
 def nand_cd(a: bool, b: bool, level: int = 3) -> bool:
     x = cd_from(a, level)

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-import os
-import sys
-import subprocess
 import importlib.util
+import os
+import subprocess
+import sys
 from pathlib import Path
+
 
 def locate_asgi_module():
     """Recursively or directly search for main.py and determine its import path."""

@@ -1,8 +1,11 @@
 
 import threading
-import uvicorn
 import time
+
+import uvicorn
+
 from app.main import app
+
 
 def start_test_server():
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
@@ -11,11 +14,11 @@ server_thread = threading.Thread(target=start_test_server, daemon=True)
 server_thread.start()
 time.sleep(2)  # Allow server to bind port 8000
 
-import urllib.request
-import urllib.parse
-import urllib.error
 import json
 import sys
+import urllib.error
+import urllib.parse
+import urllib.request
 
 BASE_URL = "http://127.0.0.1:8000"
 

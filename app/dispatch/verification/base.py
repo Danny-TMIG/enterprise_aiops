@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 def _now() -> str:
@@ -20,7 +21,7 @@ class LLMExec:
     max_tokens: int = 2048
     task: str = "proving"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "provider": self.provider, "model": self.model,
             "temperature": self.temperature, "max_tokens": self.max_tokens,
@@ -32,14 +33,14 @@ class LLMExec:
 class ProverResult:
     prover: str
     status: str
-    proof: Optional[str] = None
-    error: Optional[str] = None
+    proof: str | None = None
+    error: str | None = None
     elapsed_ms: int = 0
-    llm_exec: Optional[LLMExec] = None
-    evidence: List[Dict[str, Any]] = field(default_factory=list)
+    llm_exec: LLMExec | None = None
+    evidence: list[dict[str, Any]] = field(default_factory=list)
     ts: str = field(default_factory=_now)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         d = {
             "prover": self.prover, "status": self.status,
             "proof": self.proof, "error": self.error,
@@ -58,7 +59,7 @@ class Prover:
         return True
 
     def prove(self, statement: str,
-              context: Optional[Dict[str, Any]] = None) -> ProverResult:
+              context: dict[str, Any] | None = None) -> ProverResult:
         import time
         ctx = context or {}
         t0 = time.time()
@@ -71,5 +72,5 @@ class Prover:
         return r
 
     def _prove(self, statement: str,
-               context: Dict[str, Any]) -> ProverResult:  # pragma: no cover
+               context: dict[str, Any]) -> ProverResult:  # pragma: no cover
         raise NotImplementedError

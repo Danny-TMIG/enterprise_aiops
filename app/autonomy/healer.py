@@ -1,8 +1,10 @@
 """Healer — executes bounded, idempotent remedies."""
 from __future__ import annotations
-from dataclasses import dataclass, field
+
+from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, List
+from typing import Any
 
 
 def _now() -> str:
@@ -12,7 +14,7 @@ def _now() -> str:
 @dataclass(frozen=True)
 class Remedy:
     name: str
-    fn: Callable[[Dict[str, Any]], Dict[str, Any]]
+    fn: Callable[[dict[str, Any]], dict[str, Any]]
     max_calls_per_minute: int = 6
 
     def __hash__(self) -> int:
@@ -21,18 +23,18 @@ class Remedy:
 
 class Healer:
     def __init__(self) -> None:
-        self._remedies: Dict[str, Remedy] = {}
-        self._calls: Dict[str, List[float]] = {}
-        self._history: List[Dict[str, Any]] = []
+        self._remedies: dict[str, Remedy] = {}
+        self._calls: dict[str, list[float]] = {}
+        self._history: list[dict[str, Any]] = []
 
-    def register(self, remedy: Remedy) -> "Healer":
+    def register(self, remedy: Remedy) -> Healer:
         self._remedies[remedy.name] = remedy
         return self
 
-    def available(self) -> List[str]:
+    def available(self) -> list[str]:
         return list(self._remedies)
 
-    def apply(self, name: str, params: Dict[str, Any]) -> Dict[str, Any]:
+    def apply(self, name: str, params: dict[str, Any]) -> dict[str, Any]:
         import time
         r = self._remedies.get(name)
         if r is None:
@@ -51,7 +53,7 @@ class Healer:
         self._history.append(record)
         return record
 
-    def history(self, limit: int = 50) -> List[Dict[str, Any]]:
+    def history(self, limit: int = 50) -> list[dict[str, Any]]:
         return self._history[-limit:]
 
 
@@ -67,7 +69,7 @@ class SystemHealer:
         self._checks: list = []
         self.history: list = []
 
-    def add_check(self, name: str, check_fn, fix_fn=None) -> "SystemHealer":
+    def add_check(self, name: str, check_fn, fix_fn=None) -> SystemHealer:
         self._checks.append((name, check_fn, fix_fn))
         return self
 

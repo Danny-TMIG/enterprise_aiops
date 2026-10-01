@@ -16,9 +16,10 @@ Field meanings:
                    of a subject in a domain.
 """
 from __future__ import annotations
-import hashlib, json, time
-from dataclasses import dataclass, asdict, field
-from typing import Any, Dict, List, Optional
+
+import hashlib
+import time
+from dataclasses import dataclass, field
 
 
 def _now() -> str:
@@ -33,7 +34,7 @@ def _h(*parts: str) -> str:
     return "sha256:" + m.hexdigest()
 
 
-def _revoked(expires_at: Optional[str]) -> bool:
+def _revoked(expires_at: str | None) -> bool:
     if not expires_at:
         return False
     return expires_at < _now()
@@ -48,7 +49,7 @@ class Agency:
     granted_by: str                 # who delegated
     evidence_hash: str              # hash of the grant decision
     issued_at: str = field(default_factory=_now)
-    expires_at: Optional[str] = None
+    expires_at: str | None = None
     revoked: bool = False
 
     @property
@@ -71,7 +72,7 @@ class License:
     issued_by: str
     evidence_hash: str
     issued_at: str = field(default_factory=_now)
-    expires_at: Optional[str] = None
+    expires_at: str | None = None
     revoked: bool = False
 
     @property
@@ -94,7 +95,7 @@ class Certification:
     issued_by: str
     evidence_hash: str
     issued_at: str = field(default_factory=_now)
-    expires_at: Optional[str] = None
+    expires_at: str | None = None
     revoked: bool = False
 
     @property
@@ -115,7 +116,7 @@ class Expertise:
     completions: int = 0
     successes: int = 0
     failures: int = 0
-    evidence_hashes: List[str] = field(default_factory=list)
+    evidence_hashes: list[str] = field(default_factory=list)
     last_updated: str = field(default_factory=_now)
 
     def record(self, success: bool, evidence_hash: str) -> None:
@@ -173,7 +174,7 @@ class AgencyPrimitive:
     def live(self) -> bool:
         return self.revoked_at is None
 
-    def revoke(self, when: str = "") -> "AgencyPrimitive":
+    def revoke(self, when: str = "") -> AgencyPrimitive:
         self.revoked_at = when
         return self
 

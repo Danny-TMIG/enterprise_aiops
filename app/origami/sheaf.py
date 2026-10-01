@@ -30,9 +30,11 @@ Cocycle condition:
     A failure at any overlap is a non-vanishing cocycle.
 """
 from __future__ import annotations
-import ast, builtins
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Set, Tuple
+
+import ast
+import builtins
+from dataclasses import dataclass
+from typing import Any
 
 BUILTINS = set(dir(builtins)) | {
     "True", "False", "None", "self", "cls",
@@ -43,10 +45,10 @@ BUILTINS = set(dir(builtins)) | {
 @dataclass(frozen=True)
 class Open:
     name: str
-    covers: Tuple[str, ...]
+    covers: tuple[str, ...]
 
 
-SITE: Dict[str, Open] = {
+SITE: dict[str, Open] = {
     "module":    Open("module",    ("mod_doc", "imports")),
     "signature": Open("signature", ("func_name", "params", "ret")),
     "body":      Open("body",      ("fbody",)),
@@ -54,12 +56,12 @@ SITE: Dict[str, Open] = {
     "tests":     Open("tests",     ("test_name", "test_body")),
 }
 
-OPEN_OF_KIND: Dict[str, str] = {}
+OPEN_OF_KIND: dict[str, str] = {}
 for _o in SITE.values():
     for _k in _o.covers:
         OPEN_OF_KIND[_k] = _o.name
 
-RESTRICTIONS: Dict[str, List[str]] = {
+RESTRICTIONS: dict[str, list[str]] = {
     "module":    [],
     "signature": [],
     "body":      ["signature"],
@@ -68,7 +70,7 @@ RESTRICTIONS: Dict[str, List[str]] = {
 }
 
 # field lookup within a section
-FIELD_OF_KIND: Dict[str, str] = {
+FIELD_OF_KIND: dict[str, str] = {
     "mod_doc":   "mod_doc",
     "imports":   "imports",
     "func_name": "name",
@@ -82,11 +84,11 @@ FIELD_OF_KIND: Dict[str, str] = {
 
 
 def restrict_to(open_name: str,
-                sections: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+                sections: dict[str, dict[str, Any]]) -> dict[str, Any]:
     """Return the values visible from `open_name` under its
     restriction maps. A leaf belonging to `open_name` sees exactly
     this local context and no more."""
-    out: Dict[str, Any] = {}
+    out: dict[str, Any] = {}
     for src in RESTRICTIONS.get(open_name, []):
         for k, v in sections.get(src, {}).items():
             if v is not None and v != "":
@@ -95,38 +97,38 @@ def restrict_to(open_name: str,
 
 
 def add_to_section(open_name: str, kind: str, value: str,
-                   sections: Dict[str, Dict[str, Any]]) -> None:
+                   sections: dict[str, dict[str, Any]]) -> None:
     field = FIELD_OF_KIND.get(kind, kind)
     sections.setdefault(open_name, {})[field] = value
 
 
-def _referenced(source: str) -> Set[str]:
+def _referenced(source: str) -> set[str]:
     try:
         tree = ast.parse(source)
     except SyntaxError:
         return set()
-    out: Set[str] = set()
+    out: set[str] = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
             out.add(node.id)
     return out
 
 
-def _param_names(params: str) -> Set[str]:
+def _param_names(params: str) -> set[str]:
     try:
         tree = ast.parse(f"def _f({params}): pass")
     except SyntaxError:
         return set()
-    out: Set[str] = set()
+    out: set[str] = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.arg):
             out.add(node.arg)
     return out
 
 
-def cocycle_check(sections: Dict[str, Dict[str, Any]]
-                  ) -> Tuple[bool, List[str]]:
-    violations: List[str] = []
+def cocycle_check(sections: dict[str, dict[str, Any]]
+                  ) -> tuple[bool, list[str]]:
+    violations: list[str] = []
     sig = sections.get("signature", {})
     fn_name = (sig.get("name") or "").strip()
     params = sig.get("params") or ""
@@ -154,11 +156,11 @@ def cocycle_check(sections: Dict[str, Dict[str, Any]]
     return (not violations), violations
 
 
-def glue(sections: Dict[str, Dict[str, Any]]) -> str:
+def glue(sections: dict[str, dict[str, Any]]) -> str:
     """Assemble the unique global section, given local sections."""
     dq3 = '"' * 3
     sq3 = "'" * 3
-    out: List[str] = []
+    out: list[str] = []
 
     mod = sections.get("module", {})
     if mod.get("mod_doc"):
@@ -196,7 +198,7 @@ def glue(sections: Dict[str, Dict[str, Any]]) -> str:
     return "\n".join(out).rstrip() + "\n"
 
 
-def site_summary() -> Dict[str, Any]:
+def site_summary() -> dict[str, Any]:
     return {
         "opens": sorted(SITE),
         "kinds": sorted(OPEN_OF_KIND),

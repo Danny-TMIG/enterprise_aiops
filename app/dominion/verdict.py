@@ -4,8 +4,9 @@ Four states, no fifth. Every role returns one. Nothing invented
 beyond what chain/witness.py and chain/roles.py import.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field, asdict
-from typing import Any, Dict, Optional
+
+from dataclasses import asdict, dataclass, field
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -13,12 +14,12 @@ class Verdict:
     state: str                  # "pass" | "fail" | "unknown" | "error"
     detail: str = ""
     witness_id: str = ""
-    meta: Dict[str, Any] = field(default_factory=dict)
+    meta: dict[str, Any] = field(default_factory=dict)
 
     def ok(self) -> bool:
         return self.state == "pass"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -30,4 +31,4 @@ UNKNOWN = Verdict(state="unknown")
 ERROR   = Verdict(state="error")
 
 
-__all__ = ["Verdict", "PASS", "FAIL", "UNKNOWN", "ERROR"]
+__all__ = ["ERROR", "FAIL", "PASS", "UNKNOWN", "Verdict"]

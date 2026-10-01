@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 
 @dataclass
@@ -7,7 +7,7 @@ class DispatchResult:
   status: str = "success"
   provider: str = "default"
   payload: Any = None
-  metadata: Dict[str, Any] = field(default_factory=dict)
+  metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -17,7 +17,7 @@ class WorkerLog:
   level: str = "INFO"
 
 
-def clean_payload(payload: Union[Dict[str, Any], str]) -> Union[Dict[str, Any], str]:
+def clean_payload(payload: dict[str, Any] | str) -> dict[str, Any] | str:
   """Sanitizes and normalizes execution payloads."""
   if isinstance(payload, dict):
     return {k: v for k, v in payload.items() if v is not None}
@@ -27,8 +27,8 @@ def clean_payload(payload: Union[Dict[str, Any], str]) -> Union[Dict[str, Any], 
 
 
 def refine(
-    payload: Dict[str, Any], context: Optional[Dict[str, Any]] = None
-) -> Dict[str, Any]:
+    payload: dict[str, Any], context: dict[str, Any] | None = None
+) -> dict[str, Any]:
   """Refines execution payloads or state parameters."""
   refined = dict(payload)
   if context:
@@ -37,7 +37,7 @@ def refine(
 
 
 def dispatch(
-    payload: Union[Dict[str, Any], str], provider: str = "default", **kwargs: Any
+    payload: dict[str, Any] | str, provider: str = "default", **kwargs: Any
 ) -> DispatchResult:
   """Dispatches payload to target provider with execution wrapping."""
   cleaned = clean_payload(payload)

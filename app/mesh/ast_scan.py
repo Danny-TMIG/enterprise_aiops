@@ -5,9 +5,9 @@ Produces nodes with shape:
 where kind ∈ {module, capability, skill, endpoint, agent, import}.
 """
 from __future__ import annotations
+
 import ast
 from pathlib import Path
-from typing import Dict, List
 
 SKIP_DIRS = {
     "__pycache__", ".venv", "venv", ".git", "node_modules",
@@ -20,9 +20,9 @@ def _node_id(kind: str, name: str, file: str, line: int) -> str:
     return f"{kind}:{name}:{file}:{line}"
 
 
-def scan(root: str) -> List[Dict]:
+def scan(root: str) -> list[dict]:
     root_p = Path(root)
-    out: List[Dict] = []
+    out: list[dict] = []
     for py in root_p.rglob("*.py"):
         if any(part in SKIP_DIRS for part in py.parts):
             continue

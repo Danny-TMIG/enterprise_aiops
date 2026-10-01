@@ -1,4 +1,3 @@
-import re
 
 # 1. Ensure /cluster/status and _frontier.profiles are correct in app/main.py
 with open("app/main.py", "r") as f:

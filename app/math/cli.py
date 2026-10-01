@@ -1,6 +1,9 @@
 """Apply the distilled math to the live stack."""
 from __future__ import annotations
-import argparse, json, sys
+
+import argparse
+import json
+import sys
 
 from app.math import graph as gmath
 from app.math import phase as pmath

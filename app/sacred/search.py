@@ -15,11 +15,11 @@ Fibonacci search:
     after k steps, width = width_0 / F(k)
 """
 from __future__ import annotations
-import math
-from dataclasses import dataclass, field
-from typing import Callable, List, Optional
 
-from app.sacred.constants import PHI, PHI_INV, fib
+from collections.abc import Callable
+from dataclasses import dataclass, field
+
+from app.sacred.constants import PHI_INV, fib
 
 
 @dataclass
@@ -29,7 +29,7 @@ class SearchTrace:
     x_min: float
     f_min: float
     final_width: float
-    history: List[tuple] = field(default_factory=list)
+    history: list[tuple] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {

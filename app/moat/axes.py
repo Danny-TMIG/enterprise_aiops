@@ -11,10 +11,11 @@ Both are supported by one dispatcher. Same for score_all:
     score_all(root, scope="app")             -> list of objects with .x
 """
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 # ── dataclasses used by callers that want structured axes ───────
@@ -29,10 +30,10 @@ class Axis:
 class AxisScore:
     axis: str
     score: float
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
 
 
-AXES: List[Axis] = [
+AXES: list[Axis] = [
     Axis("security", 1.0, "Security and isolation"),
     Axis("robustness", 1.0, "Robustness and fault tolerance"),
 ]

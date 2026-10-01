@@ -11,11 +11,12 @@ attack distribution. Every attempt and every defense is written to the
 RAMSubstrate ledger. Nothing is claimed before it is exercised.
 """
 from __future__ import annotations
-import random, time
-from dataclasses import dataclass, field, asdict
-from typing import Any, Callable, Dict, List, Optional
 
-from app.core import autoreg
+import random
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from typing import Any
+
 from app.core.mastery import HATS, discover_skills
 from app.core.ram_substrate import RAMSubstrate
 
@@ -27,7 +28,7 @@ class Attempt:
     payload: Any
     target_skill: str
     attack_kind: str
-    meta: Dict[str, Any] = field(default_factory=dict)
+    meta: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -43,14 +44,14 @@ class Round:
     n: int
     attempts: int
     held: int
-    broken: List[str] = field(default_factory=list)
+    broken: list[str] = field(default_factory=list)
     evidence_seq: int = 0
 
     @property
     def defender_ok(self) -> bool:
         return self.broken == []
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"round": self.n, "attempts": self.attempts,
                 "held": self.held, "broken": self.broken[:8],
                 "evidence_seq": self.evidence_seq}
@@ -61,17 +62,17 @@ class Round:
 class Adversary:
     code: str
     target_hat: str
-    attack: Callable[[int, random.Random], List[Attempt]]
+    attack: Callable[[int, random.Random], list[Attempt]]
     defend: Callable[[Attempt], bool]
     rounds: int = 6
     seed: int = 0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"code": self.code, "target_hat": self.target_hat,
                 "rounds": self.rounds}
 
 
-_ADVERSARIES: Dict[str, Adversary] = {}
+_ADVERSARIES: dict[str, Adversary] = {}
 
 
 def adversary(code: str, target_hat: str, rounds: int = 6, seed: int = 0):
@@ -93,7 +94,7 @@ def adversary(code: str, target_hat: str, rounds: int = 6, seed: int = 0):
     return deco
 
 
-_SUB: Optional[RAMSubstrate] = None
+_SUB: RAMSubstrate | None = None
 
 
 def _sub() -> RAMSubstrate:
@@ -108,10 +109,10 @@ def _sub() -> RAMSubstrate:
 class Verdict:
     adversary: str
     hat: str
-    rounds: List[Round] = field(default_factory=list)
+    rounds: list[Round] = field(default_factory=list)
     mastered: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"adversary": self.adversary, "hat": self.hat,
                 "rounds": [r.to_dict() for r in self.rounds],
                 "mastered": self.mastered}
@@ -164,8 +165,8 @@ def train(adv: Adversary) -> Verdict:
     return v
 
 
-def train_all(*, hat: Optional[str] = None) -> Dict[str, Verdict]:
-    out: Dict[str, Verdict] = {}
+def train_all(*, hat: str | None = None) -> dict[str, Verdict]:
+    out: dict[str, Verdict] = {}
     for code, adv in _ADVERSARIES.items():
         if hat and adv.target_hat != hat:
             continue
@@ -175,7 +176,7 @@ def train_all(*, hat: Optional[str] = None) -> Dict[str, Verdict]:
 
 # ── built-in adversaries, one per high-signal hat ───────────────
 def _attempts_vs_skills(hat: str, round_no: int, rng: random.Random,
-                        k: int = 4) -> List[Attempt]:
+                        k: int = 4) -> list[Attempt]:
     """Generic attacker: pick K random skills under the target hat and
     craft attempts that probe them."""
     skills_by_hat = discover_skills()
@@ -183,7 +184,7 @@ def _attempts_vs_skills(hat: str, round_no: int, rng: random.Random,
     if not pool:
         return []
     picks = rng.sample(pool, min(k, len(pool)))
-    out: List[Attempt] = []
+    out: list[Attempt] = []
     for i, s in enumerate(picks):
         out.append(Attempt(
             id=f"{hat}-r{round_no}-{i:02d}-{s.code}",
@@ -239,6 +240,12 @@ def _self_register() -> None:
 _self_register()
 
 __all__ = [
-    "Attempt", "Defense", "Round", "Adversary", "Verdict",
-    "adversary", "train", "train_all",
+    "Adversary",
+    "Attempt",
+    "Defense",
+    "Round",
+    "Verdict",
+    "adversary",
+    "train",
+    "train_all",
 ]

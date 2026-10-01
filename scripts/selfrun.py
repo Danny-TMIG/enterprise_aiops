@@ -12,20 +12,28 @@ next run's observation is on top of the previous run.
     Phase AZ A–Z       per-letter capability census + dispatch probe
 """
 from __future__ import annotations
-import ast, hashlib, importlib, json, py_compile, re, subprocess, sys, time
+
+import hashlib
+import importlib
+import json
+import py_compile
+import re
+import subprocess
+import sys
+import time
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from app.core.ram_substrate import RAMSubstrate
 from app.core import capabilities as caps
+from app.core.ram_substrate import RAMSubstrate
 
 SUB = RAMSubstrate(capacity=4096, autoload=True)
 
 
-def phase_c_compile() -> Dict[str, Any]:
+def phase_c_compile() -> dict[str, Any]:
     ok, fail = [], []
     for p in sorted((ROOT / "app").rglob("*.py")):
         if "__pycache__" in str(p):
@@ -38,7 +46,7 @@ def phase_c_compile() -> Dict[str, Any]:
     return {"compiled": len(ok), "failed": len(fail), "failures": fail[:8]}
 
 
-def phase_b_build() -> Dict[str, Any]:
+def phase_b_build() -> dict[str, Any]:
     # collect every capability code from the table
     from app.core.capabilities import CAPS
     loaded, failed = [], []
@@ -55,7 +63,7 @@ def phase_b_build() -> Dict[str, Any]:
             "failures": failed[:8]}
 
 
-def phase_r_run() -> Dict[str, Any]:
+def phase_r_run() -> dict[str, Any]:
     r = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "--no-header",
          "-p", "no:cacheprovider", "--tb=line", "tests/"],
@@ -71,7 +79,7 @@ def phase_r_run() -> Dict[str, Any]:
             "tail": tail}
 
 
-def phase_o_observe() -> Dict[str, Any]:
+def phase_o_observe() -> dict[str, Any]:
     return {
         "resident": SUB.stats()["resident"],
         "head_seq": SUB.stats()["head_seq"],
@@ -84,7 +92,7 @@ def phase_o_observe() -> Dict[str, Any]:
     }
 
 
-def phase_n_nested(prev: Dict[str, Any]) -> Dict[str, Any]:
+def phase_n_nested(prev: dict[str, Any]) -> dict[str, Any]:
     """Observe the observation: hash the summary and record a new event."""
     blob = json.dumps(prev, sort_keys=True, default=str)
     h = hashlib.sha256(blob.encode()).hexdigest()[:16]
@@ -92,9 +100,9 @@ def phase_n_nested(prev: Dict[str, Any]) -> Dict[str, Any]:
             "subjects_observed": prev["subjects"]}
 
 
-def phase_az_census() -> Dict[str, Any]:
+def phase_az_census() -> dict[str, Any]:
     """Per-letter census of capability codes + a live dispatch probe."""
-    census: Dict[str, int] = {}
+    census: dict[str, int] = {}
     for code, *_ in caps.CAPS:
         letter = code[0].upper()
         census[letter] = census.get(letter, 0) + 1

@@ -1,10 +1,12 @@
 """Print the grounding of every module in the register."""
 from __future__ import annotations
-import json, sys
+
+import json
+import sys
 
 from app.residual import register as R
-from app.residual.anchors import validate, all_modules
-from app.residual.terminate import terminate, terminate_all, render
+from app.residual.anchors import validate
+from app.residual.terminate import render, terminate_all
 
 
 def main() -> int:

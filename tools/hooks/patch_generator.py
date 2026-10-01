@@ -1,6 +1,9 @@
 """Rewrite the module-body template strings inside /tmp/parallel_train.py to
 match tools/hooks/canonical_{core,mesh}.py. Idempotent, backs up first."""
-import ast, shutil, sys, time
+import ast
+import shutil
+import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent

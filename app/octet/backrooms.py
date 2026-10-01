@@ -1,7 +1,10 @@
-import hashlib, json, threading, time
-from dataclasses import dataclass, field, asdict
+import hashlib
+import json
+import threading
+import time
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 _DEFAULT = Path(".backrooms/octets.jsonl")
 _LOCK = threading.Lock()
@@ -35,12 +38,11 @@ class Backrooms:
         self.path.touch(exist_ok=True)
 
     def store(self, e: OctetEntry) -> str:
-        with _LOCK:
-            with self.path.open("a") as f:
-                f.write(json.dumps({**asdict(e), "id": e.id}) + "\n")
+        with _LOCK, self.path.open("a") as f:
+            f.write(json.dumps({**asdict(e), "id": e.id}) + "\n")
         return e.id
 
-    def all(self) -> List[Dict[str, Any]]:
+    def all(self) -> list[dict[str, Any]]:
         out = []
         for line in self.path.read_text().splitlines():
             line = line.strip()
@@ -52,7 +54,7 @@ class Backrooms:
                 continue
         return out
 
-    def search(self, s: str) -> List[Dict[str, Any]]:
+    def search(self, s: str) -> list[dict[str, Any]]:
         s = s.lower()
         return [e for e in self.all()
                 if s in e.get("reason", "").lower()

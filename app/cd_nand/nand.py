@@ -5,7 +5,8 @@ derived, not primitive. This is the seed of the Cayley-Dickson
 tower: at every doubling level, the atom at the base stays NAND.
 """
 from __future__ import annotations
-from typing import Iterable
+
+from collections.abc import Iterable
 
 
 def NAND(a: bool, b: bool) -> bool:

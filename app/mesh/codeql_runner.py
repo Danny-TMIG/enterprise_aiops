@@ -1,10 +1,12 @@
 from __future__ import annotations
-import os, shutil, subprocess
+
+import os
+import shutil
+import subprocess
 from pathlib import Path
-from typing import Optional
 
 
-def _codeql_bin() -> Optional[str]:
+def _codeql_bin() -> str | None:
     p = shutil.which("codeql")
     if p:
         return p
@@ -18,8 +20,8 @@ def _codeql_bin() -> Optional[str]:
     return None
 
 
-def run_codeql(project_root: str, work_dir: Optional[str] = None,
-               timeout: int = 1800) -> Optional[str]:
+def run_codeql(project_root: str, work_dir: str | None = None,
+               timeout: int = 1800) -> str | None:
     codeql = _codeql_bin()
     if not codeql:
         return None

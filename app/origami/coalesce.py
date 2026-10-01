@@ -8,10 +8,10 @@ backticks, and wrapper prefixes in one step.
 Nothing downstream ever sees the raw text.
 """
 from __future__ import annotations
+
 import ast
 import re
-from typing import Any, List, Tuple
-
+from typing import Any
 
 _FENCE_RE = re.compile(r"```[a-zA-Z]*\s*\n?(.*?)```", re.DOTALL)
 _WRAP = ('"', "'", "`")
@@ -157,14 +157,14 @@ def canonical_text(s: str) -> str:
     return _strip_wrap(s).strip()
 
 
-def indent(block: str, spaces: int = 4) -> List[str]:
+def indent(block: str, spaces: int = 4) -> list[str]:
     """Indent every non-empty line of a canonical block."""
     pad = " " * spaces
     return [(pad + ln) if ln.strip() else "" for ln in block.splitlines()]
 
 
 # ── equivalence ───────────────────────────────────────────────
-def key(kind: str, value: str) -> Tuple[str, Any]:
+def key(kind: str, value: str) -> tuple[str, Any]:
     if kind in ("func_name", "test_name", "ret"):
         return (kind, canonical_identifier(value))
     if kind == "params":

@@ -1,7 +1,8 @@
 import pytest
-from app.puzzles.rubik import RubikCube, scramble, solve_cube, SOLVED, MOVES, apply_move
+
+from app.puzzles.rubik import MOVES, SOLVED, apply_move, scramble, solve_cube
 from app.train.core import TrainConfig, Trainer
-from app.train.mesh import trans, weave, criss_cross, pollinate
+from app.train.mesh import criss_cross, pollinate, trans, weave
 
 
 @pytest.mark.parametrize("depth", [2, 4, 6, 8, 10, 11])

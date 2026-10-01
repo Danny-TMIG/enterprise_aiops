@@ -1,14 +1,40 @@
 """Full coverage for dcs.triad.*"""
-import hashlib, json, tempfile
+import hashlib
+import json
+import tempfile
 from pathlib import Path
+
 import pytest
-from dcs.triad.lattice import (VState, UNKNOWN, PASS, FAIL, CONFLICT, ALL_STATES,
-    truth_le, know_le, meet_truth, join_truth, meet_know, join_know,
-    fold_v, consensus, quorum)
-from dcs.triad.axes import coherence, conformance, coordination
-from dcs.triad.kernel import Kernel, Triad, Receipt, KERNEL_VERSION, _canon, _digest, _sign
+
 from dcs.triad import laws, report
-from dcs.triad.__main__ import main as triad_main, DEMO_SPEC
+from dcs.triad.__main__ import DEMO_SPEC
+from dcs.triad.__main__ import main as triad_main
+from dcs.triad.axes import coherence, conformance, coordination
+from dcs.triad.kernel import (
+    KERNEL_VERSION,
+    Kernel,
+    Receipt,
+    Triad,
+    _canon,
+    _digest,
+    _sign,
+)
+from dcs.triad.lattice import (
+    CONFLICT,
+    FAIL,
+    PASS,
+    UNKNOWN,
+    VState,
+    consensus,
+    fold_v,
+    join_know,
+    join_truth,
+    know_le,
+    meet_know,
+    meet_truth,
+    quorum,
+    truth_le,
+)
 
 
 def test_vstate_names():

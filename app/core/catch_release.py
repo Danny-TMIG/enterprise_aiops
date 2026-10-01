@@ -1,12 +1,15 @@
 """Catch-and-release error handling. Parse tracebacks, emit records, never re-raise."""
 from __future__ import annotations
-import asyncio, traceback, uuid
+
+import asyncio
+import traceback
+import uuid
 from collections import deque
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from functools import wraps
 from threading import Lock
-from typing import Any, Callable, Deque, Dict, List, Optional
+from typing import Any
 
 _CLASSIFIERS = [
     ("shadow",      lambda e: isinstance(e, ImportError) and "cannot import name" in str(e)),
@@ -31,9 +34,9 @@ class Frame:
 @dataclass
 class Catch:
     id: str; when: str; kind: str; category: str; message: str
-    frames: List[Frame]; origin: str; released: bool = False
-    meta: Dict[str, Any] = field(default_factory=dict)
-    def to_dict(self) -> Dict[str, Any]: return asdict(self)
+    frames: list[Frame]; origin: str; released: bool = False
+    meta: dict[str, Any] = field(default_factory=dict)
+    def to_dict(self) -> dict[str, Any]: return asdict(self)
 
 def _origin(frames):
     ours = [f for f in frames if "/site-packages/" not in f.file and "/.venv/" not in f.file]
@@ -54,7 +57,7 @@ def parse(exc, *, meta=None):
                  type(exc).__name__, _classify(exc), str(exc),
                  frames, _origin(frames), False, meta or {})
 
-_BUFFER: Deque[Catch] = deque(maxlen=500)
+_BUFFER: deque[Catch] = deque(maxlen=500)
 _LOCK = Lock()
 
 def release(catch):
@@ -117,7 +120,7 @@ def install_middleware(app):
 
 def install_routes(app):
     @app.get("/diag/catches")
-    def _catches(limit: int = 50, category: Optional[str] = None):
+    def _catches(limit: int = 50, category: str | None = None):
         return {"catches": recent(limit=limit, category=category)}
     @app.get("/diag/catches/counts")
     def _counts(): return {"counts": counts()}
@@ -125,8 +128,19 @@ def install_routes(app):
 def install(app):
     install_middleware(app); install_routes(app)
 
-__all__ = ["Catch","Frame","catcher","catch_and_release","parse","release",
-           "recent","counts","install","install_middleware","install_routes"]
+__all__ = [
+    "Catch",
+    "Frame",
+    "catch_and_release",
+    "catcher",
+    "counts",
+    "install",
+    "install_middleware",
+    "install_routes",
+    "parse",
+    "recent",
+    "release",
+]
 
 
 # ── self-registration: this module is a capability of the fabric ──

@@ -5,13 +5,12 @@ satisfy the intersection constraints, then present that placement
 as the puzzle. This guarantees the puzzle is solvable.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from itertools import permutations
-from typing import Dict, List, Optional, Tuple
 
-from app.puzzles.atlas import Atlas, load_atlas, CATEGORIES
-from app.puzzles.grid import Grid, Var, Constraint
-from app.puzzles.solver import solve, Solution
+from dataclasses import dataclass, field
+
+from app.puzzles.atlas import CATEGORIES, Atlas, load_atlas
+from app.puzzles.grid import Constraint, Grid, Var
+from app.puzzles.solver import solve
 
 
 @dataclass
@@ -21,7 +20,7 @@ class Slot:
     col: int
     direction: str
     length: int
-    cells: List[Tuple[int, int]]
+    cells: list[tuple[int, int]]
     clue_category: str = "Semantics"
     clue: str = ""
 
@@ -50,8 +49,8 @@ def _fits(a1: str, d1: str, d2: str, a2: str) -> bool:
             and a2[3] == d2[3])
 
 
-def _find_placement(pool: List[str], seed: int = 0
-                    ) -> Optional[Tuple[str, str, str, str]]:
+def _find_placement(pool: list[str], seed: int = 0
+                    ) -> tuple[str, str, str, str] | None:
     """Return (a1, d1, d2, a2) satisfying the layout, or None."""
     # dedupe and keep order deterministic
     words = sorted(set(pool))
@@ -72,8 +71,8 @@ def _find_placement(pool: List[str], seed: int = 0
     return None
 
 
-def make_crossword(atlas: Optional[Atlas] = None,
-                   seed: int = 0) -> "CrosswordPuzzle":
+def make_crossword(atlas: Atlas | None = None,
+                   seed: int = 0) -> CrosswordPuzzle:
     a = atlas or load_atlas()
     pool = a.by_length(4)
     if len(pool) < 4:
@@ -89,7 +88,7 @@ def make_crossword(atlas: Optional[Atlas] = None,
     a1, d1, d2, a2 = placement
 
     grid = Grid(meta={"kind": "crossword", "size": 4, "seed": seed})
-    slots: List[Slot] = [
+    slots: list[Slot] = [
         Slot("A1", 0, 0, "A", 4, _ROW0, CATEGORIES[0],
              f"4-letter term in {CATEGORIES[0]}"),
         Slot("D1", 0, 0, "D", 4, _COL0, CATEGORIES[1],
@@ -138,13 +137,13 @@ def make_crossword(atlas: Optional[Atlas] = None,
 @dataclass
 class CrosswordPuzzle:
     grid: Grid
-    slots: List[Slot]
+    slots: list[Slot]
     seed: int = 0
     pool_size: int = 0
-    truth: Dict[str, str] = field(default_factory=dict)
+    truth: dict[str, str] = field(default_factory=dict)
 
-    def to_matrix(self, assignment: Optional[Dict[str, str]] = None
-                  ) -> List[List[str]]:
+    def to_matrix(self, assignment: dict[str, str] | None = None
+                  ) -> list[list[str]]:
         m = [["." for _ in range(4)] for _ in range(4)]
         if assignment is None:
             return m
@@ -160,7 +159,7 @@ class CrosswordPuzzle:
         m = m if m is not None else self.to_matrix()
         return "\n".join(" ".join(row) for row in m)
 
-    def clue_list(self) -> List[dict]:
+    def clue_list(self) -> list[dict]:
         return [{"slot": s.id, "direction": s.direction,
                  "row": s.row, "col": s.col,
                  "category": s.clue_category, "clue": s.clue}

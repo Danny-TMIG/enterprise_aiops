@@ -10,11 +10,11 @@ predicates are not rules; they are functions of graph topology. New
 languages add no predicates — they add shapes in the residue.
 """
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Dict, List, Tuple
 
 from app.octet.graph import OctetGraph
-from app.octet.octet import G, D, E, PORTS
+from app.octet.octet import PORTS, D, E, G
 from app.octet.reduce import normalise
 
 
@@ -23,13 +23,13 @@ class EmergentTask:
     id: str
     shape: str
     nodes: int
-    value_span: Tuple[int, int]
+    value_span: tuple[int, int]
     evidence: str
 
 
-def _shapes(g: OctetGraph) -> List[EmergentTask]:
+def _shapes(g: OctetGraph) -> list[EmergentTask]:
     """Read task shapes from a normal form. No rules. Only topology."""
-    out: List[EmergentTask] = []
+    out: list[EmergentTask] = []
     # connected components again
     seen: set = set()
     idx = 0
@@ -81,7 +81,7 @@ def _shapes(g: OctetGraph) -> List[EmergentTask]:
 
 
 def bypass(g: OctetGraph, max_steps: int = 10_000
-           ) -> Tuple[OctetGraph, List[EmergentTask], int, List[str]]:
+           ) -> tuple[OctetGraph, list[EmergentTask], int, list[str]]:
     """Reduce and read. No rules. No op table. Everything emergent."""
     ng, n, trace = normalise(g.copy(), max_steps=max_steps)
     tasks = _shapes(ng)

@@ -1,8 +1,10 @@
 """Symbolic rewrite rules: IntentIR → partial TaskGraph."""
 
 from __future__ import annotations
+
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 from app.reconfig.intent_ir import IntentIR
 
@@ -11,24 +13,24 @@ from app.reconfig.intent_ir import IntentIR
 class Task:
     id: str
     op: str
-    inputs: List[str] = field(default_factory=list)
-    outputs: List[str] = field(default_factory=list)
-    params: Dict[str, Any] = field(default_factory=dict)
-    residue: List[str] = field(default_factory=list)
+    inputs: list[str] = field(default_factory=list)
+    outputs: list[str] = field(default_factory=list)
+    params: dict[str, Any] = field(default_factory=dict)
+    residue: list[str] = field(default_factory=list)
 
 
 @dataclass
 class Rule:
     name: str
     when: Callable[[IntentIR], bool]
-    then: Callable[[IntentIR], List[Task]]
+    then: Callable[[IntentIR], list[Task]]
 
 
 def _has_verb(ir: IntentIR, *verbs: str) -> bool:
     return any(v in ir.verbs for v in verbs)
 
 
-def _rule_count_then_store(ir: IntentIR) -> List[Task]:
+def _rule_count_then_store(ir: IntentIR) -> list[Task]:
     return [
         Task(id="t1", op="COUNT",
              inputs=[ir.objects.get("input", "input")],
@@ -40,7 +42,7 @@ def _rule_count_then_store(ir: IntentIR) -> List[Task]:
     ]
 
 
-def _rule_train_evaluate(ir: IntentIR) -> List[Task]:
+def _rule_train_evaluate(ir: IntentIR) -> list[Task]:
     return [
         Task(id="t1", op="LOAD", inputs=["dataset"], outputs=["data"]),
         Task(id="t2", op="TRAIN", inputs=["data"], outputs=["model"],
@@ -54,7 +56,7 @@ def _rule_train_evaluate(ir: IntentIR) -> List[Task]:
     ]
 
 
-def _rule_route_events(ir: IntentIR) -> List[Task]:
+def _rule_route_events(ir: IntentIR) -> list[Task]:
     return [
         Task(id="t1", op="FETCH", inputs=["source"], outputs=["events"]),
         Task(id="t2", op="FILTER", inputs=["events"], outputs=["matched"],
@@ -72,7 +74,7 @@ def _extract_cadence(ir: IntentIR) -> str:
     return "daily"
 
 
-RULES: List[Rule] = [
+RULES: list[Rule] = [
     Rule(
         name="count_then_store",
         when=lambda ir: _has_verb(ir, "COUNT") and _has_verb(ir, "STORE"),
@@ -98,10 +100,10 @@ RULES: List[Rule] = [
 ]
 
 
-def apply_rules(ir: IntentIR) -> tuple[List[Task], List[str]]:
+def apply_rules(ir: IntentIR) -> tuple[list[Task], list[str]]:
     """Return (tasks, unmatched_names)."""
-    tasks: List[Task] = []
-    matched: List[str] = []
+    tasks: list[Task] = []
+    matched: list[str] = []
     for rule in RULES:
         try:
             if rule.when(ir):

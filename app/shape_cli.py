@@ -1,8 +1,11 @@
 """python3 -m app.shape [--dict|--validate|--write]"""
 from __future__ import annotations
-import argparse, json, sys
 
-from app.shape import render, as_dict, validate, write_markdown
+import argparse
+import json
+import sys
+
+from app.shape import as_dict, render, validate, write_markdown
 
 
 def main(argv=None):

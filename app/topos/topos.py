@@ -12,11 +12,12 @@ a characteristic arrow χ: dst → Ω that reads "is this in the
 verified subobject?".
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Any
 
 from app.topos.category import Category, Morphism, Object
-
 
 TERMINAL_ID = "1"
 OMEGA_ID = "Ω"
@@ -46,7 +47,7 @@ class SubobjectClassifier:
             meta={"classifier": True, "of": X},
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"omega": self.omega_id, "terminal": self.terminal_id,
                 "values": [self.true_value, self.false_value]}
 
@@ -101,7 +102,7 @@ class Topos(Category):
             and self.is_identity_lawful()
         )
 
-    def stats(self) -> Dict[str, Any]:
+    def stats(self) -> dict[str, Any]:
         s = super().stats()
         s["is_topos"] = self.is_topos()
         s["has_omega"] = OMEGA_ID in self.objects

@@ -1,10 +1,12 @@
 import asyncio
-import httpx
-import json
 import hashlib
-from pathlib import Path
+import json
 from datetime import datetime
-from typing import Dict, Any, List
+from pathlib import Path
+from typing import Any
+
+import httpx
+
 
 class PiCalculusChannel:
     'Implements pi-calculus channel communication (asynchronous message passing & mobility).'
@@ -12,10 +14,10 @@ class PiCalculusChannel:
         self.name = name
         self.queue = asyncio.Queue()
 
-    async def send(self, message: Dict[str, Any]):
+    async def send(self, message: dict[str, Any]):
         await self.queue.put(message)
 
-    async def receive(self) -> Dict[str, Any]:
+    async def receive(self) -> dict[str, Any]:
         return await self.queue.get()
 
 class TokyoMoldRoutingHarness:
@@ -26,7 +28,7 @@ class TokyoMoldRoutingHarness:
             'http://127.0.0.1:11434/api/generate', # Ollama default
             'http://127.0.0.1:8000/v1/generate'    # Local Uvicorn server
         ]
-        self.channels: Dict[str, PiCalculusChannel] = {
+        self.channels: dict[str, PiCalculusChannel] = {
             'dispatch': PiCalculusChannel('ch_dispatch'),
             'routing': PiCalculusChannel('ch_routing'),
             'commit': PiCalculusChannel('ch_commit')
@@ -42,7 +44,7 @@ class TokyoMoldRoutingHarness:
             except Exception:
                 continue
         # Fallback simulation if local inference daemon is unreachable
-        return f"[MOCK-PI-CALCULUS-SYNTHESIS] State transition verified across Tokyo Mold coordinate."
+        return "[MOCK-PI-CALCULUS-SYNTHESIS] State transition verified across Tokyo Mold coordinate."
 
     async def process_worker(self, discipline: str, goal: str) -> dict:
         # Pi-calculus channel synchronization: name restriction and output prefix
@@ -72,8 +74,8 @@ class TokyoMoldRoutingHarness:
         await self.channels['commit'].send(record)
         return record
 
-    async def execute_matrix(self, disciplines: List[str], goal: str):
-        print(f"[*] Igniting Tokyo Mold Routing & Logistics Harness ($\\pi$-calculus engine)...")
+    async def execute_matrix(self, disciplines: list[str], goal: str):
+        print("[*] Igniting Tokyo Mold Routing & Logistics Harness ($\\pi$-calculus engine)...")
         print(f"[*] Ingested Goal: {goal}")
         print(f"[*] Active Spatial Matrix Nodes: {len(disciplines)}")
 

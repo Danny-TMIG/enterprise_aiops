@@ -7,19 +7,21 @@ a dict) and records the values of named keys across ticks.
 Self-registers as capability `observatory`.
 """
 from __future__ import annotations
-import inspect, statistics
-from dataclasses import dataclass, field, asdict
-from typing import Any, Callable, Dict, List, Optional
+
+import statistics
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
 class Trajectory:
     code: str
     steps: int
-    series: Dict[str, List[float]] = field(default_factory=dict)
-    scalars: Dict[str, Any] = field(default_factory=dict)
+    series: dict[str, list[float]] = field(default_factory=dict)
+    scalars: dict[str, Any] = field(default_factory=dict)
 
-    def stats(self, key: str) -> Dict[str, float]:
+    def stats(self, key: str) -> dict[str, float]:
         xs = self.series.get(key, [])
         if not xs:
             return {}
@@ -52,7 +54,7 @@ class Trajectory:
         v = statistics.pvariance(xs)
         return v / (m * m)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "code": self.code,
             "steps": self.steps,
@@ -63,7 +65,7 @@ class Trajectory:
 
 # ── wrap a PhysarumRouter (or anything with tick/topology) ──────────
 def observe_live(obj: Any, steps: int, *,
-                 extract: Optional[Callable[[Any], Dict[str, float]]] = None,
+                 extract: Callable[[Any], dict[str, float]] | None = None,
                  sample_every: int = 1) -> Trajectory:
     """Run obj.tick(1) `steps` times. After each tick, call extract(obj)
     and record its dict. Default extractor understands PhysarumRouter
@@ -82,8 +84,8 @@ def observe_live(obj: Any, steps: int, *,
     return tr
 
 
-def _default_extract(obj: Any) -> Dict[str, float]:
-    out: Dict[str, float] = {}
+def _default_extract(obj: Any) -> dict[str, float]:
+    out: dict[str, float] = {}
     if hasattr(obj, "topology"):
         try:
             top = obj.topology()
@@ -125,7 +127,7 @@ def _self_register() -> None:
         return
 
     @register("observatory")
-    def _entry(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _entry(*args: Any, **kwargs: Any) -> dict[str, Any]:
         return {
             "module": "app.core.observatory",
             "classes": ["Trajectory"],

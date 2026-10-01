@@ -1,13 +1,14 @@
-from typing import Dict, Any, List
+from typing import Any
+
 
 class ModelRegistry:
     def __init__(self):
-        self.registry: Dict[str, Dict[str, Any]] = {}
+        self.registry: dict[str, dict[str, Any]] = {}
 
-    def register(self, name: str, config: Dict[str, Any]) -> None:
+    def register(self, name: str, config: dict[str, Any]) -> None:
         self.registry[name] = config
 
-    def status(self) -> Dict[str, Any]:
+    def status(self) -> dict[str, Any]:
         return {
             "total_models": len(self.registry),
             "models": list(self.registry.keys()),
@@ -15,7 +16,7 @@ class ModelRegistry:
         }
 
 class DummyProvider:
-    def list(self) -> List[str]:
+    def list(self) -> list[str]:
         return ["provider-1"]
 
 class DisRuntime:
@@ -28,7 +29,7 @@ class DisRuntime:
         self.mcp = type("MCP", (), {"tools": {"default": {}}})()
         self.a2a = type("A2A", (), {"card": type("Card", (), {"skills": [{"id": "skill-1"}]})()})()
 
-    def status(self) -> Dict[str, Any]:
+    def status(self) -> dict[str, Any]:
         return {
             "runtime": "DIS",
             "models": self.models.status(),

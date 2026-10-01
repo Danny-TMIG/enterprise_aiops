@@ -1,15 +1,16 @@
 """Demo: atlas, sudoku, crossword, rubik, tictactoe, gridworld."""
 from __future__ import annotations
+
 import sys
 
-from app.puzzles.atlas import load_atlas, CATEGORIES
-from app.puzzles.sudoku import make_sudoku, solve_sudoku
-from app.puzzles.crossword import make_crossword, solve_crossword
+from app.puzzles.atlas import load_atlas
 from app.puzzles.configurator import Config, Configurator
-from app.puzzles.tree import bfs, ida_star, minimax, alpha_beta, mcts
-from app.puzzles.rubik import scramble, solve_cube, RubikCube, SOLVED
-from app.puzzles.tictactoe import TicTacToe
+from app.puzzles.crossword import make_crossword, solve_crossword
 from app.puzzles.gridworld import Gridworld
+from app.puzzles.rubik import scramble, solve_cube
+from app.puzzles.sudoku import make_sudoku, solve_sudoku
+from app.puzzles.tictactoe import TicTacToe
+from app.puzzles.tree import alpha_beta, bfs, mcts
 
 
 def _hdr(t):

@@ -1,6 +1,7 @@
 """Derived from ISO/IEC 12207 / ISO: 6.4 Software Services."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

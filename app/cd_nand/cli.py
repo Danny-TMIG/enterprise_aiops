@@ -1,15 +1,20 @@
 """Demonstrate the Cayley-Dickson tower over NAND."""
 from __future__ import annotations
+
 import sys
 
-from app.cd_nand.nand import NAND, NOT, AND, OR, XOR, IMPLIES, exhaustive_check
-from app.cd_nand.cayley import CD, BOOL_ALG, cd_basis, cd_zero, cd_one
+from app.cd_nand.cayley import BOOL_ALG, cd_basis
 from app.cd_nand.levels import (
-    LEVELS, full_tower, level_module, level_module as lm,
+    full_tower,
+    level_module,
 )
 from app.cd_nand.map_to_logic import (
-    nand_to_cd, cd_to_truth, nand_cd, verify_embedding,
+    cd_to_truth,
+    nand_cd,
+    nand_to_cd,
+    verify_embedding,
 )
+from app.cd_nand.nand import AND, IMPLIES, NAND, NOT, OR, XOR, exhaustive_check
 
 
 def _hdr(t):
@@ -43,9 +48,9 @@ def demo_cd():
             a, b = basis[1], basis[1]
             prod = a * b
             print(f"    {a!r}")
-            print(f"    *")
+            print("    *")
             print(f"    {b!r}")
-            print(f"    =")
+            print("    =")
             print(f"    {prod!r}")
         print()
 

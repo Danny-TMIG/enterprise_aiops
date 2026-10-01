@@ -17,16 +17,23 @@ property, the failing row is named.
     P10 runtime closure      real capability execution succeeds
 """
 from __future__ import annotations
-import ast, importlib, json, py_compile, re, subprocess, sys, hashlib
+
+import ast
+import hashlib
+import json
+import py_compile
+import re
+import subprocess
+import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 
 # ── P1 ─────────────────────────────────────────────────────────────
-def p1_compile() -> Dict[str, Any]:
+def p1_compile() -> dict[str, Any]:
     ok, bad = 0, []
     for p in sorted((ROOT / "app").rglob("*.py")):
         if "__pycache__" in str(p):
@@ -41,7 +48,7 @@ def p1_compile() -> Dict[str, Any]:
 
 
 # ── P2 ─────────────────────────────────────────────────────────────
-def p2_imports() -> Dict[str, Any]:
+def p2_imports() -> dict[str, Any]:
     """Check imports in a bounded child process and identify a stuck import."""
     import math
     import os
@@ -167,7 +174,7 @@ save()
 
 
 # ── P3 ─────────────────────────────────────────────────────────────
-def p3_tests() -> Dict[str, Any]:
+def p3_tests() -> dict[str, Any]:
     """Keep pytest's exit status authoritative and explain coverage failures."""
     r = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "--no-header", "-p", "no:cacheprovider", "-p", "no:sugar", "--tb=short", "tests/"],
@@ -203,7 +210,7 @@ def p3_tests() -> Dict[str, Any]:
 
 
 # ── P4 ─────────────────────────────────────────────────────────────
-def p4_ledger_writes() -> Dict[str, Any]:
+def p4_ledger_writes() -> dict[str, Any]:
     # every direct `INSERT INTO events` outside ram_substrate is a
     # violation of the single-writer invariant.
     hits = []
@@ -221,14 +228,14 @@ def p4_ledger_writes() -> Dict[str, Any]:
             if stripped.startswith("#"):
                 continue
             if re.search(r"execute\s*\(\s*[fr]?['\"]INSERT\s+INTO\s+events",
-                         line, re.I):
+                         line, re.IGNORECASE):
                 hits.append(rel)
                 break
     return {"pass": not hits, "violations": hits}
 
 
 # ── P5 ─────────────────────────────────────────────────────────────
-def p5_chain() -> Dict[str, Any]:
+def p5_chain() -> dict[str, Any]:
     from app.core.ram_substrate import RAMSubstrate
     sub = RAMSubstrate(capacity=8, autoload=False)  # small ring, chain check is against db
     v = sub.verify_chain(from_seq=1)
@@ -239,11 +246,12 @@ def p5_chain() -> Dict[str, Any]:
 
 
 # ── P6 ─────────────────────────────────────────────────────────────
-def p6_dispatch() -> Dict[str, Any]:
+def p6_dispatch() -> dict[str, Any]:
     """Every real capability must resolve to a callable implementation."""
-    from app.core import capabilities as c
     import sqlite3
     from contextlib import closing
+
+    from app.core import capabilities as c
     with closing(sqlite3.connect(c.DB)) as con:
         real = [r[0] for r in con.execute(
             "SELECT code FROM capabilities WHERE status='real' ORDER BY code")]
@@ -257,15 +265,16 @@ def p6_dispatch() -> Dict[str, Any]:
             "missing": missing[:12]}
 
 
-def p10_runtime() -> Dict[str, Any]:
+def p10_runtime() -> dict[str, Any]:
     """How many real caps run right now. FAIL if any don't.
 
     Before the local generator landed this was informational — 90% of
     the registry was unrunnable and P10 still printed PASS. It now
     reports honestly: dep_satisfied > 0 -> P10 red, names the failures.
     """
-    from app.core.capabilities import dispatch, DB
     import sqlite3
+
+    from app.core.capabilities import DB, dispatch
     con = sqlite3.connect(DB)
     real = [r[0] for r in con.execute(
         "SELECT code FROM capabilities WHERE status='real' ORDER BY code")]
@@ -286,9 +295,10 @@ def p10_runtime() -> Dict[str, Any]:
         "failed_sample": failed[:10],
     }
 
-def p7_catalog() -> Dict[str, Any]:
-    from app.core.capabilities import DB
+def p7_catalog() -> dict[str, Any]:
     import sqlite3
+
+    from app.core.capabilities import DB
     con = sqlite3.connect(DB)
     rows = con.execute(
         "SELECT code, status FROM capabilities WHERE category='nature'"
@@ -301,9 +311,9 @@ def p7_catalog() -> Dict[str, Any]:
 
 
 # ── P8 ─────────────────────────────────────────────────────────────
-def p8_determinism() -> Dict[str, Any]:
+def p8_determinism() -> dict[str, Any]:
     """Run one phenomenon twice with the same seed; hashes must match."""
-    from app.core.nature import kuramoto, sir, levy_flight
+    from app.core.nature import kuramoto, levy_flight, sir
     cases = [
         ("kuramoto",  lambda: kuramoto(n=20, steps=50, seed=7)),
         ("sir",       lambda: sir(steps=100)),
@@ -321,7 +331,7 @@ def p8_determinism() -> Dict[str, Any]:
 
 
 # ── P9 ─────────────────────────────────────────────────────────────
-def p9_bridges() -> Dict[str, Any]:
+def p9_bridges() -> dict[str, Any]:
     """Every external-graph bridge declares runtime availability and
     exposes a working model layer that runs without the runtime."""
     from app.bridges import describe

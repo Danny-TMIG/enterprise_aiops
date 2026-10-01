@@ -1,12 +1,13 @@
 """Observer — run a harness, parse its structured output."""
 from __future__ import annotations
+
 import contextlib
-import io
 import importlib
+import io
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 _AXIS_NAMES = [
     "parses", "intent_match", "body_nonstub",
@@ -22,7 +23,7 @@ _SAFE_RE = re.compile(
 @dataclass
 class Run:
     input: str
-    bits: List[int]
+    bits: list[int]
     score: float
 
 
@@ -30,8 +31,8 @@ class Run:
 class Observation:
     harness: str
     ts: str
-    runs: List[Run]
-    axis_pass: Dict[str, int]
+    runs: list[Run]
+    axis_pass: dict[str, int]
     n: int
     raw: str = ""
 
@@ -43,7 +44,7 @@ class Observation:
     def all_pass(self) -> bool:
         return all(all(b == 1 for b in r.bits) for r in self.runs)
 
-    def failures(self) -> List[Dict[str, Any]]:
+    def failures(self) -> list[dict[str, Any]]:
         out = []
         for r in self.runs:
             bad = [_AXIS_NAMES[i] for i, b in enumerate(r.bits) if b == 0]
@@ -52,7 +53,7 @@ class Observation:
                             "score": r.score})
         return out
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "harness": self.harness, "ts": self.ts, "n": self.n,
             "mean": round(self.mean, 4), "all_pass": self.all_pass,
@@ -74,7 +75,7 @@ def _capture(mod) -> str:
 def _observe_usefulness() -> Observation:
     mod = importlib.import_module("app.proof.usefulness")
     raw = _capture(mod)
-    runs: List[Run] = []
+    runs: list[Run] = []
     for bits_s, prompt, score_s in _USEFUL_RE.findall(raw):
         runs.append(Run(
             input=prompt.strip(),
@@ -101,7 +102,7 @@ def observe_murmur() -> Observation:
     mod = importlib.import_module("app.proof.murmur_proof")
     raw = _capture(mod)
     # reuse the usefulness line regex — same shape
-    runs: List[Run] = []
+    runs: list[Run] = []
     for bits_s, name, score_s in _USEFUL_RE.findall(raw):
         runs.append(Run(input=name.strip(),
                         bits=[int(c) for c in bits_s],

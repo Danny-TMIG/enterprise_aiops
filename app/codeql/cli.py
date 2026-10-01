@@ -1,5 +1,6 @@
-import sys
 import argparse
+import sys
+
 
 def main(argv=None):
     """Main CLI entrypoint with graceful argument handling."""

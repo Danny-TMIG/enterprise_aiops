@@ -4,12 +4,14 @@ Rogue is not prevented. Rogue is a state whose attestation chain breaks.
 The chain is total. Therefore rogue is detectable by construction.
 """
 from __future__ import annotations  # pragma: no cover
-import hashlib, json, time  # pragma: no cover
-from dataclasses import dataclass, field  # pragma: no cover
 
-from dcs.triad.lattice import PASS, FAIL, UNKNOWN, CONFLICT, VState  # pragma: no cover
+import hashlib  # pragma: no cover
+import json
+import time
+from dataclasses import dataclass  # pragma: no cover
+
 from dcs.triad.kernel import Kernel, Triad  # pragma: no cover
-
+from dcs.triad.lattice import FAIL, PASS, UNKNOWN, VState  # pragma: no cover
 
 # ── 48 hats × 7 layers × 4 standards bodies ─────────────────────
 HATS = [
@@ -207,7 +209,6 @@ def triad_for(att: Attestation, chain: Chain) -> Triad:  # pragma: no cover
 
 
 if __name__ == "__main__":  # pragma: no cover
-    import sys  # pragma: no cover
     key = b"demo-key-not-for-production"
     chain = Chain(key)
     for i, (code, layer, verb, output, anchor) in enumerate(HATS):

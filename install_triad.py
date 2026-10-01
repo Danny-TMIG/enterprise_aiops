@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Install the TRIAD kernel: conformance × coherence × coordination as one algebra."""
-import os, shutil, subprocess, sys
+import os
+import shutil
+import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 

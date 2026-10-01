@@ -6,11 +6,10 @@ on the subsystems that *define* reality.
 import json
 from pathlib import Path
 
-from app.moat.axes import score_subsystem, score_all
+from app.moat.axes import score_all, score_subsystem
 from app.moat.moat import MoatMesh, record_run
 from app.moat.runtime import MoatRuntime
 from app.reality.probe import probe_reality
-
 
 ROOT = Path(__file__).resolve().parent.parent
 

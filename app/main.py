@@ -1,5 +1,3 @@
-from pydantic import BaseModel
-from typing import Optional
 import datetime
 import hashlib
 import json
@@ -9,6 +7,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ed25519
 from fastapi import FastAPI, Query
 from mlx_lm import generate, load
+from pydantic import BaseModel
 
 app = FastAPI(title="Sovereign Enterprise AIOps Gateway", version="1.0.0")
 MODEL_ID = "mlx-community/Qwen2.5-7B-Instruct-4bit"
@@ -55,12 +54,12 @@ def health_check():
 
 
 class PersonaRequest(BaseModel):
-    prompt: Optional[str] = "status"
-    profile_id: Optional[str] = "default"
-    archetype: Optional[str] = "default"
+    prompt: str | None = "status"
+    profile_id: str | None = "default"
+    archetype: str | None = "default"
 
 @app.post("/persona/synthesize")
-def synthesize_persona(payload: Optional[PersonaRequest] = None, profile_id: Optional[str] = None, archetype: Optional[str] = None):
+def synthesize_persona(payload: PersonaRequest | None = None, profile_id: str | None = None, archetype: str | None = None):
     p_id = profile_id or (payload.profile_id if payload else "default")
     arch = archetype or (payload.archetype if payload else "default")
     return {"status": "synthesized", "profile_id": p_id, "archetype": arch, "synthesized_output": "mocked persona synthesis result"}
@@ -234,7 +233,8 @@ def dispatch_cluster_task(task_name: str, payload_data: str = "default_payload")
 
 # ── mesh endpoints (registered here to keep app.mesh import-light) ──
 try:
-    from app.mesh import get_mesh as _get_mesh, route as _route_fn
+    from app.mesh import get_mesh as _get_mesh
+    from app.mesh import route as _route_fn
 
     @app.get("/mesh/status")
     def _mesh_status_endpoint():
@@ -264,6 +264,7 @@ except Exception as _e:
 
 # --- Auto-generated fallback route stubs for E2E mesh compatibility ---
 from fastapi import APIRouter
+
 router_stubs = APIRouter()
 
 @router_stubs.get("/cluster/status")

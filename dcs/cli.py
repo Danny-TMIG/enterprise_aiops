@@ -11,10 +11,9 @@ from __future__ import annotations  # pragma: no cover
 
 import argparse  # pragma: no cover
 import json  # pragma: no cover
-import sys  # pragma: no cover
 import time  # pragma: no cover
-import hashlib  # pragma: no cover
 from pathlib import Path  # pragma: no cover
+
 
 # ── lazy imports so subcommands only pull what they need ─────────
 def _rogue():  # pragma: no cover
@@ -23,7 +22,7 @@ def _rogue():  # pragma: no cover
 
 def _triad():  # pragma: no cover
     from dcs.triad.kernel import Kernel, Triad  # pragma: no cover
-    from dcs.triad.lattice import PASS, FAIL, UNKNOWN, CONFLICT  # pragma: no cover
+    from dcs.triad.lattice import CONFLICT, FAIL, PASS, UNKNOWN  # pragma: no cover
     return Kernel, Triad, PASS, FAIL, UNKNOWN, CONFLICT  # pragma: no cover
 
 
@@ -146,7 +145,7 @@ def cmd_generate(args):  # pragma: no cover
 def cmd_hats(args):  # pragma: no cover
     r = _rogue()
     dist = r.hats_by_layer()
-    print(f"48 hats across 7 layers\n")
+    print("48 hats across 7 layers\n")
     for i in range(7):
         codes = dist[i]
         print(f"L{i} {r.LAYERS[i]:<14} ({len(codes):>2})  {' '.join(codes)}")
@@ -208,7 +207,7 @@ def cmd_apop(args):  # pragma: no cover
 # dcs license — issue / verify / show
 # ══════════════════════════════════════════════════════════════════
 def _reconstruct_cert(raw):  # pragma: no cover
-    from dcs.certify import Certification, Scope, NonClaims  # pragma: no cover
+    from dcs.certify import Certification, NonClaims, Scope  # pragma: no cover
     raw["scope"] = Scope(**raw["scope"])
     raw["non_claims"] = NonClaims(**raw["non_claims"])
     sig = raw.pop("signature", "")
@@ -216,10 +215,15 @@ def _reconstruct_cert(raw):  # pragma: no cover
 
 
 def cmd_license(args):  # pragma: no cover
-    from dcs.certify import issue_license, verify_license, render_license  # pragma: no cover
-    from dcs.ct import TransparencyLog, make_inclusion_proof  # pragma: no cover
-    from dataclasses import asdict  # pragma: no cover
     import json as _json  # pragma: no cover
+    from dataclasses import asdict  # pragma: no cover
+
+    from dcs.certify import (  # pragma: no cover
+        issue_license,
+        render_license,
+        verify_license,
+    )
+    from dcs.ct import TransparencyLog  # pragma: no cover
 
     key = (args.key or "default-key").encode()
 

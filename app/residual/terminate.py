@@ -1,7 +1,7 @@
 """Walk from a module to its terminal residual Ω."""
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Dict, List
 
 from app.residual import register as R
 from app.residual.anchors import ANCHORS, OMEGA, anchors_for
@@ -10,12 +10,12 @@ from app.residual.anchors import ANCHORS, OMEGA, anchors_for
 @dataclass
 class Chain:
     module: str
-    residuals: List[R.Residual] = field(default_factory=list)
+    residuals: list[R.Residual] = field(default_factory=list)
     terminal: str = OMEGA
     valid: bool = True
-    missing: List[str] = field(default_factory=list)
+    missing: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "module": self.module,
             "residuals": [
@@ -43,7 +43,7 @@ def terminate(module: str) -> Chain:
     return chain
 
 
-def terminate_all() -> List[Chain]:
+def terminate_all() -> list[Chain]:
     return [terminate(m) for m in sorted(ANCHORS)]
 
 

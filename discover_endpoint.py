@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import urllib.request
 import json
+import urllib.request
 
 BASE_URL = "http://127.0.0.1:8000"
 

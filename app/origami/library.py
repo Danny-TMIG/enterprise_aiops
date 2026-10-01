@@ -13,7 +13,10 @@ asserts the shipped set is exactly those six names.
 from __future__ import annotations
 
 from app.origami.grammar import (
-    LoadedGrammar, Production, WeightedGrammar, _n, _t,
+    LoadedGrammar,
+    Production,
+    _n,
+    _t,
 )
 
 
@@ -107,8 +110,14 @@ def list_shipped() -> list:
 
 
 __all__ = [
-    "SHIPPED", "get", "list_shipped",
-    "code_artifact", "review", "invariant",
-    "code_with_review", "code_variants", "dense_code",
+    "SHIPPED",
+    "code_artifact",
+    "code_variants",
+    "code_with_review",
+    "dense_code",
+    "get",
+    "invariant",
+    "list_shipped",
+    "review",
     "rich_module",
 ]

@@ -1,7 +1,8 @@
 """40 algorithms, nested, anchored, verdicted."""
 from __future__ import annotations  # pragma: no cover
+
 import json  # pragma: no cover
-from dataclasses import dataclass, asdict  # pragma: no cover
+from dataclasses import asdict, dataclass  # pragma: no cover
 from pathlib import Path  # pragma: no cover
 
 

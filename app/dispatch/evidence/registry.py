@@ -1,24 +1,25 @@
 from __future__ import annotations
-from typing import Any, Dict, List
 
-from app.dispatch.evidence.base import EvidenceStore, EvidenceRecord
-from app.dispatch.evidence.novafabric import NovaFabricStore
+from typing import Any
+
 from app.dispatch.evidence.aar import AARStore
+from app.dispatch.evidence.base import EvidenceRecord, EvidenceStore
+from app.dispatch.evidence.novafabric import NovaFabricStore
 
 
 class EvidenceRegistry:
     def __init__(self) -> None:
-        self.stores: Dict[str, EvidenceStore] = {
+        self.stores: dict[str, EvidenceStore] = {
             "novafabric": NovaFabricStore(),
             "aar-alc":    AARStore(),
         }
 
-    def list(self) -> Dict[str, Any]:
+    def list(self) -> dict[str, Any]:
         return {n: {"available": s.available()}
                 for n, s in self.stores.items()}
 
     def record(self, kind: str, subject: str,
-               payload: Dict[str, Any]) -> Dict[str, Any]:
+               payload: dict[str, Any]) -> dict[str, Any]:
         r = EvidenceRecord(kind=kind, subject=subject, payload=payload)
         return {
             "record": r.to_dict(),
@@ -26,7 +27,7 @@ class EvidenceRegistry:
         }
 
     def record_to(self, store: str, kind: str, subject: str,
-                  payload: Dict[str, Any]) -> Dict[str, Any]:
+                  payload: dict[str, Any]) -> dict[str, Any]:
         s = self.stores.get(store)
         if not s:
             return {"status": "UNSUPPORTED", "store": store}

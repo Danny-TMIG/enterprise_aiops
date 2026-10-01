@@ -14,7 +14,13 @@ Levels
   L7  fabric_top              one row: hash of everything else + itself
 """
 from __future__ import annotations
-import hashlib, hmac, json, secrets, sqlite3, sys
+
+import hashlib
+import hmac
+import json
+import secrets
+import sqlite3
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent

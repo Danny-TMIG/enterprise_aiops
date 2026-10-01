@@ -1,13 +1,14 @@
-from typing import Dict, Type
+
 from app.dispatchpatch.verification.base import BaseVerification
 
+
 class VerificationRegistry:
-    _registry: Dict[str, Type[BaseVerification]] = {}
+    _registry: dict[str, type[BaseVerification]] = {}
 
     @classmethod
-    def register(cls, name: str, verifier_cls: Type[BaseVerification]):
+    def register(cls, name: str, verifier_cls: type[BaseVerification]):
         cls._registry[name] = verifier_cls
 
     @classmethod
-    def get(cls, name: str) -> Type[BaseVerification]:
+    def get(cls, name: str) -> type[BaseVerification]:
         return cls._registry.get(name, BaseVerification)

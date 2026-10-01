@@ -8,10 +8,9 @@ For each function:
     rewrite the undefined name to the first parameter
 """
 from __future__ import annotations
+
 import ast
 import builtins
-from typing import List, Set
-
 
 _BUILTINS = set(dir(builtins)) | {
     "True", "False", "None", "self", "cls",
@@ -20,7 +19,7 @@ _BUILTINS = set(dir(builtins)) | {
 }
 
 
-def _param_names(fn: ast.AST) -> List[str]:
+def _param_names(fn: ast.AST) -> list[str]:
     out = []
     for a in getattr(fn.args, "args", []):
         out.append(a.arg)
@@ -35,7 +34,7 @@ def _param_names(fn: ast.AST) -> List[str]:
     return out
 
 
-def _defined_names(tree: ast.AST) -> Set[str]:
+def _defined_names(tree: ast.AST) -> set[str]:
     out = set(_BUILTINS)
     for n in ast.walk(tree):
         if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
@@ -52,9 +51,7 @@ def _defined_names(tree: ast.AST) -> Set[str]:
             for t in n.targets:
                 if isinstance(t, ast.Name):
                     out.add(t.id)
-        elif isinstance(n, ast.AnnAssign) and isinstance(n.target, ast.Name):
-            out.add(n.target.id)
-        elif isinstance(n, ast.For) and isinstance(n.target, ast.Name):
+        elif isinstance(n, ast.AnnAssign) and isinstance(n.target, ast.Name) or isinstance(n, ast.For) and isinstance(n.target, ast.Name):
             out.add(n.target.id)
         elif isinstance(n, ast.withitem) and isinstance(n.optional_vars, ast.Name):
             out.add(n.optional_vars.id)
@@ -63,7 +60,7 @@ def _defined_names(tree: ast.AST) -> Set[str]:
     return out
 
 
-def _undefined_in_function(fn: ast.AST, top_defined: Set[str]) -> List[str]:
+def _undefined_in_function(fn: ast.AST, top_defined: set[str]) -> list[str]:
     params = set(_param_names(fn))
     local = set()
     for n in ast.walk(fn):
@@ -71,9 +68,7 @@ def _undefined_in_function(fn: ast.AST, top_defined: Set[str]) -> List[str]:
             for t in n.targets:
                 if isinstance(t, ast.Name):
                     local.add(t.id)
-        elif isinstance(n, ast.AnnAssign) and isinstance(n.target, ast.Name):
-            local.add(n.target.id)
-        elif isinstance(n, ast.For) and isinstance(n.target, ast.Name):
+        elif isinstance(n, ast.AnnAssign) and isinstance(n.target, ast.Name) or isinstance(n, ast.For) and isinstance(n.target, ast.Name):
             local.add(n.target.id)
         elif isinstance(n, ast.withitem) and isinstance(n.optional_vars, ast.Name):
             local.add(n.optional_vars.id)

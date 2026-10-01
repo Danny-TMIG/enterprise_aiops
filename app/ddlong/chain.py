@@ -18,13 +18,13 @@ Composes with:
   - app.combinator          (the schedule can be reduced as a graph)
 """
 from __future__ import annotations
-import hashlib, math
+
+import hashlib
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
 
 from app.ddlong.dd import DD
-from app.ddlong.hop import Hop, HoppingSchedule, hop_encode, hop_decode
-from app.ddlong.longctx import LongAccumulator, phase_drift
+from app.ddlong.hop import HoppingSchedule, hop_decode, hop_encode
+from app.ddlong.longctx import LongAccumulator
 
 
 @dataclass
@@ -93,7 +93,7 @@ def transmit(payload: bytes, seed: int = 0,
     }
 
 
-def receive(schedule: HoppingSchedule, chain: Optional[DDChain] = None,
+def receive(schedule: HoppingSchedule, chain: DDChain | None = None,
             phase_error_rms: float = 0.0) -> dict:
     decoded = hop_decode(schedule, phase_error_rms=phase_error_rms)
     obs = chain.observe(schedule, phase_error_rms=phase_error_rms) if chain else {}

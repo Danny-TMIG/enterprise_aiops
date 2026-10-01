@@ -1,9 +1,11 @@
 from __future__ import annotations
-import hashlib
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
 
-from app.dominion.verdict import Verdict, PASS, FAIL
+import hashlib
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from typing import Any
+
+from app.dominion.verdict import PASS, Verdict
 
 
 def _h(*p: str) -> str:
@@ -18,9 +20,9 @@ class Witness:
     role_id: str
     kind: str
     payload: Any
-    verify_fn: Optional[Callable[[Any], Verdict]] = None
-    residue: List[str] = field(default_factory=list)
-    inputs: List[str] = field(default_factory=list)
+    verify_fn: Callable[[Any], Verdict] | None = None
+    residue: list[str] = field(default_factory=list)
+    inputs: list[str] = field(default_factory=list)
 
     @property
     def id(self) -> str:
@@ -34,7 +36,7 @@ class Witness:
                                 "no checker; witness accepted")
         return self.verify_fn(self.payload)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         v = self.verify()
         return {
             "id": self.id,

@@ -5,8 +5,9 @@ from arbitrary bytes. Text, JSON, images, audio, raw blobs — same
 code path. The graph is the input.
 """
 from __future__ import annotations
+
 import json
-from typing import Any, List
+from typing import Any
 
 from app.octet.graph import OctetGraph
 from app.octet.octet import G

@@ -1,6 +1,8 @@
 from enum import Enum
+from typing import Any
+
 from pydantic import BaseModel
-from typing import Dict, Any
+
 
 class ModelProvider(str, Enum):
     OPENAI = "openai"
@@ -19,4 +21,4 @@ class ModelRequest(BaseModel):
 class ModelResponse(BaseModel):
     text: str
     model: str
-    usage: Dict[str, Any] = {}
+    usage: dict[str, Any] = {}

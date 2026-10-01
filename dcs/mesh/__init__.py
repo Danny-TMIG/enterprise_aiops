@@ -8,13 +8,13 @@ from dcs.mesh.ucs import UCS, UCS_STAGES  # pragma: no cover
 
 __all__ = [
     "FAMILIES",
-    "stage",
-    "stages_of",
+    "LAWS",
+    "UCS",
+    "UCS_STAGES",
     "Behavior",
     "Pipeline",
     "empty",
-    "UCS",
-    "UCS_STAGES",
-    "LAWS",
     "run_laws",
+    "stage",
+    "stages_of",
 ]

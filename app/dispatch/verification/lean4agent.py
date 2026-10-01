@@ -1,9 +1,10 @@
 from __future__ import annotations
-from typing import Any, Dict, Optional
 
-from app.dispatch.verification.base import LLMExec, Prover, ProverResult
-from app.dispatch.models.registry import get_registry
+from typing import Any
+
 from app.dispatch.models.base import ModelRequest
+from app.dispatch.models.registry import get_registry
+from app.dispatch.verification.base import LLMExec, Prover, ProverResult
 
 
 class Lean4Agent(Prover):
@@ -14,7 +15,7 @@ class Lean4Agent(Prover):
     """
     name = "lean4agent"
 
-    def __init__(self, exec_hint: Optional[LLMExec] = None) -> None:
+    def __init__(self, exec_hint: LLMExec | None = None) -> None:
         self.exec_hint = exec_hint or LLMExec(
             provider="anthropic", model="claude-sonnet-4-6",
             task="proving",
@@ -24,7 +25,7 @@ class Lean4Agent(Prover):
         reg = get_registry()
         return reg.select("reasoning", model=self.exec_hint.model)
 
-    def _prove(self, statement: str, context: Dict[str, Any]):
+    def _prove(self, statement: str, context: dict[str, Any]):
         reg = get_registry()
         provider = self._pick_provider()
         llm_exec = LLMExec(

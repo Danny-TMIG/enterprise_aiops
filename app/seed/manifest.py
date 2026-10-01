@@ -1,4 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+
+
 class Manifest:
     def __init__(self, version: str = "1.0", **kwargs):
         self.version = version

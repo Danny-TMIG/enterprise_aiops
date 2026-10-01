@@ -4,21 +4,21 @@ Rule engine output overrides the stage decision when present.
 Both go through `apply`, so state is updated consistently.
 """
 from __future__ import annotations
+
 import time
 from dataclasses import dataclass, field
-from typing import List, Optional
 
-from app.murmur.state import AgentState, Decision, Update
 from app.murmur.rules import Rule, select
+from app.murmur.state import AgentState, Decision, Update
 
 
 @dataclass
 class Agent:
     state: AgentState
-    rules: List[Rule] = field(default_factory=list)
-    neighbors: List["Agent"] = field(default_factory=list)
+    rules: list[Rule] = field(default_factory=list)
+    neighbors: list[Agent] = field(default_factory=list)
 
-    def decide(self) -> Optional[Decision]:
+    def decide(self) -> Decision | None:
         self.state.ticks += 1
         self.state.last_tick_ts = time.time()
         return select(self.state, [n.state for n in self.neighbors],

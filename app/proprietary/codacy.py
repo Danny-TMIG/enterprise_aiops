@@ -9,16 +9,18 @@ Local implementation is a rule-based Python linter emitting the same
 shape. Every rule has the uniform signature `rule(tree, src) -> list`.
 """
 from __future__ import annotations
-import ast, re
-from typing import Any, Dict, List, Tuple
+
+import ast
+import re
+from typing import Any
 
 from app.proprietary.base import ProprietaryObject
 
 
 # ── rules (all take tree, src) ──────────────────────────────────
-def _rule_unused_import(tree: ast.AST, src: str) -> List[Dict[str, Any]]:
-    out: List[Dict[str, Any]] = []
-    imported: Dict[str, int] = {}
+def _rule_unused_import(tree: ast.AST, src: str) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    imported: dict[str, int] = {}
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for a in node.names:
@@ -49,7 +51,7 @@ def _rule_unused_import(tree: ast.AST, src: str) -> List[Dict[str, Any]]:
     return out
 
 
-def _rule_bare_except(tree: ast.AST, src: str) -> List[Dict[str, Any]]:
+def _rule_bare_except(tree: ast.AST, src: str) -> list[dict[str, Any]]:
     out = []
     for node in ast.walk(tree):
         if isinstance(node, ast.ExceptHandler) and node.type is None:
@@ -61,7 +63,7 @@ def _rule_bare_except(tree: ast.AST, src: str) -> List[Dict[str, Any]]:
 
 
 def _rule_long_function(tree: ast.AST, src: str,
-                        limit: int = 100) -> List[Dict[str, Any]]:
+                        limit: int = 100) -> list[dict[str, Any]]:
     out = []
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -74,7 +76,7 @@ def _rule_long_function(tree: ast.AST, src: str,
     return out
 
 
-def _rule_todo_comment(tree: ast.AST, src: str) -> List[Dict[str, Any]]:
+def _rule_todo_comment(tree: ast.AST, src: str) -> list[dict[str, Any]]:
     out = []
     for i, line in enumerate(src.splitlines(), 1):
         if re.search(r"#\s*(TODO|FIXME|XXX)\b", line, re.IGNORECASE):
@@ -84,7 +86,7 @@ def _rule_todo_comment(tree: ast.AST, src: str) -> List[Dict[str, Any]]:
     return out
 
 
-RULES: List = [
+RULES: list = [
     _rule_unused_import,
     _rule_bare_except,
     _rule_long_function,
@@ -92,9 +94,9 @@ RULES: List = [
 ]
 
 
-def _local_scan(payload: Dict[str, Any]) -> Dict[str, Any]:
+def _local_scan(payload: dict[str, Any]) -> dict[str, Any]:
     files = payload.get("files") or {}
-    issues: List[Dict[str, Any]] = []
+    issues: list[dict[str, Any]] = []
     scanned = 0
     for path, src in files.items():
         if not isinstance(src, str):

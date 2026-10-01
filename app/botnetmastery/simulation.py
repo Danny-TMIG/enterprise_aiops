@@ -1,6 +1,7 @@
 """Deterministic C2 simulation driver."""
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
+
+from typing import Any
 
 from app.botnetmastery.c2 import C2Server
 from app.botnetmastery.models import Bot, Task
@@ -8,19 +9,19 @@ from app.botnetmastery.models import Bot, Task
 
 class Simulation:
     def __init__(self, server: C2Server,
-                 seed: Optional[int] = None,
+                 seed: int | None = None,
                  *args, **kwargs):
         self.server = server
         self.seed = seed
         self._state = (seed or 0) & 0x7FFFFFFF
-        self.broadcast_queue: List[Dict[str, Any]] = []
+        self.broadcast_queue: list[dict[str, Any]] = []
 
     def _next(self) -> int:
         self._state = (1103515245 * self._state + 12345) & 0x7FFFFFFF
         return self._state
 
-    def spawn(self, count: int = 1) -> List[str]:
-        ids: List[str] = []
+    def spawn(self, count: int = 1) -> list[str]:
+        ids: list[str] = []
         for _ in range(count):
             tag = self._next() % 100000
             b = Bot.new(f"host-{tag}", "linux", "x86_64")
@@ -32,7 +33,7 @@ class Simulation:
         self.broadcast_queue.append(
             {"action": action, "payload": dict(payload or {})})
 
-    def tick(self) -> Dict[str, int]:
+    def tick(self) -> dict[str, int]:
         stats = {"heartbeats": 0, "dispatched": 0,
                  "completed": 0, "skipped": 0}
         if self.server.kill_switch_engaged():

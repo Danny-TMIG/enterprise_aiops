@@ -1,12 +1,13 @@
 """Demo: double-double long accumulation + frequency-phase hopping."""
 from __future__ import annotations
-import math, sys
-from pathlib import Path
 
-from app.ddlong.dd import DD, two_sum, two_prod
-from app.ddlong.hop import hop_encode, hop_decode, BITS_PER_HOP, N_FREQ, N_PHASE
+import math
+import sys
+
+from app.ddlong.chain import DDChain, transmit
+from app.ddlong.dd import DD, two_prod, two_sum
+from app.ddlong.hop import BITS_PER_HOP, N_FREQ, N_PHASE
 from app.ddlong.longctx import fold_sequence, phase_drift
-from app.ddlong.chain import DDChain, transmit, receive
 
 
 def _hdr(t: str) -> None:

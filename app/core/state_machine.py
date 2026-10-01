@@ -1,8 +1,9 @@
 """Enterprise state machine."""
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List
+
 
 class LockError(RuntimeError): pass
 class PolicyError(RuntimeError): pass
@@ -23,7 +24,7 @@ _T = {
 class EnterpriseStateMachine:
     state: State = State.INIT
     locked: bool = False
-    history: List[State] = field(default_factory=list)
+    history: list[State] = field(default_factory=list)
     def __post_init__(self): self.history.append(self.state)
     def lock(self): self.locked = True
     def unlock(self): self.locked = False

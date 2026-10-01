@@ -12,10 +12,13 @@ to the events ledger. Every capability is bridged to the gap-register
 row it addresses (or marked unbridged).
 """
 from __future__ import annotations
-import hashlib, json, sqlite3
-from dataclasses import dataclass, field, asdict
+
+import hashlib
+import sqlite3
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 DB = ROOT / "data" / "fabric.sqlite3"
@@ -57,7 +60,7 @@ CREATE INDEX IF NOT EXISTS ix_bridges_dst ON bridges(dst_kind, dst_code);
 
 # ── the 232-tool list, honestly annotated ──────────────────────────
 # (code, name, category, equation, status, provider, home)
-CAPS: List[tuple] = [
+CAPS: list[tuple] = [
  # AI / ML
  ("ai_expert_roadmap","AI-Expert-Roadmap","ai_ml","R(t)=Σ S_i(t)·T_i(t)","real","","app/localmodel.py"),
  ("ai_agents","AI_Agents","ai_ml","A(s)=π(s,θ)","real","","app/localmodel.py"),
@@ -248,7 +251,7 @@ def _cap_code_hash(row: tuple) -> str:
 
 # ── bridges: aspirational claims to the gap register they address ──
 # (capability_code, gap_table, gap_id, kind, note)
-BRIDGES: List[tuple] = [
+BRIDGES: list[tuple] = [
  # AI/ML tools bridge to E (model security) gaps
  ("llama",          "ai_checkpoint_registry",  1, "implements", "would host checkpoints"),
  ("lora",           "ai_lora_attribution",      1, "implements", "would attribute adapters"),
@@ -309,11 +312,11 @@ class Dispatch:
     reason: str = ""
     home: str = ""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
-_IMPL: Dict[str, Callable[..., Any]] = {}
+_IMPL: dict[str, Callable[..., Any]] = {}
 
 
 def register(code: str) -> Callable:
@@ -327,7 +330,7 @@ def register(code: str) -> Callable:
 _AUTOLOADED: set = set()
 
 
-_AUTOLOAD_ERRORS: Dict[str, str] = {}
+_AUTOLOAD_ERRORS: dict[str, str] = {}
 
 
 def _autoload(code: str) -> None:
@@ -350,8 +353,7 @@ def _autoload(code: str) -> None:
             _AUTOLOAD_ERRORS[code] = "capability has no implementation home"
             return
         mod_path = str(row[0]).replace("/", ".").removesuffix(".py")
-        if mod_path.endswith(".__init__"):
-            mod_path = mod_path[:-9]
+        mod_path = mod_path.removesuffix(".__init__")
         mod = importlib.import_module(mod_path)
 
         # Importing a module may register wrappers with defaults or metadata.
@@ -388,7 +390,7 @@ def _connect() -> sqlite3.Connection:
     return sqlite3.connect(DB)
 
 
-def get(code: str) -> Optional[Dict[str, Any]]:
+def get(code: str) -> dict[str, Any] | None:
     con = _connect()
     row = con.execute(
         "SELECT code,name,category,equation,status,provider,home,rationale "
@@ -450,7 +452,7 @@ def _log(d: Dispatch) -> None:
         pass
 
 
-def status() -> Dict[str, int]:
+def status() -> dict[str, int]:
     con = _connect()
     out = {s: n for s, n in con.execute(
         "SELECT status, COUNT(*) FROM capabilities GROUP BY status")}
@@ -458,7 +460,7 @@ def status() -> Dict[str, int]:
     return out
 
 
-def by_category() -> Dict[str, int]:
+def by_category() -> dict[str, int]:
     con = _connect()
     out = {c: n for c, n in con.execute(
         "SELECT category, COUNT(*) FROM capabilities GROUP BY category ORDER BY category")}
@@ -466,7 +468,7 @@ def by_category() -> Dict[str, int]:
     return out
 
 
-def bridges_for(code: str) -> List[Dict[str, Any]]:
+def bridges_for(code: str) -> list[dict[str, Any]]:
     con = _connect()
     rows = con.execute(
         "SELECT dst_kind,dst_code,kind,note FROM bridges "
@@ -477,9 +479,16 @@ def bridges_for(code: str) -> List[Dict[str, Any]]:
 
 
 __all__ = [
-    "CAPS", "BRIDGES", "Dispatch", "DDL",
-    "register", "get", "dispatch", "status",
-    "by_category", "bridges_for",
+    "BRIDGES",
+    "CAPS",
+    "DDL",
+    "Dispatch",
+    "bridges_for",
+    "by_category",
+    "dispatch",
+    "get",
+    "register",
+    "status",
 ]
 
 # ── generated codes appended at import ──────────────────────────────

@@ -1,8 +1,7 @@
 import asyncio
 import json
 import logging
-import socket
-from typing import Dict, Any
+from typing import Any
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("OmniNCF-Gossip")
@@ -12,7 +11,7 @@ class P2PGossipNode:
         self.host = host
         self.port = port
         self.peer_ports = peer_ports or []
-        self.state: Dict[str, Any] = {
+        self.state: dict[str, Any] = {
             "status": "active",
             "model": "mlx-community/Qwen2.5-7B-Instruct-4bit",
             "epoch": 0

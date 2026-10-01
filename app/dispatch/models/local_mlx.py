@@ -10,18 +10,18 @@ Env overrides:
     MLX_DISABLE     set to 1 to force the provider off
 """
 from __future__ import annotations
+
 import os
 import threading
-from typing import Any, Dict, Optional
+from typing import Any
 
-from app.dispatch.models.base import ModelProvider, ModelRequest, ModelResponse
-
+from app.dispatch.models.base import ModelRequest, ModelResponse
 
 DEFAULT_MODEL = "mlx-community/Qwen2.5-7B-Instruct-4bit"
 
 # process-wide cache so multiple provider aliases share the model
 _LOCK = threading.Lock()
-_CACHE: Dict[str, Any] = {"model": None, "tokenizer": None,
+_CACHE: dict[str, Any] = {"model": None, "tokenizer": None,
                           "model_id": None}
 
 
@@ -29,8 +29,8 @@ def _mlx_available() -> bool:
     if os.environ.get("MLX_DISABLE") == "1":
         return False
     try:
-        import mlx_lm  # noqa: F401
         import mlx.core  # noqa: F401
+        import mlx_lm  # noqa: F401
         return True
     except Exception:
         return False
@@ -51,7 +51,7 @@ def _load(model_id: str):
 class LocalMLXProvider:
     """One local provider, multiple vendor aliases."""
 
-    def __init__(self, alias: str, model_id: Optional[str] = None) -> None:
+    def __init__(self, alias: str, model_id: str | None = None) -> None:
         self.name = alias
         self._model_id = model_id or os.environ.get("MLX_MODEL", DEFAULT_MODEL)
         self.default_model = self._model_id

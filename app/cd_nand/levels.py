@@ -9,10 +9,11 @@ Each level = one formal system. Each level has:
 The tower as a whole is the sequence.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from app.cd_nand.cayley import CD, Alg, BOOL_ALG, cd_zero, cd_one, cd_basis
+from collections.abc import Callable
+from dataclasses import dataclass, field
+
+from app.cd_nand.cayley import BOOL_ALG, CD, Alg, cd_basis, cd_one, cd_zero
 from app.cd_nand.nand import NAND
 
 
@@ -24,12 +25,12 @@ class LevelSpec:
     index: int
     name: str
     dimension: int
-    primitives: Tuple[str, ...]
+    primitives: tuple[str, ...]
     loses: str
     invariant: str
 
 
-LEVELS: Tuple[LevelSpec, ...] = (
+LEVELS: tuple[LevelSpec, ...] = (
     LevelSpec(0, "Boolean logic", 1,
               ("nand",),
               "order",   # already gone
@@ -223,7 +224,7 @@ def general_level():
     }
 
 
-LEVEL_CONSTRUCTORS: Dict[int, Callable[[], dict]] = {
+LEVEL_CONSTRUCTORS: dict[int, Callable[[], dict]] = {
     0: boolean_level,
     1: lambda_level,
     2: combinatory_level,
@@ -252,7 +253,7 @@ class Tower:
     depth: int = 9
     levels: list = field(default_factory=list)
 
-    def build(self) -> "Tower":
+    def build(self) -> Tower:
         self.levels = [level_module(i) for i in range(self.depth + 1)]
         return self
 

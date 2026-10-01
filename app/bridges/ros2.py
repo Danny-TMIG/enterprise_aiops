@@ -1,7 +1,8 @@
 """ROS2 graph model. Extends ROS1 with actions, lifecycle, QoS."""
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 QOS_PRESETS = {
     "default":       {"reliability": "reliable",  "durability": "volatile",  "history": "keep_last", "depth": 10},
@@ -31,10 +32,10 @@ class Action:
 class Node2:
     name: str
     namespace: str = "/"
-    pubs: List[Endpoint] = field(default_factory=list)
-    subs: List[Endpoint] = field(default_factory=list)
-    actions: List[Action] = field(default_factory=list)
-    lifecycle: Optional[str] = None  # None | "unconfigured" | "inactive" | "active" | "finalized"
+    pubs: list[Endpoint] = field(default_factory=list)
+    subs: list[Endpoint] = field(default_factory=list)
+    actions: list[Action] = field(default_factory=list)
+    lifecycle: str | None = None  # None | "unconfigured" | "inactive" | "active" | "finalized"
 
     @property
     def fqn(self) -> str:
@@ -43,22 +44,22 @@ class Node2:
 
 class ROS2Catalog:
     def __init__(self) -> None:
-        self.nodes: Dict[str, Node2] = {}
+        self.nodes: dict[str, Node2] = {}
 
     def add(self, node: Node2) -> Node2:
         self.nodes[node.fqn] = node
         return node
 
-    def qos_mismatches(self) -> List[Tuple[str, str]]:
+    def qos_mismatches(self) -> list[tuple[str, str]]:
         """Publishers/subscribers on the same topic with incompatible QoS."""
-        pub: Dict[str, str] = {}
-        sub: Dict[str, str] = {}
+        pub: dict[str, str] = {}
+        sub: dict[str, str] = {}
         for n in self.nodes.values():
             for e in n.pubs:
                 pub[e.name] = e.qos
             for e in n.subs:
                 sub[e.name] = e.qos
-        out: List[Tuple[str, str]] = []
+        out: list[tuple[str, str]] = []
         for t in set(pub) & set(sub):
             a = QOS_PRESETS.get(pub[t], {})
             b = QOS_PRESETS.get(sub[t], {})
@@ -67,7 +68,7 @@ class ROS2Catalog:
                 out.append((t, f"pub={pub[t]} sub={sub[t]}"))
         return out
 
-    def graph(self) -> Dict[str, Any]:
+    def graph(self) -> dict[str, Any]:
         return {
             "nodes": {k: {
                 "pubs": [(e.name, e.msg_type, e.qos) for e in v.pubs],
@@ -79,7 +80,7 @@ class ROS2Catalog:
         }
 
 
-def runtime_available() -> Tuple[bool, str]:
+def runtime_available() -> tuple[bool, str]:
     try:
         import rclpy  # noqa: F401
         return True, "rclpy installed"
@@ -87,7 +88,7 @@ def runtime_available() -> Tuple[bool, str]:
         return False, "rclpy not installed; model layer only"
 
 
-def describe() -> Dict[str, Any]:
+def describe() -> dict[str, Any]:
     ok, why = runtime_available()
     c = ROS2Catalog()
     c.add(Node2("talker", pubs=[Endpoint("/chatter", "std_msgs/msg/String", "default")]))

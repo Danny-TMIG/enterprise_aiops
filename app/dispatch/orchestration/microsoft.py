@@ -1,7 +1,11 @@
 from __future__ import annotations
+
 import os
+
 from app.dispatch.orchestration.base import (
-    OrchestratorBackend, VerificationClaim, VerificationVerdict,
+    OrchestratorBackend,
+    VerificationClaim,
+    VerificationVerdict,
 )
 
 

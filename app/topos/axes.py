@@ -9,9 +9,10 @@ just views — distinguished sub-categories with a selected set of
 arrows.
 """
 from __future__ import annotations
-from typing import Any, Dict, List
 
-from app.topos.category import Category, Morphism, Object
+from typing import Any
+
+from app.topos.category import Category
 from app.topos.topos import Topos
 
 
@@ -26,12 +27,12 @@ class Forward(Category):
             ("spec", "artifact", "generate"),
         ])
 
-    def _select(self, ids: List[str]) -> None:
+    def _select(self, ids: list[str]) -> None:
         for i in ids:
             if i in self.T.objects:
                 self.add(self.T.objects[i])
 
-    def _links(self, pairs: List[tuple]) -> None:
+    def _links(self, pairs: list[tuple]) -> None:
         for src, dst, name in pairs:
             for m in self.T.morphisms:
                 if m.src == src and m.dst == dst and m.name == name:
@@ -49,12 +50,12 @@ class Inverse(Category):
             ("artifact", "proof", "verify"),
         ])
 
-    def _select(self, ids: List[str]) -> None:
+    def _select(self, ids: list[str]) -> None:
         for i in ids:
             if i in self.T.objects:
                 self.add(self.T.objects[i])
 
-    def _links(self, pairs: List[tuple]) -> None:
+    def _links(self, pairs: list[tuple]) -> None:
         for src, dst, name in pairs:
             for m in self.T.morphisms:
                 if m.src == src and m.dst == dst and m.name == name:
@@ -82,7 +83,7 @@ class Axes:
         self.G = Inverse(T)
         self.R = Relational(T)
 
-    def stats(self) -> Dict[str, Any]:
+    def stats(self) -> dict[str, Any]:
         return {
             "Forward": self.F.stats(),
             "Inverse": self.G.stats(),

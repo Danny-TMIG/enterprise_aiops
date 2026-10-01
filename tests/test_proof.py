@@ -1,5 +1,7 @@
-import pytest
 import importlib
+
+import pytest
+
 
 def test_proof_import():
     try:

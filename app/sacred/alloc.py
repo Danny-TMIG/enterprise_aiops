@@ -12,12 +12,11 @@ Three concrete uses:
                         successive points cluster.
 """
 from __future__ import annotations
-from typing import Dict, List
 
 from app.sacred.constants import PHI_INV, fib
 
 
-def fib_alloc(total: int, tiers: int = 5) -> List[int]:
+def fib_alloc(total: int, tiers: int = 5) -> list[int]:
     """Partition `total` into `tiers` buckets following Fibonacci
     proportions. Largest bucket at the top tier (closest to the
     action), smallest at the leaves. Sum is preserved exactly."""

@@ -6,8 +6,8 @@ recursive: sub-graphs that still have active pairs are decomposed
 again until each fragment is either reduced or stuck.
 """
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Dict, List, Tuple
 
 from app.octet.graph import OctetGraph
 from app.octet.octet import PORTS
@@ -20,22 +20,22 @@ class Fragment:
     graph: OctetGraph
     steps: int
     terminated: bool
-    trace: List[str] = field(default_factory=list)
+    trace: list[str] = field(default_factory=list)
 
     @property
     def hash(self) -> str:
         return self.graph.hash()
 
 
-def _components(g: OctetGraph) -> List[OctetGraph]:
+def _components(g: OctetGraph) -> list[OctetGraph]:
     """Split into connected components via wires."""
     seen: set = set()
-    out: List[OctetGraph] = []
+    out: list[OctetGraph] = []
     for nid in g.nodes:
         if nid in seen:
             continue
         comp = OctetGraph()
-        remap: Dict[int, int] = {}
+        remap: dict[int, int] = {}
         stack = [nid]
         while stack:
             u = stack.pop()
@@ -63,7 +63,7 @@ class HyperDecomposer:
     def __init__(self, max_depth: int = 6, max_steps: int = 5_000):
         self.max_depth = max_depth
         self.max_steps = max_steps
-        self.fragments: List[Fragment] = []
+        self.fragments: list[Fragment] = []
 
     def decompose(self, g: OctetGraph, depth: int = 0) -> None:
         comps = _components(g)
@@ -84,7 +84,7 @@ class HyperDecomposer:
             if depth < self.max_depth and len(_components(ng)) > 1:
                 self.decompose(ng, depth + 1)
 
-    def summary(self) -> Dict:
+    def summary(self) -> dict:
         return {
             "fragments": len(self.fragments),
             "by_depth": _count_by(self.fragments, "depth"),
@@ -95,7 +95,7 @@ class HyperDecomposer:
 
 
 def _count_by(items, attr):
-    out: Dict[int, int] = {}
+    out: dict[int, int] = {}
     for it in items:
         k = getattr(it, attr)
         out[k] = out.get(k, 0) + 1

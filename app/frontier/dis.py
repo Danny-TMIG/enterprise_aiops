@@ -9,19 +9,20 @@ converts it to the vendor's native shape. If the model fails, the
 call falls through to the vendor's local implementation.
 """
 from __future__ import annotations
-import json, re
+
+import json
+import re
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from typing import Any
 
-from app.frontier.profile import PROFILES, get_profile, VendorProfile
-from app.dispatch.models.registry import get_registry
 from app.dispatch.models.base import ModelRequest
-
+from app.dispatch.models.registry import get_registry
+from app.frontier.profile import PROFILES, VendorProfile, get_profile
 
 _JSON_BLOCK = re.compile(r"\{.*\}", re.DOTALL)
 
 
-def _extract_json(text: str) -> Optional[Dict[str, Any]]:
+def _extract_json(text: str) -> dict[str, Any] | None:
     if not text:
         return None
     m = _JSON_BLOCK.search(text)
@@ -37,7 +38,7 @@ def _extract_json(text: str) -> Optional[Dict[str, Any]]:
 class FrontierRequest:
     vendor: str
     intent: str
-    payload: Dict[str, Any] = field(default_factory=dict)
+    payload: dict[str, Any] = field(default_factory=dict)
     task: str = "reasoning"
     max_tokens: int = 512
     temperature: float = 0.0
@@ -47,15 +48,15 @@ class FrontierRequest:
 class FrontierResponse:
     vendor: str
     ok: bool
-    wire: Dict[str, Any]
-    model_out: Dict[str, Any]
+    wire: dict[str, Any]
+    model_out: dict[str, Any]
     provider: str = ""
     model: str = ""
     dry_run: bool = False
     fallback: bool = False
-    error: Optional[str] = None
+    error: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "vendor": self.vendor, "ok": self.ok,
             "wire": self.wire, "model_out": self.model_out,
@@ -70,7 +71,7 @@ class FrontierDis:
         self.registry = get_registry()
         self.profiles = PROFILES
 
-    def profiles(self) -> Dict[str, Any]:
+    def profiles(self) -> dict[str, Any]:
         return {name: p.to_dict() for name, p in self.profiles.items()}
 
     def invoke(self, req: FrontierRequest) -> FrontierResponse:
@@ -125,7 +126,7 @@ class FrontierDis:
         )
 
     def _fallback(self, vendor: str,
-                  payload: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+                  payload: dict[str, Any]) -> dict[str, Any] | None:
         try:
             from app.proprietary.registry import ProprietaryRegistry
             r = ProprietaryRegistry().invoke(vendor, payload)
@@ -135,7 +136,7 @@ class FrontierDis:
             pass
         return None
 
-    def status(self) -> Dict[str, Any]:
+    def status(self) -> dict[str, Any]:
         reg = self.registry.status()
         return {
             "profiles": list(self.profiles.keys()),
@@ -146,7 +147,7 @@ class FrontierDis:
         }
 
 
-_FD: Optional[FrontierDis] = None
+_FD: FrontierDis | None = None
 
 
 def get_frontier() -> FrontierDis:

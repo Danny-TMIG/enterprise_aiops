@@ -1,5 +1,5 @@
-from typing import Any
 from app.seed.workflow import Workflow, from_cli
+
 
 class SeedRuntime:
     def __init__(self, root: str = "."):
@@ -16,4 +16,4 @@ class SeedRuntime:
 
 def get_seed(*args, **kwargs):
     """Mock get_seed helper for runtime imports."""
-    return None
+    return

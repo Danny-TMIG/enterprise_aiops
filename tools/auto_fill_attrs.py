@@ -1,5 +1,7 @@
 """Loop: parse AttributeError, add the missing attribute to the class, retry."""
-import re, subprocess, sys
+import re
+import subprocess
+import sys
 from pathlib import Path
 
 MAX_ROUNDS = 20
@@ -39,7 +41,7 @@ def find_class_file(cls: str) -> Path | None:
     # fallback: grep
     for p in Path("app").rglob("*.py"):
         try:
-            if re.search(rf"^class\s+{re.escape(cls)}\b", p.read_text(), re.M):
+            if re.search(rf"^class\s+{re.escape(cls)}\b", p.read_text(), re.MULTILINE):
                 return p
         except Exception:
             continue
@@ -50,7 +52,7 @@ def add_attr(path: Path, cls: str, attr: str) -> bool:
     """Append a classmethod returning a neutral value for the missing attr."""
     src = path.read_text()
     # find the class block
-    m = re.search(rf"^class\s+{re.escape(cls)}\b.*?(?=^class |\Z)", src, re.M | re.S)
+    m = re.search(rf"^class\s+{re.escape(cls)}\b.*?(?=^class |\Z)", src, re.MULTILINE | re.DOTALL)
     if not m:
         return False
     block = m.group(0)
@@ -58,7 +60,7 @@ def add_attr(path: Path, cls: str, attr: str) -> bool:
     # Already has attribute as method or property?
     if re.search(rf"def\s+{re.escape(attr)}\b", block):
         return False
-    if re.search(rf"^\s+{re.escape(attr)}\s*=", block, re.M):
+    if re.search(rf"^\s+{re.escape(attr)}\s*=", block, re.MULTILINE):
         return False
 
     stub = (

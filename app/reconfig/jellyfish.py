@@ -13,9 +13,9 @@ Behavior per tick:
   split     — if residue exceeds threshold, spawn a child
 """
 from __future__ import annotations
+
 import random
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 from app.reconfig.mesh import Mesh, Packet
 
@@ -24,11 +24,11 @@ from app.reconfig.mesh import Mesh, Packet
 class Jellyfish:
     id: str
     ttl: int = 8
-    residue: List[str] = field(default_factory=list)
-    route: List[str] = field(default_factory=list)
-    packet: Optional[Packet] = None
+    residue: list[str] = field(default_factory=list)
+    route: list[str] = field(default_factory=list)
+    packet: Packet | None = None
 
-    def drift(self, mesh: Mesh, rng: random.Random) -> Optional[str]:
+    def drift(self, mesh: Mesh, rng: random.Random) -> str | None:
         ids = sorted(mesh.nodes.keys())
         if not ids:
             return None
@@ -39,7 +39,7 @@ class Jellyfish:
         self.route.append(node)
         return node
 
-    def tick(self, mesh: Mesh, rng: random.Random) -> Optional["Jellyfish"]:
+    def tick(self, mesh: Mesh, rng: random.Random) -> Jellyfish | None:
         self.ttl -= 1
         node = self.drift(mesh, rng)
         child = None
@@ -68,12 +68,12 @@ class Bloom:
 
     def __init__(self, n: int = 4, seed: int = 0):
         self.rng = random.Random(seed)
-        self.members: List[Jellyfish] = [
+        self.members: list[Jellyfish] = [
             Jellyfish(id=f"jf-{i}", ttl=6 + i) for i in range(n)
         ]
 
     def tick(self, mesh: Mesh) -> None:
-        new: List[Jellyfish] = []
+        new: list[Jellyfish] = []
         for j in list(self.members):
             child = j.tick(mesh, self.rng)
             if not j.alive:
@@ -85,7 +85,7 @@ class Bloom:
             if len(self.members) < 16:
                 self.members.append(c)
 
-    def snapshot(self) -> List[dict]:
+    def snapshot(self) -> list[dict]:
         return [
             {"id": j.id, "ttl": j.ttl, "route": j.route,
              "residue": j.residue[:4]}

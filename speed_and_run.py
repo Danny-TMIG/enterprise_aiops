@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Speed up slow nature sims, patch fix_all.py with timeouts, then run it."""
-import ast, os, re, shutil, subprocess, sys
+import ast
+import os
+import re
+import shutil
+import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 

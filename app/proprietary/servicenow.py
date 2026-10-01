@@ -5,12 +5,13 @@ Wire format: Flow Designer REST action.
     response: {"result": {"state": "success|error", "output": {...}}}
 """
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import Any
 
 from app.proprietary.base import ProprietaryObject
 
 
-def _local_verify(payload: Dict[str, Any]) -> Dict[str, Any]:
+def _local_verify(payload: dict[str, Any]) -> dict[str, Any]:
     inputs = payload.get("inputs") or payload
     claim = inputs.get("claim", "")
     ok = bool(claim)

@@ -13,14 +13,12 @@ Each Algorithm carries:
     residuals   tuple of residual IDs from app.residual.register
 """
 from __future__ import annotations
-import json
-from dataclasses import dataclass, field, asdict
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
+from dataclasses import asdict, dataclass
+from pathlib import Path
 
 # ── sections ────────────────────────────────────────────────────
-SECTIONS: Dict[int, str] = {
+SECTIONS: dict[int, str] = {
     1: "Foundational Algorithms",
     2: "Cryptographic & Security Algorithms",
     3: "Artificial Intelligence & Learning Algorithms",
@@ -40,14 +38,14 @@ class Algorithm:
     significance: str
     section: int
     level: int                    # CD level 0..9
-    residuals: Tuple[str, ...]    # residual IDs
+    residuals: tuple[str, ...]    # residual IDs
 
     def to_dict(self) -> dict:
         return asdict(self)
 
 
 # ── the 40 entries ──────────────────────────────────────────────
-_RAW: List[Tuple] = [
+_RAW: list[tuple] = [
     # (rank, name, domain, significance, section, level, residuals)
     (1, "Euclidean Algorithm (c. 300 BCE)", "Mathematics",
      "First known algorithm; computes greatest common divisor (GCD); "
@@ -200,7 +198,7 @@ _RAW: List[Tuple] = [
      7, 9, ("Ω", "T-38")),
 ]
 
-ALGORITHMS: Tuple[Algorithm, ...] = tuple(
+ALGORITHMS: tuple[Algorithm, ...] = tuple(
     Algorithm(rank=r, name=n, domain=d, significance=s,
               section=sec, level=lvl, residuals=res)
     for r, n, d, s, sec, lvl, res in _RAW
@@ -208,24 +206,24 @@ ALGORITHMS: Tuple[Algorithm, ...] = tuple(
 
 
 # ── queries ─────────────────────────────────────────────────────
-def by_section(section: int) -> List[Algorithm]:
+def by_section(section: int) -> list[Algorithm]:
     return [a for a in ALGORITHMS if a.section == section]
 
 
-def by_domain(substr: str) -> List[Algorithm]:
+def by_domain(substr: str) -> list[Algorithm]:
     s = substr.lower()
     return [a for a in ALGORITHMS if s in a.domain.lower()]
 
 
-def by_level(level: int) -> List[Algorithm]:
+def by_level(level: int) -> list[Algorithm]:
     return [a for a in ALGORITHMS if a.level == level]
 
 
-def by_residual(rid: str) -> List[Algorithm]:
+def by_residual(rid: str) -> list[Algorithm]:
     return [a for a in ALGORITHMS if rid in a.residuals]
 
 
-def search(substr: str) -> List[Algorithm]:
+def search(substr: str) -> list[Algorithm]:
     s = substr.lower()
     return [a for a in ALGORITHMS
             if s in a.name.lower()
@@ -241,7 +239,7 @@ def validate() -> dict:
     except Exception as e:
         return {"ok": False, "reason": f"register not importable: {e}"}
 
-    bad: Dict[int, List[str]] = {}
+    bad: dict[int, list[str]] = {}
     for a in ALGORITHMS:
         for rid in a.residuals:
             if not R.is_valid(rid):
@@ -279,7 +277,7 @@ _LEVEL_NAMES = {
 
 def render_markdown() -> str:
     """Render the registry as the canonical markdown doc."""
-    out: List[str] = []
+    out: list[str] = []
     out.append("# Forty Algorithms That Changed Civilization")
     out.append("")
     out.append("A live registry. The doc is a projection of")
@@ -354,7 +352,7 @@ def render_markdown() -> str:
     return "\n".join(out)
 
 
-def write_markdown(path: Optional[Path] = None) -> Path:
+def write_markdown(path: Path | None = None) -> Path:
     p = Path(path) if path else (
         Path(__file__).resolve().parent.parent.parent
         / "docs" / "algorithms.md"

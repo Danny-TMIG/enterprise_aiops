@@ -1,17 +1,18 @@
 from __future__ import annotations
+
 import hashlib
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-from typing import Dict, Iterator, List, Optional, Tuple
 
-from app.octet.octet import Octet, PORTS, E
+from app.octet.octet import PORTS, E, Octet
 
-Port = Tuple[int, int]
+Port = tuple[int, int]
 
 
 @dataclass
 class OctetGraph:
-    nodes: Dict[int, Octet] = field(default_factory=dict)
-    wires: Dict[Port, Port] = field(default_factory=dict)
+    nodes: dict[int, Octet] = field(default_factory=dict)
+    wires: dict[Port, Port] = field(default_factory=dict)
     _next_id: int = 0
 
     def new_node(self, kind: str, value: int = 0) -> int:
@@ -20,13 +21,13 @@ class OctetGraph:
         self.nodes[nid] = Octet(kind, value)
         return nid
 
-    def wire(self, p1: Optional[Port], p2: Optional[Port]) -> None:
+    def wire(self, p1: Port | None, p2: Port | None) -> None:
         if p1 is None or p2 is None:
             return
         self.wires[p1] = p2
         self.wires[p2] = p1
 
-    def detach(self, p: Port) -> Optional[Port]:
+    def detach(self, p: Port) -> Port | None:
         other = self.wires.pop(p, None)
         if other is not None:
             self.wires.pop(other, None)
@@ -40,7 +41,7 @@ class OctetGraph:
             self.detach((nid, idx))
         del self.nodes[nid]
 
-    def active_pairs(self) -> Iterator[Tuple[int, int]]:
+    def active_pairs(self) -> Iterator[tuple[int, int]]:
         seen = set()
         for nid, oct_ in list(self.nodes.items()):
             if oct_.kind == E:
@@ -58,7 +59,7 @@ class OctetGraph:
             seen.add(key)
             yield nid, onid
 
-    def copy(self) -> "OctetGraph":
+    def copy(self) -> OctetGraph:
         g = OctetGraph()
         g.nodes = dict(self.nodes)
         g.wires = dict(self.wires)
@@ -66,8 +67,8 @@ class OctetGraph:
         return g
 
     def canonical(self) -> str:
-        remap: Dict[int, int] = {}
-        order: List[int] = []
+        remap: dict[int, int] = {}
+        order: list[int] = []
 
         def visit(nid: int):
             if nid in remap:
@@ -82,7 +83,7 @@ class OctetGraph:
         for nid in sorted(self.nodes):
             visit(nid)
 
-        lines: List[str] = []
+        lines: list[str] = []
         for nid in order:
             o = self.nodes[nid]
             rn = remap[nid]

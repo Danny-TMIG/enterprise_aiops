@@ -1,5 +1,7 @@
 """Loop: run pytest, extract `cannot import name 'X' from 'Y'`, add a stub, retry."""
-import re, subprocess, sys
+import re
+import subprocess
+import sys
 from pathlib import Path
 
 MAX_ROUNDS = 30
@@ -64,11 +66,11 @@ def target_file(module: str) -> Path:
 
 def has_symbol(src: str, name: str, kind: str) -> bool:
     if kind == "class":
-        return bool(re.search(rf"^class\s+{re.escape(name)}\b", src, re.M))
+        return bool(re.search(rf"^class\s+{re.escape(name)}\b", src, re.MULTILINE))
     if kind == "func":
-        return bool(re.search(rf"^def\s+{re.escape(name)}\s*\(", src, re.M))
+        return bool(re.search(rf"^def\s+{re.escape(name)}\s*\(", src, re.MULTILINE))
     if kind == "assign":
-        return bool(re.search(rf"^{re.escape(name)}\s*=", src, re.M))
+        return bool(re.search(rf"^{re.escape(name)}\s*=", src, re.MULTILINE))
     return False
 
 

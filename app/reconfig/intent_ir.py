@@ -1,7 +1,9 @@
 from __future__ import annotations
-import hashlib, time
-from dataclasses import dataclass, field, asdict
-from typing import Any, Dict, List, Optional
+
+import hashlib
+import time
+from dataclasses import asdict, dataclass, field
+from typing import Any
 
 
 def _h(*p: str) -> str:
@@ -14,12 +16,12 @@ def _h(*p: str) -> str:
 @dataclass
 class IntentIR:
     goal: str
-    verbs: List[str] = field(default_factory=list)
-    objects: Dict[str, str] = field(default_factory=dict)   # role → noun
-    targets: List[str] = field(default_factory=list)        # pg, mongo, ...
-    constraints: List[str] = field(default_factory=list)     # must/must-not
-    evidence_required: List[str] = field(default_factory=list)
-    residue: List[str] = field(default_factory=list)
+    verbs: list[str] = field(default_factory=list)
+    objects: dict[str, str] = field(default_factory=dict)   # role → noun
+    targets: list[str] = field(default_factory=list)        # pg, mongo, ...
+    constraints: list[str] = field(default_factory=list)     # must/must-not
+    evidence_required: list[str] = field(default_factory=list)
+    residue: list[str] = field(default_factory=list)
     raw: str = ""
     source: str = "user"
     ts: str = field(default_factory=lambda: time.strftime(
@@ -31,5 +33,5 @@ class IntentIR:
                   "|".join(sorted(self.objects.items())),
                   "|".join(sorted(self.targets)))
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         d = asdict(self); d["id"] = self.id; return d

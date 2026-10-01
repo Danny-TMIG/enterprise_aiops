@@ -2,4 +2,4 @@
 
 from dcs.triad.axes import coherence, conformance, coordination  # pragma: no cover
 
-__all__ = ["conformance", "coherence", "coordination"]
+__all__ = ["coherence", "conformance", "coordination"]

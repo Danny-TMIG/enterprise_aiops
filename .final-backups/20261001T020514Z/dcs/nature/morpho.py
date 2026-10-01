@@ -1,6 +1,9 @@
 """Morphogenesis — pattern formation without a plan."""
-import math, random
+import math
+import random
+
 from dcs.generate import requirement
+
 
 def turing_pattern(n=64, steps=2000, seed=0):
     rng = random.Random(seed)

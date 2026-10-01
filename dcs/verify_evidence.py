@@ -2,13 +2,14 @@
 """Independent re-run and signature verification of a stored evidence record."""
 import sys
 from pathlib import Path
+
 ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / "dcs/evidence/qualifications"
 KEY_FILE = ROOT / "dcs/key.hex"
 
 def main():
     sys.path.insert(0, str(ROOT))
-    from dcs.evidence_chain import EvidenceChain, PASS
+    from dcs.evidence_chain import PASS, EvidenceChain
     chain = EvidenceChain(str(STORE))
     name = sys.argv[1] if len(sys.argv) > 1 else "evidence_capture.json"
     rec = chain.load_record(name)

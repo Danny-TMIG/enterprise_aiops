@@ -1,10 +1,10 @@
 """Sudoku — 81 vars, 27 all-different constraints (partial)."""
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
 
-from app.puzzles.grid import Grid, Var, Constraint
-from app.puzzles.solver import solve, Solution
+from dataclasses import dataclass, field
+
+from app.puzzles.grid import Constraint, Grid, Var
+from app.puzzles.solver import solve
 
 N = 9
 BOX = 3
@@ -27,7 +27,7 @@ def _all_diff_partial(vals):
 @dataclass
 class SudokuPuzzle:
     grid: Grid
-    givens: Dict[str, int] = field(default_factory=dict)
+    givens: dict[str, int] = field(default_factory=dict)
     seed: int = 0
 
     def solve(self, max_nodes=1_000_000):

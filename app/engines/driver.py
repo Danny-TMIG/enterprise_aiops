@@ -1,21 +1,21 @@
 """Driver: parallel grids, dynamic difficulty, difference engine."""
 from __future__ import annotations
-import time
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
 
-from app.engines.kinds import KINDS, SOLVERS
-from app.engines.parallel import run_grid, Outcome, Tile
+import time
+from dataclasses import dataclass
+
 from app.engines.differential import DiffEngine
 from app.engines.dynamic import Controller
+from app.engines.kinds import KINDS, SOLVERS
+from app.engines.parallel import Tile, run_grid
 
 
 @dataclass
 class Generation:
     index: int
-    difficulty: Dict[str, str]
-    tiles: List[Tile]
-    rate_by_kind: Dict[str, float]
+    difficulty: dict[str, str]
+    tiles: list[Tile]
+    rate_by_kind: dict[str, float]
     duration_ms: float
 
     def to_dict(self):
@@ -34,8 +34,8 @@ class Driver:
     seed: int = 0
     high: float = 0.85
     low: float = 0.25
-    kinds: Optional[List[str]] = None
-    solvers_by_kind: Optional[Dict[str, List[str]]] = None
+    kinds: list[str] | None = None
+    solvers_by_kind: dict[str, list[str]] | None = None
 
     def run(self) -> dict:
         kinds = self.kinds or list(KINDS.keys())
@@ -45,7 +45,7 @@ class Driver:
         ctrl = Controller(high=self.high, low=self.low)
         ctrl.initialise(kinds)
         diff = DiffEngine(solvers_by_kind)
-        gens: List[Generation] = []
+        gens: list[Generation] = []
 
         for g in range(self.generations):
             t0 = time.time()
@@ -58,8 +58,8 @@ class Driver:
                 solvers_by_kind=solvers_by_kind,
             )
             # compute per-kind mean rate
-            rate_by_kind: Dict[str, float] = {}
-            rate_by_kind_solver: Dict[str, Dict[str, float]] = {}
+            rate_by_kind: dict[str, float] = {}
+            rate_by_kind_solver: dict[str, dict[str, float]] = {}
             for t in tiles:
                 rate_by_kind_solver.setdefault(t.kind, {})[t.solver] = t.rate
             for k, rmap in rate_by_kind_solver.items():

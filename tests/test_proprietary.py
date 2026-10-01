@@ -1,5 +1,5 @@
-import pytest
 from app.core.registry import ProprietaryRegistry
+
 
 def test_proprietary_registry_interface():
     reg = ProprietaryRegistry()

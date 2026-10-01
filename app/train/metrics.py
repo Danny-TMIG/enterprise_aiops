@@ -21,9 +21,9 @@ Every float is stored at DD precision when accumulated over many
 generations. Single-generation values are float64.
 """
 from __future__ import annotations
+
 import math
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
 
 from app.ddlong.dd import DD
 
@@ -35,7 +35,7 @@ class EWMA:
     # α = 1 - α², so the EWMA window is Fibonacci-proportional
     # and its half-life is exactly one Fibonacci step.
     alpha: float = 0.6180339887498949
-    value: Optional[float] = None
+    value: float | None = None
     samples: int = 0
 
     def push(self, x: float) -> float:
@@ -51,7 +51,7 @@ class EWMA:
 @dataclass
 class Window:
     k: int = 4
-    buf: List[float] = field(default_factory=list)
+    buf: list[float] = field(default_factory=list)
 
     def push(self, x: float) -> float:
         self.buf.append(x)
@@ -73,10 +73,10 @@ class Window:
 # ── derivative tracker ──────────────────────────────────────────
 @dataclass
 class Derivatives:
-    last: Optional[float] = None
-    prev_diff: Optional[float] = None
+    last: float | None = None
+    prev_diff: float | None = None
 
-    def push(self, x: float) -> Tuple[float, float]:
+    def push(self, x: float) -> tuple[float, float]:
         if self.last is None:
             self.last = x
             return 0.0, 0.0
@@ -105,7 +105,7 @@ class DriftTracker:
     ref: DD = field(default_factory=lambda: DD(0.0, 0.0))
     n: int = 0
 
-    def push(self, x: float) -> Tuple[float, float]:
+    def push(self, x: float) -> tuple[float, float]:
         self.ref = self.ref + DD.from_float(x)
         self.n += 1
         return self.ref.hi, self.ref.lo
@@ -129,9 +129,9 @@ class StreamMetrics:
     drift: DriftTracker = field(default_factory=DriftTracker)
     passes_total: int = 0
     fails_total: int = 0
-    history: List[Dict[str, float]] = field(default_factory=list)
+    history: list[dict[str, float]] = field(default_factory=list)
 
-    def push(self, passes: int, trials: int) -> Dict[str, float]:
+    def push(self, passes: int, trials: int) -> dict[str, float]:
         """Push a whole-generation tile: pushes each of the `trials`
         individual outcomes into the moving-average stream first,
         then records the generation snapshot.
@@ -195,10 +195,10 @@ class MetricsRegistry:
     static even when the underlying rate moves.
     """
     def __init__(self):
-        self.streams: Dict[Tuple[str, str, str], StreamMetrics] = {}
+        self.streams: dict[tuple[str, str, str], StreamMetrics] = {}
 
     def push(self, kind: str, solver: str, difficulty: str,
-             passes: int, trials: int) -> Dict[str, float]:
+             passes: int, trials: int) -> dict[str, float]:
         key = (kind, solver, difficulty)
         s = self.streams.get(key)
         if s is None:
@@ -206,10 +206,10 @@ class MetricsRegistry:
             self.streams[key] = s
         return s.push(passes, trials)
 
-    def summary(self) -> List[dict]:
+    def summary(self) -> list[dict]:
         return [s.to_dict() for s in self.streams.values()]
 
-    def non_static(self, threshold: float = 1e-9) -> List[str]:
+    def non_static(self, threshold: float = 1e-9) -> list[str]:
         out = []
         for (k, s, d), st in self.streams.items():
             rates = [h["rate"] for h in st.history]
@@ -217,7 +217,7 @@ class MetricsRegistry:
                 out.append(f"{k}/{s}/{d}")
         return sorted(out)
 
-    def static(self, threshold: float = 1e-9) -> List[str]:
+    def static(self, threshold: float = 1e-9) -> list[str]:
         out = []
         for (k, s, d), st in self.streams.items():
             rates = [h["rate"] for h in st.history]

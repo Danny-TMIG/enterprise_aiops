@@ -8,8 +8,9 @@ payloads. Composition priority order is LIVRPS:
 No `pxr` required for the model layer.
 """
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 
 @dataclass
@@ -23,8 +24,8 @@ class Attr:
 class Prim:
     path: str                    # "/World/Chair"
     type_name: str = ""          # "Xform" | "Mesh" | ...
-    attrs: Dict[str, Attr] = field(default_factory=dict)
-    children: Dict[str, "Prim"] = field(default_factory=dict)
+    attrs: dict[str, Attr] = field(default_factory=dict)
+    children: dict[str, Prim] = field(default_factory=dict)
     active: bool = True
     instanceable: bool = False
 
@@ -32,11 +33,11 @@ class Prim:
 @dataclass
 class Layer:
     identifier: str
-    sublayers: List[str] = field(default_factory=list)
-    prims: Dict[str, Prim] = field(default_factory=dict)
-    references: Dict[str, str] = field(default_factory=dict)
-    payloads: Dict[str, str] = field(default_factory=dict)
-    variants: Dict[str, Dict[str, str]] = field(default_factory=dict)
+    sublayers: list[str] = field(default_factory=list)
+    prims: dict[str, Prim] = field(default_factory=dict)
+    references: dict[str, str] = field(default_factory=dict)
+    payloads: dict[str, str] = field(default_factory=dict)
+    variants: dict[str, dict[str, str]] = field(default_factory=dict)
 
     def define(self, prim: Prim) -> Prim:
         self.prims[prim.path] = prim
@@ -45,18 +46,18 @@ class Layer:
 
 @dataclass
 class Stage:
-    layers: Dict[str, Layer] = field(default_factory=dict)
+    layers: dict[str, Layer] = field(default_factory=dict)
     root: str = "/"
 
     def open(self, layer: Layer) -> Layer:
         self.layers[layer.identifier] = layer
         return layer
 
-    def compose(self, prim_path: str) -> Dict[str, Any]:
+    def compose(self, prim_path: str) -> dict[str, Any]:
         """Resolve a prim across layers in LIVRPS order.
         Returns a merged attribute dictionary and the winner layer."""
-        winner: Optional[Tuple[str, Prim]] = None
-        attrs: Dict[str, Attr] = {}
+        winner: tuple[str, Prim] | None = None
+        attrs: dict[str, Attr] = {}
         for ident, layer in self.layers.items():
             prim = layer.prims.get(prim_path)
             if prim and prim.active:
@@ -72,9 +73,9 @@ class Stage:
             "layers": list(self.layers),
         }
 
-    def sublayer_order(self, top: str) -> List[str]:
+    def sublayer_order(self, top: str) -> list[str]:
         """Flatten sublayers depth-first, deepest first (weakest)."""
-        seen: List[str] = []
+        seen: list[str] = []
         def walk(ident: str) -> None:
             lyr = self.layers.get(ident)
             if not lyr:
@@ -86,7 +87,7 @@ class Stage:
         return seen
 
 
-def runtime_available() -> Tuple[bool, str]:
+def runtime_available() -> tuple[bool, str]:
     try:
         from pxr import Usd  # noqa: F401
         return True, "pxr (USD) installed"
@@ -94,7 +95,7 @@ def runtime_available() -> Tuple[bool, str]:
         return False, "pxr not installed; model layer only"
 
 
-def describe() -> Dict[str, Any]:
+def describe() -> dict[str, Any]:
     ok, why = runtime_available()
     s = Stage()
     base = Layer("base.usda")

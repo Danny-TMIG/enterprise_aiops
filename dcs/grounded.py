@@ -5,10 +5,9 @@ counterpart that says what IS certified, with the mechanism and
 the check.
 """
 from __future__ import annotations  # pragma: no cover
-import json  # pragma: no cover
-from dataclasses import asdict  # pragma: no cover
-from pathlib import Path  # pragma: no cover
 
+import json  # pragma: no cover
+from pathlib import Path  # pragma: no cover
 
 GROUNDED: dict[str, dict] = {
 "aligned": {
@@ -173,7 +172,7 @@ def check_orthogonality() -> dict:  # pragma: no cover
 
 def render() -> str:  # pragma: no cover
     lines = ["═" * 72,
-             f"  DCS LICENSE — GROUNDED CLAIMS",
+             "  DCS LICENSE — GROUNDED CLAIMS",
              f"  {len(GROUNDED)} top-level × 8 sub = {sum(len(v['sub']) for v in GROUNDED.values())}",
              "═" * 72, ""]
     for i, (name, block) in enumerate(GROUNDED.items(), 1):

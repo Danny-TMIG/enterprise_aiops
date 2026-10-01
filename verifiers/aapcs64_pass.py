@@ -5,7 +5,6 @@ Enforces 16-byte stack alignment, callee-saved register invariants, and link reg
 """
 import re
 from pathlib import Path
-from typing import List, Dict, Tuple
 
 CALLEE_SAVED_GPR = {f"x{i}" for i in range(19, 30)}
 CALLEE_SAVED_SIMD = {f"v{i}" for i in range(8, 16)}
@@ -20,11 +19,11 @@ class FunctionContext:
         self.stack_allocated: int = 0
         self.has_nested_calls: bool = False
         self.saves_lr: bool = False
-        self.violations: List[str] = []
+        self.violations: list[str] = []
 
-def verify_assembly_file(filepath: Path) -> Tuple[bool, List[Dict]]:
+def verify_assembly_file(filepath: Path) -> tuple[bool, list[dict]]:
     lines = filepath.read_text().splitlines()
-    functions: Dict[str, FunctionContext] = {}
+    functions: dict[str, FunctionContext] = {}
     current_func = None
 
     label_re = re.compile(r"^([a-zA-Z_][a-zA-Z0-9_]*):$")

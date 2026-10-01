@@ -5,19 +5,19 @@ The coordinate value is the success rate. The whole grid becomes
 one CD element whose level is ceil(log2(n_coords)).
 """
 from __future__ import annotations
+
 import math
 from dataclasses import dataclass
-from typing import Any, Dict, List, Tuple
 
-from app.cd_nand.cayley import CD, cd_from, cd_zero, alg_at
-from app.train.core import Run, TrainTile
+from app.cd_nand.cayley import CD, alg_at, cd_from, cd_zero
+from app.train.core import Run
 
 
 @dataclass
 class CDState:
     run_index: int
-    coordinates: List[Tuple[str, str, str]]
-    values: List[float]
+    coordinates: list[tuple[str, str, str]]
+    values: list[float]
     level: int
     cd: CD
 
@@ -58,7 +58,7 @@ def resolve_cd(run: Run) -> CDState:
     return CDState(run.index, coords, values, level, cd)
 
 
-def _bits_to_cd(bits: List[bool], level: int) -> CD:
+def _bits_to_cd(bits: list[bool], level: int) -> CD:
     if level == 0:
         return cd_from(bits[0], 0)
     half = 1 << (level - 1)

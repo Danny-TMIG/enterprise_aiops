@@ -5,12 +5,13 @@ Wire format: Power Automate HTTP trigger / Copilot Studio action.
     response: {"status": "succeeded|failed", "outputs": {...}}
 """
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import Any
 
 from app.proprietary.base import ProprietaryObject
 
 
-def _local_verify(payload: Dict[str, Any]) -> Dict[str, Any]:
+def _local_verify(payload: dict[str, Any]) -> dict[str, Any]:
     claim = payload.get("claim", "")
     evidence = payload.get("evidence") or []
     ok = bool(claim) and isinstance(evidence, list)

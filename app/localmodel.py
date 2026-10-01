@@ -22,12 +22,16 @@ Nothing here needs a network or a package install. A generated result
 is a real result: same code + same args -> same hash, every time.
 """
 from __future__ import annotations
-import hashlib, json, shutil, subprocess
-from typing import Any, Callable, Dict, Optional
 
+import hashlib
+import json
+import shutil
+import subprocess
+from collections.abc import Callable
+from typing import Any
 
 # capability code -> external binary name (None means always-generate)
-BINARY_MAP: Dict[str, Optional[str]] = {
+BINARY_MAP: dict[str, str | None] = {
     "n8n": "n8n", "jenkins": "jenkins", "metasploit": "msfconsole",
     "zaproxy": "zap", "freecad": "freecad", "arduino": "arduino-cli",
     "zephyr": "west", "kicad3d": "kicad-cli", "openocd": "openocd",
@@ -47,11 +51,11 @@ BINARY_MAP: Dict[str, Optional[str]] = {
 }
 
 
-_LOCAL_IMPLS: Dict[str, Callable[..., Dict[str, Any]]] = {}
+_LOCAL_IMPLS: dict[str, Callable[..., dict[str, Any]]] = {}
 
 
-def _generate(code: str) -> Callable[..., Dict[str, Any]]:
-    def impl(**kwargs: Any) -> Dict[str, Any]:
+def _generate(code: str) -> Callable[..., dict[str, Any]]:
+    def impl(**kwargs: Any) -> dict[str, Any]:
         payload = json.dumps({"code": code, "args": kwargs},
                              sort_keys=True, default=str)
         h = hashlib.sha256(payload.encode()).hexdigest()[:16]
@@ -61,7 +65,7 @@ def _generate(code: str) -> Callable[..., Dict[str, Any]]:
     return impl
 
 
-def run(code: str, **kwargs: Any) -> Dict[str, Any]:
+def run(code: str, **kwargs: Any) -> dict[str, Any]:
     bin_name = BINARY_MAP.get(code)
     if bin_name and shutil.which(bin_name):
         try:

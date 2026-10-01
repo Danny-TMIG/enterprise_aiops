@@ -1,6 +1,8 @@
+import hashlib
+import time
+
 from fastapi import FastAPI
 from pydantic import BaseModel
-import hashlib, time
 
 app = FastAPI()
 

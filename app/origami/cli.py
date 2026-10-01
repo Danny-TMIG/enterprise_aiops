@@ -1,11 +1,15 @@
 """origami CLI."""
 from __future__ import annotations
-import argparse, json, sys
+
+import argparse
+import json
+import sys
 from pathlib import Path
 
-from app.origami.library import get as get_grammar, list_shipped
-from app.origami.grammar import expand
 from app.origami.dispatch import dispatch
+from app.origami.grammar import expand
+from app.origami.library import get as get_grammar
+from app.origami.library import list_shipped
 
 
 def _cmd_expand(a) -> int:

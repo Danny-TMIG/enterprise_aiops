@@ -1,22 +1,23 @@
 """MoatMesh + MoatRuntime + score_subsystem + record_run."""
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import Any
 
 
 class MoatMesh:
     def __init__(self, factors=None, **kwargs):
-        self._seed_factors: Dict[str, Any] = dict(factors or {})
+        self._seed_factors: dict[str, Any] = dict(factors or {})
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-    def refresh(self) -> "MoatMesh":
+    def refresh(self) -> MoatMesh:
         return self
 
     @property
-    def equation(self) -> "MoatMesh":
+    def equation(self) -> MoatMesh:
         return self
 
-    def factors(self) -> Dict[str, float]:
+    def factors(self) -> dict[str, float]:
         base = {
             "C_g": 1.0, "X_h": 1.0, "S_g": 0.72,
             "E_g": 0.9, "P_g": 1.0, "Q_g": 1.0, "K_g": 1.0,
@@ -25,10 +26,10 @@ class MoatMesh:
                      if isinstance(v, (int, float))})
         return base
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"factors": self.factors()}
 
-    def score_all(self, scope: str = "global", **kwargs) -> Dict[str, float]:
+    def score_all(self, scope: str = "global", **kwargs) -> dict[str, float]:
         d = self.factors()
         for k, v in self._seed_factors.items():
             if not k:
@@ -51,10 +52,10 @@ class MoatRuntime:
     def __init__(self, root: str = ".", *args: Any, **kwargs: Any):
         self.root = root
 
-    def status(self) -> Dict[str, Any]:
+    def status(self) -> dict[str, Any]:
         return {"status": "active", "root": self.root, "moat_3axis": 1.0}
 
-    def score(self, scope: str = "app") -> Dict[str, Any]:
+    def score(self, scope: str = "app") -> dict[str, Any]:
         return {
             "axes": {"real": 1.0, "exists": 1.0, "coherent": 1.0},
             "moat_3axis": 1.0,

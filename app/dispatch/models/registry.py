@@ -1,10 +1,11 @@
-from typing import Dict, Any
+from typing import Any
+
 
 class ModelRegistry:
     def __init__(self):
         self.models = {}
 
-    def register(self, name: str, model_info: Dict[str, Any]):
+    def register(self, name: str, model_info: dict[str, Any]):
         self.models[name] = model_info
 
     def get(self, name: str):

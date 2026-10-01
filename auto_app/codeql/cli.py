@@ -2,8 +2,10 @@
 
 import argparse
 import sys
+
 from .runner import CodeQLRunner
 from .swarm import CodeQLSwarm
+
 
 def main(args=None):
     parser = argparse.ArgumentParser(description="Enterprise AIOps CodeQL CLI")

@@ -1,6 +1,7 @@
 """Unified status for every layer. Never raises."""
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import Any
 
 
 def _safe(fn) -> Any:
@@ -10,8 +11,8 @@ def _safe(fn) -> Any:
         return {"error": type(exc).__name__}
 
 
-def unified_status() -> Dict[str, Any]:
-    out: Dict[str, Any] = {"layers": {}}
+def unified_status() -> dict[str, Any]:
+    out: dict[str, Any] = {"layers": {}}
 
     def mesh():
         from app.mesh.runtime import get_mesh

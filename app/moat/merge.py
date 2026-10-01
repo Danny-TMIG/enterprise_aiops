@@ -11,11 +11,13 @@ Two ways to merge:
       stitches subsystems into a moat mesh.
 """
 from __future__ import annotations
+
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from statistics import mean
-from typing import Any, Dict, Iterable, List
+from typing import Any
 
-from app.moat.axes import AxisScore, Axis, AXES
+from app.moat.axes import AXES, Axis, AxisScore
 
 
 @dataclass
@@ -25,19 +27,19 @@ class MergeEdge:
     axis: Axis
     weight: float
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"src": self.src, "dst": self.dst,
                 "axis": self.axis.value, "weight": self.weight}
 
 
 @dataclass
 class MergeResult:
-    scores: List[AxisScore] = field(default_factory=list)
-    axes: Dict[str, float] = field(default_factory=dict)
-    edges: List[MergeEdge] = field(default_factory=list)
+    scores: list[AxisScore] = field(default_factory=list)
+    axes: dict[str, float] = field(default_factory=dict)
+    edges: list[MergeEdge] = field(default_factory=list)
     moat: float = 0.0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "subsystems": len(self.scores),
             "axes": self.axes,
@@ -61,7 +63,7 @@ def merge(a: AxisScore, b: AxisScore) -> AxisScore:
     return m
 
 
-def merge_all(scores: List[AxisScore]) -> AxisScore:
+def merge_all(scores: list[AxisScore]) -> AxisScore:
     if not scores:
         return AxisScore(subsystem="empty", path="")
     m = scores[0]
@@ -70,7 +72,7 @@ def merge_all(scores: List[AxisScore]) -> AxisScore:
     return m
 
 
-def merge_set(scores: List[AxisScore]) -> MergeResult:
+def merge_set(scores: list[AxisScore]) -> MergeResult:
     """Vertical merge: aggregate across subsystems, compute the moat.
 
     The three axes are weighted as in the earlier decomposition:
@@ -85,7 +87,7 @@ def merge_set(scores: List[AxisScore]) -> MergeResult:
     if n == 0:
         return MergeResult()
 
-    agg: Dict[str, float] = {}
+    agg: dict[str, float] = {}
     for ax in AXES:
         agg[ax.value] = round(_mean(s.get(ax) for s in scores), 4)
 
@@ -95,7 +97,7 @@ def merge_set(scores: List[AxisScore]) -> MergeResult:
 
     # edges: every subsystem that scores low on X or V becomes a
     # "thin" edge the moat wants to reinforce
-    edges: List[MergeEdge] = []
+    edges: list[MergeEdge] = []
     for s in scores:
         if s.x < 0.5:
             edges.append(MergeEdge(s.subsystem, "REALITY", Axis.X, 1.0 - s.x))

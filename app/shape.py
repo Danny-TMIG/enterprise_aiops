@@ -17,8 +17,8 @@ rewrites, because it names what each pair of modules *is*, not
 what files it lives in.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Dict, List, Tuple
+
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -56,7 +56,7 @@ class Adjunction:
                 self.unit, self.counit, self.witness)
 
 
-ADJUNCTIONS: Tuple[Adjunction, ...] = (
+ADJUNCTIONS: tuple[Adjunction, ...] = (
     Adjunction(
         left_name="Integration",
         right_name="Distribution",
@@ -148,7 +148,7 @@ def shape_identity() -> tuple:
 
 
 def render() -> str:
-    lines: List[str] = []
+    lines: list[str] = []
     lines.append("THE SHAPE OF THE SYSTEM")
     lines.append("=" * 66)
     lines.append("")
@@ -190,7 +190,6 @@ def as_dict() -> dict:
 def validate() -> dict:
     """Check that each adjunction's witness module exists and that
     its proof test passes."""
-    import importlib
     out = []
     for adj in ADJUNCTIONS:
         left_ok = _module_exists(adj.left_module)
@@ -222,7 +221,7 @@ def _module_exists(dotted_path: str) -> bool:
         return False
 
 
-def write_markdown(path=None) -> "Path":
+def write_markdown(path=None) -> Path:
     from pathlib import Path
     p = Path(path) if path else (
         Path(__file__).resolve().parent.parent / "docs" / "shape.md"

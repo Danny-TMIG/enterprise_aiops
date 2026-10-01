@@ -24,10 +24,10 @@ from dcs import sources as src  # pragma: no cover
 # Side-effect imports: each module registers @source handlers.
 from dcs.sources import aws as _aws  # noqa: F401  # pragma: no cover
 from dcs.sources import eval_report as _eval_report  # noqa: F401  # pragma: no cover
-from dcs.sources import model_card as _model_card  # noqa: F401  # pragma: no cover
 from dcs.sources import github as _github  # noqa: F401  # pragma: no cover
 from dcs.sources import kube_bench as _kb  # noqa: F401  # pragma: no cover
 from dcs.sources import kyverno as _kyv  # noqa: F401  # pragma: no cover
+from dcs.sources import model_card as _model_card  # noqa: F401  # pragma: no cover
 from dcs.sources import oscap as _oscap  # noqa: F401  # pragma: no cover
 from dcs.sources import prowler as _prowler  # noqa: F401  # pragma: no cover
 
@@ -206,7 +206,7 @@ def main() -> int:  # pragma: no cover
     stem = "self-" + str(int(time.time()))
     primary = out / (stem + ".json")
     primary.write_text(json.dumps(signed, indent=2))
-    print("")
+    print()
     print("evidence: " + str(primary))
 
     _write_exports(payload, out, stem)

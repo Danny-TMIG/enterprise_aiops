@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Fix P3 + P6 + P10 in one pass."""
-import os, re, sqlite3, subprocess, sys
+import os
+import re
+import sqlite3
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path.home() / "enterprise_aiops"

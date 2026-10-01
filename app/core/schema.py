@@ -375,7 +375,7 @@ TABLE_NAMES = [slug for slug, *_ in GAPS] + [
     "ontology", "registry_entries", "registry_publications", "refs", "events",
 ]
 
-__all__ = ["GAPS", "STD_COLS", "CROSS_TABLES", "ddl", "TABLE_NAMES"]
+__all__ = ["CROSS_TABLES", "GAPS", "STD_COLS", "TABLE_NAMES", "ddl"]
 
 
 # ── self-registration as capability `schema` ───────────────────────

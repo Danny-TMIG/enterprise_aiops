@@ -1,25 +1,25 @@
 """Flock — N agents, one shared clock, one local tick per bird."""
 from __future__ import annotations
+
 import json
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
+from app.murmur import stages
 from app.murmur.agent import Agent
 from app.murmur.rules import default_rules
 from app.murmur.state import AgentState
-from app.murmur import stages
-from app.murmur.connectors import REGISTRY
 
 
 @dataclass
 class Flock:
     n: int = 8
     history_path: str = ".murmur/history.jsonl"
-    agents: List[Agent] = field(default_factory=list)
+    agents: list[Agent] = field(default_factory=list)
     tick_count: int = 0
-    last_metrics: Dict[str, float] = field(default_factory=dict)
+    last_metrics: dict[str, float] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         import random
@@ -36,7 +36,7 @@ class Flock:
             )
             self.agents.append(Agent(state=s, rules=list(rules)))
 
-    def neighbors_of(self, idx: int, radius: int = 2) -> List[Agent]:
+    def neighbors_of(self, idx: int, radius: int = 2) -> list[Agent]:
         out = []
         for j in range(max(0, idx - radius),
                        min(self.n, idx + radius + 1)):
@@ -44,14 +44,14 @@ class Flock:
                 out.append(self.agents[j])
         return out
 
-    def tick(self, dt: float = 0.05, tool: Optional[str] = None) -> Dict[str, Any]:
+    def tick(self, dt: float = 0.05, tool: str | None = None) -> dict[str, Any]:
         self.tick_count += 1
 
         # update neighbor lists (small rule, high frequency)
         for i, a in enumerate(self.agents):
             a.neighbors = self.neighbors_of(i)
 
-        effects: List[Dict[str, Any]] = []
+        effects: list[dict[str, Any]] = []
         for a in self.agents:
             sig = stages.sense(a.state, {"kind": "drift"})
             sit = stages.interpret(sig, a.state)
@@ -90,7 +90,7 @@ class Flock:
         return {"tick": self.tick_count, "effects": effects,
                 "metrics": self.last_metrics}
 
-    def _record(self, effects: List[Dict[str, Any]]) -> None:
+    def _record(self, effects: list[dict[str, Any]]) -> None:
         p = Path(self.history_path)
         p.parent.mkdir(parents=True, exist_ok=True)
         rec = {"tick": self.tick_count, "ts": time.time(),
@@ -98,7 +98,7 @@ class Flock:
         with p.open("a") as f:
             f.write(json.dumps(rec) + "\n")
 
-    def _metrics(self, effects: List[Dict[str, Any]]) -> None:
+    def _metrics(self, effects: list[dict[str, Any]]) -> None:
         n = max(1, len(effects))
         ok = sum(1 for e in effects if e["effect"])
         aligned = sum(1 for e in effects if e["decision"] == "act.align")
@@ -115,8 +115,8 @@ class Flock:
         }
 
     def run(self, ticks: int = 50, dt: float = 0.05,
-            tool: Optional[str] = None,
-            on_tick: Optional[Any] = None) -> List[Dict[str, Any]]:
+            tool: str | None = None,
+            on_tick: Any | None = None) -> list[dict[str, Any]]:
         out = []
         for _ in range(ticks):
             r = self.tick(dt=dt, tool=tool)

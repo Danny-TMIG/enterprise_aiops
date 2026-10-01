@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 from pathlib import Path
+
 ROOT = Path.cwd()
 SDLC = json.loads((ROOT/"dcs/standards/sdlc.json").read_text())
 REG = json.loads((ROOT/"dcs/standards/registry.json").read_text())["registry"]

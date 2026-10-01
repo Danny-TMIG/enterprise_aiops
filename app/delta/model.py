@@ -1,9 +1,11 @@
 """A local model handle. Reads from disk. No network."""
 from __future__ import annotations
+
 import hashlib
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, List, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -15,7 +17,7 @@ class Model(Protocol):
 @dataclass
 class FixtureModel:
     id: str
-    fixtures: List[tuple] = field(default_factory=list)
+    fixtures: list[tuple] = field(default_factory=list)
     fallback: str = ""
 
     def generate(self, prompt: str, seed: int = 0) -> str:

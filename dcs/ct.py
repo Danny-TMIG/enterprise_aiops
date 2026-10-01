@@ -7,8 +7,11 @@ with the log file and the issuer's key can verify:
   - no rogue license was inserted out of band
 """
 from __future__ import annotations  # pragma: no cover
-import hashlib, json, time  # pragma: no cover
-from dataclasses import dataclass, asdict  # pragma: no cover
+
+import hashlib  # pragma: no cover
+import json
+import time
+from dataclasses import asdict, dataclass  # pragma: no cover
 from pathlib import Path  # pragma: no cover
 
 
@@ -78,7 +81,7 @@ class TransparencyLog:  # pragma: no cover
         }, indent=2))
 
     @classmethod
-    def load(cls, path: Path, key: bytes) -> "TransparencyLog":  # pragma: no cover
+    def load(cls, path: Path, key: bytes) -> TransparencyLog:  # pragma: no cover
         data = json.loads(path.read_text())
         log = cls(key)
         log.entries = [LogEntry(**e) for e in data["entries"]]

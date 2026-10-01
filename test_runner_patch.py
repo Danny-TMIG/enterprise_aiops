@@ -1,6 +1,7 @@
 import asyncio
 import inspect
 
+
 def test_module_comprehensive(mod):
     for attr_name in dir(mod):
         if attr_name.startswith("_"):

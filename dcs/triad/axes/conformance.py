@@ -13,7 +13,7 @@ def resolve(  # pragma: no cover
 ) -> VState:
     if compare is None:  # pragma: no cover
 
-        def compare(d, a):  # noqa: E731  # pragma: no cover
+        def compare(d, a):  # pragma: no cover
             return d == a  # pragma: no cover
 
     try:

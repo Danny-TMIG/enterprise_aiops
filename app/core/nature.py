@@ -9,19 +9,20 @@ The dispatchable ones self-register as capabilities of the form
 No global optimizer. No controller. Local rules only.
 """
 from __future__ import annotations
-import math, random, threading
-from collections import defaultdict, deque
-from dataclasses import dataclass, field, asdict
-from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
 
+import math
+import random
+from collections import defaultdict
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
 
 # ── catalog ─────────────────────────────────────────────────────────
 CATALOG_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "nature.tsv"
 
 
-def load_catalog() -> List[Dict[str, str]]:
-    rows: List[Dict[str, str]] = []
+def load_catalog() -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
     if CATALOG_PATH.exists():
         for line in CATALOG_PATH.read_text().splitlines():
             parts = line.split("\t")
@@ -33,7 +34,7 @@ def load_catalog() -> List[Dict[str, str]]:
 
 # ── foraging ────────────────────────────────────────────────────────
 def levy_flight(n: int = 1000, alpha: float = 1.5,
-                seed: int = 0) -> Dict[str, Any]:
+                seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     x, y = 0.0, 0.0
     for _ in range(n):
@@ -46,7 +47,7 @@ def levy_flight(n: int = 1000, alpha: float = 1.5,
 
 
 def brownian_search(n: int = 1000, sigma: float = 1.0,
-                    seed: int = 0) -> Dict[str, Any]:
+                    seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     x = y = 0.0
     for _ in range(n):
@@ -56,7 +57,7 @@ def brownian_search(n: int = 1000, sigma: float = 1.0,
 
 
 def area_restricted(n: int = 200, leg: int = 20, turn_sd: float = 1.2,
-                    seed: int = 0) -> Dict[str, Any]:
+                    seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     x = y = 0.0; h = 0.0
     for i in range(n):
@@ -69,7 +70,7 @@ def area_restricted(n: int = 200, leg: int = 20, turn_sd: float = 1.2,
 
 
 def correlated_walk(n: int = 1000, kappa: float = 0.9,
-                    seed: int = 0) -> Dict[str, Any]:
+                    seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     x = y = 0.0; h = rng.uniform(0, 2*math.pi)
     for _ in range(n):
@@ -81,7 +82,7 @@ def correlated_walk(n: int = 1000, kappa: float = 0.9,
 # ── flocking ────────────────────────────────────────────────────────
 def boids(n: int = 40, steps: int = 80, sep: float = 1.5,
           ali: float = 0.05, coh: float = 0.005,
-          seed: int = 0) -> Dict[str, Any]:
+          seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     pos = [[rng.uniform(0, 30), rng.uniform(0, 30)] for _ in range(n)]
     vel = [[rng.gauss(0, 1), rng.gauss(0, 1)] for _ in range(n)]
@@ -118,7 +119,7 @@ def boids(n: int = 40, steps: int = 80, sep: float = 1.5,
 
 # ── stigmergy ───────────────────────────────────────────────────────
 def termite_mound(n: int = 200, steps: int = 200, evap: float = 0.05,
-                  seed: int = 0) -> Dict[str, Any]:
+                  seed: int = 0) -> dict[str, Any]:
     """Deposit + follow + evaporate. Gives pile-up structure."""
     rng = random.Random(seed)
     grid = defaultdict(float)
@@ -141,20 +142,20 @@ def termite_mound(n: int = 200, steps: int = 200, evap: float = 0.05,
     return {"n": n, "steps": steps, "peak": peak}
 
 
-def ant_colony(edges: Optional[List[Tuple[str, str, float]]] = None,
+def ant_colony(edges: list[tuple[str, str, float]] | None = None,
                source: str = "A", target: str = "E",
                ants: int = 20, steps: int = 40,
-               evap: float = 0.1, seed: int = 0) -> Dict[str, Any]:
+               evap: float = 0.1, seed: int = 0) -> dict[str, Any]:
     if edges is None:
         edges = [("A","B",1.0),("A","C",1.5),("B","D",1.0),
                  ("C","D",1.2),("D","E",1.0),("B","E",3.0),
                  ("C","E",2.5),("A","D",2.2)]
     rng = random.Random(seed)
-    neighbors: Dict[str, List[Tuple[str, float]]] = defaultdict(list)
+    neighbors: dict[str, list[tuple[str, float]]] = defaultdict(list)
     for a, b, L in edges:
         neighbors[a].append((b, L))
         neighbors[b].append((a, L))
-    pheromone: Dict[Tuple[str, str], float] = defaultdict(lambda: 1.0)
+    pheromone: dict[tuple[str, str], float] = defaultdict(lambda: 1.0)
     best = None; best_len = float("inf")
     for _ in range(steps):
         for _ in range(ants):
@@ -192,7 +193,7 @@ def ant_colony(edges: Optional[List[Tuple[str, str, float]]] = None,
 def turing_pattern(n: int = 48, steps: int = 300,
                    f: float = 0.055, k: float = 0.062,
                    Da: float = 1.0, Db: float = 0.5,
-                   seed: int = 0) -> Dict[str, Any]:
+                   seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     A = [[1.0]*n for _ in range(n)]
     B = [[0.0]*n for _ in range(n)]
@@ -234,11 +235,11 @@ def turing_pattern(n: int = 48, steps: int = 300,
 
 # ── oscillator ──────────────────────────────────────────────────────
 def kuramoto(n: int = 100, steps: int = 200, K: float = 2.0,
-             seed: int = 0) -> Dict[str, Any]:
+             seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     omega = [rng.gauss(0, 1) for _ in range(n)]
     theta = [rng.uniform(0, 2*math.pi) for _ in range(n)]
-    dt = 0.05; Rs: List[float] = []
+    dt = 0.05; Rs: list[float] = []
     for _ in range(steps):
         sx = sum(math.cos(t) for t in theta)
         sy = sum(math.sin(t) for t in theta)
@@ -252,7 +253,7 @@ def kuramoto(n: int = 100, steps: int = 200, K: float = 2.0,
 
 def fitzhugh_nagumo(steps: int = 400, a: float = 0.7, b: float = 0.8,
                     tau: float = 12.5, I: float = 0.5
-                    ) -> Dict[str, Any]:
+                    ) -> dict[str, Any]:
     v = w = 0.0; dt = 0.05; spikes = 0; prev = v
     for _ in range(steps):
         dv = v - v**3/3 - w + I
@@ -265,12 +266,12 @@ def fitzhugh_nagumo(steps: int = 400, a: float = 0.7, b: float = 0.8,
 
 
 def firefly_sync(n: int = 30, steps: int = 200,
-                 seed: int = 0) -> Dict[str, Any]:
+                 seed: int = 0) -> dict[str, Any]:
     """Pulse-coupled: every cycle each firefly nudges its phase toward
     the mean. Order parameter rises."""
     rng = random.Random(seed)
     phase = [rng.uniform(0, 1) for _ in range(n)]
-    order_trace: List[float] = []
+    order_trace: list[float] = []
     for _ in range(steps):
         # advance
         for i in range(n):
@@ -290,9 +291,9 @@ def firefly_sync(n: int = 30, steps: int = 200,
 
 # ── walks ───────────────────────────────────────────────────────────
 def elephant_walk(n: int = 1000, p: float = 0.5,
-                  seed: int = 0) -> Dict[str, Any]:
+                  seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
-    x = 0.0; history: List[float] = []
+    x = 0.0; history: list[float] = []
     for _ in range(n):
         if not history or rng.random() < p:
             step = 1.0 if rng.random() < 0.5 else -1.0
@@ -302,7 +303,7 @@ def elephant_walk(n: int = 1000, p: float = 0.5,
     return {"n": n, "p": p, "end": x}
 
 
-def self_avoiding_walk(n: int = 200, seed: int = 0) -> Dict[str, Any]:
+def self_avoiding_walk(n: int = 200, seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     visited = {(0, 0)}
     x = y = 0
@@ -320,7 +321,7 @@ def self_avoiding_walk(n: int = 200, seed: int = 0) -> Dict[str, Any]:
 
 # ── threshold ───────────────────────────────────────────────────────
 def quorum_sensing(n: int = 50, threshold: float = 0.5,
-                   seed: int = 0) -> Dict[str, Any]:
+                   seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     s = 0.0; at = None
     for step in range(n):
@@ -332,7 +333,7 @@ def quorum_sensing(n: int = 50, threshold: float = 0.5,
 
 def neuron_threshold(v_th: float = 1.0, steps: int = 200,
                      I: float = 0.02, leak: float = 0.05,
-                     seed: int = 0) -> Dict[str, Any]:
+                     seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     v = 0.0; spikes = 0
     for _ in range(steps):
@@ -344,7 +345,7 @@ def neuron_threshold(v_th: float = 1.0, steps: int = 200,
 
 # ── adaptation ──────────────────────────────────────────────────────
 def hebbian(n: int = 10, steps: int = 100, lr: float = 0.01,
-            seed: int = 0) -> Dict[str, Any]:
+            seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     W = [[0.0]*n for _ in range(n)]
     for _ in range(steps):
@@ -363,7 +364,7 @@ def hebbian(n: int = 10, steps: int = 100, lr: float = 0.01,
 
 
 def homeostat(target: float = 1.0, steps: int = 200,
-              gain: float = 0.1, seed: int = 0) -> Dict[str, Any]:
+              gain: float = 0.1, seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     x = 0.0
     for _ in range(steps):
@@ -373,7 +374,7 @@ def homeostat(target: float = 1.0, steps: int = 200,
 
 
 def bacterial_chemotaxis(steps: int = 200, seed: int = 0
-                         ) -> Dict[str, Any]:
+                         ) -> dict[str, Any]:
     """Run-and-tumble: if gradient is good, keep running; else tumble."""
     rng = random.Random(seed)
     x = y = 0.0; h = 0.0; last = 0.0
@@ -395,7 +396,7 @@ def bacterial_chemotaxis(steps: int = 200, seed: int = 0
 def lotka_volterra(steps: int = 400, alpha: float = 1.1, beta: float = 0.4,
                    gamma: float = 0.4, delta: float = 0.1,
                    x0: float = 10.0, y0: float = 5.0
-                   ) -> Dict[str, Any]:
+                   ) -> dict[str, Any]:
     dt = 0.01; x = x0; y = y0
     xs = [x]; ys = [y]
     for _ in range(steps):
@@ -408,7 +409,7 @@ def lotka_volterra(steps: int = 400, alpha: float = 1.1, beta: float = 0.4,
 
 
 def logistic(r: float = 0.9, K: float = 100.0, x0: float = 1.0,
-             steps: int = 200) -> Dict[str, Any]:
+             steps: int = 200) -> dict[str, Any]:
     dt = 0.05; x = x0
     for _ in range(steps):
         x += dt * r * x * (1 - x/K)
@@ -417,7 +418,7 @@ def logistic(r: float = 0.9, K: float = 100.0, x0: float = 1.0,
 
 def sir(S0: float = 0.99, I0: float = 0.01, R0: float = 0.0,
         beta: float = 0.3, gamma: float = 0.1,
-        steps: int = 300) -> Dict[str, Any]:
+        steps: int = 300) -> dict[str, Any]:
     S, I, R = S0, I0, R0; dt = 0.1
     peak_I = I
     for _ in range(steps):
@@ -432,7 +433,7 @@ def sir(S0: float = 0.99, I0: float = 0.01, R0: float = 0.0,
 
 # ── flow ────────────────────────────────────────────────────────────
 def fick_1d(n: int = 64, steps: int = 200, D: float = 0.5,
-            seed: int = 0) -> Dict[str, Any]:
+            seed: int = 0) -> dict[str, Any]:
     rng = random.Random(seed)
     c = [0.0]*n
     for i in range(n//2 - 3, n//2 + 3):
@@ -447,7 +448,7 @@ def fick_1d(n: int = 64, steps: int = 200, D: float = 0.5,
             "spread_center": c[n//2]}
 
 
-def kirchhoff(nodes: int = 6, seed: int = 0) -> Dict[str, Any]:
+def kirchhoff(nodes: int = 6, seed: int = 0) -> dict[str, Any]:
     """Steady-state currents in a resistor network. Small linear solve."""
     rng = random.Random(seed)
     # build a random graph with conductances
@@ -486,7 +487,7 @@ def kirchhoff(nodes: int = 6, seed: int = 0) -> Dict[str, Any]:
 
 
 # ── registry: dispatchable phenomena ────────────────────────────────
-PHENOMENA: Dict[str, Tuple[Callable[..., Any], str, str]] = {
+PHENOMENA: dict[str, tuple[Callable[..., Any], str, str]] = {
     "nature_levy_flight":          (levy_flight,         "foraging",  "heavy-tailed search"),
     "nature_brownian_search":      (brownian_search,     "foraging",  "diffusive search"),
     "nature_area_restricted":      (area_restricted,     "foraging",  "long legs + tight turns"),
@@ -520,7 +521,7 @@ def _self_register() -> None:
         return
     for code, (fn, cls, rule) in PHENOMENA.items():
         def make(fn=fn, cls=cls, rule=rule, code=code):
-            def entry(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+            def entry(*args: Any, **kwargs: Any) -> dict[str, Any]:
                 out = fn(*args, **kwargs)
                 if isinstance(out, dict):
                     out["phenomenon"] = code
@@ -535,13 +536,29 @@ _self_register()
 
 
 __all__ = [
-    "load_catalog", "PHENOMENA",
-    "levy_flight", "brownian_search", "area_restricted", "correlated_walk",
-    "boids", "termite_mound", "ant_colony", "turing_pattern",
-    "kuramoto", "fitzhugh_nagumo", "firefly_sync",
-    "elephant_walk", "self_avoiding_walk",
-    "quorum_sensing", "neuron_threshold",
-    "hebbian", "homeostat", "bacterial_chemotaxis",
-    "lotka_volterra", "logistic", "sir",
-    "fick_1d", "kirchhoff",
+    "PHENOMENA",
+    "ant_colony",
+    "area_restricted",
+    "bacterial_chemotaxis",
+    "boids",
+    "brownian_search",
+    "correlated_walk",
+    "elephant_walk",
+    "fick_1d",
+    "firefly_sync",
+    "fitzhugh_nagumo",
+    "hebbian",
+    "homeostat",
+    "kirchhoff",
+    "kuramoto",
+    "levy_flight",
+    "load_catalog",
+    "logistic",
+    "lotka_volterra",
+    "neuron_threshold",
+    "quorum_sensing",
+    "self_avoiding_walk",
+    "sir",
+    "termite_mound",
+    "turing_pattern",
 ]

@@ -1,11 +1,14 @@
 """Claim 1: 7B output is 7B output. Measure it, don't assert it."""
 from __future__ import annotations
-import ast, builtins, sys
-from typing import Any, Dict, List
 
+import ast
+import builtins
+import sys
+from typing import Any
+
+from app.origami.dispatch import dispatch
 from app.origami.library import get as get_grammar
 from app.origami.swarm import Swarm
-from app.origami.dispatch import dispatch
 
 PROMPTS = [
     "add rate limiting to /api/checkout",
@@ -35,7 +38,7 @@ _B = set(dir(builtins)) | {
 }
 
 
-def undefined_names(source: str) -> List[str]:
+def undefined_names(source: str) -> list[str]:
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -56,9 +59,7 @@ def undefined_names(source: str) -> List[str]:
             for t in node.targets:
                 if isinstance(t, ast.Name):
                     defined.add(t.id)
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            defined.add(node.target.id)
-        elif isinstance(node, ast.For) and isinstance(node.target, ast.Name):
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) or isinstance(node, ast.For) and isinstance(node.target, ast.Name):
             defined.add(node.target.id)
         elif isinstance(node, ast.withitem) and isinstance(node.optional_vars, ast.Name):
             defined.add(node.optional_vars.id)
@@ -67,7 +68,7 @@ def undefined_names(source: str) -> List[str]:
     return sorted(used - defined - _B)
 
 
-def unused_params(source: str) -> List[str]:
+def unused_params(source: str) -> list[str]:
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -129,7 +130,7 @@ def no_stub_body(source: str) -> bool:
     return False
 
 
-def score(source: str) -> Dict[str, Any]:
+def score(source: str) -> dict[str, Any]:
     try:
         ast.parse(source)
         parse_ok = True

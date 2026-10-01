@@ -1,9 +1,9 @@
-import os
-import mmap
-import struct
 import hashlib
+import mmap
+import os
+import struct
 import time
-from typing import Optional, Dict, Any
+from typing import Any
 
 # Cross-Disciplinary Standards & Engineering Compliance Manifest
 ENGINEERING_MANIFEST = {
@@ -43,7 +43,7 @@ class SovereignMicrokernel:
         self.file_obj = open(self.backing_path, "r+b")
         self.mmap_buf = mmap.mmap(self.file_obj.fileno(), self.total_size, access=mmap.ACCESS_WRITE)
 
-    def commit_state(self, slot_id: int, state_hash: str, consensus_ratio: float, active_agents: int) -> Dict[str, Any]:
+    def commit_state(self, slot_id: int, state_hash: str, consensus_ratio: float, active_agents: int) -> dict[str, Any]:
         if slot_id >= self.max_slots:
             raise ValueError(f"Slot ID {slot_id} exceeds Dunbar mesh capacity ({self.max_slots}).")
         
@@ -68,7 +68,7 @@ class SovereignMicrokernel:
             "timestamp": timestamp
         }
 
-    def read_state(self, slot_id: int) -> Optional[Dict[str, Any]]:
+    def read_state(self, slot_id: int) -> dict[str, Any] | None:
         if slot_id >= self.max_slots:
             return None
             
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     kernel = SovereignMicrokernel()
     test_hash = hashlib.sha256(b"fellow_level_master_execution").hexdigest()
     res = kernel.commit_state(slot_id=0, state_hash=test_hash, consensus_ratio=1.0, active_agents=256)
-    print(f"[+] Microkernel State Committed successfully.")
+    print("[+] Microkernel State Committed successfully.")
     print(f"[+] Cryptographic Block Signature: {res['block_signature']}")
     verification = kernel.read_state(0)
     print(f"[+] Verified Zero-Copy RAM Read: {verification['state_hash']}")

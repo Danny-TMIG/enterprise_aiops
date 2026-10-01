@@ -3,14 +3,14 @@
 Kinds: sudoku | crossword | rubik | tictactoe | gridworld.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
 
-from app.puzzles.atlas import Atlas, load_atlas
-from app.puzzles.sudoku import make_sudoku, SudokuPuzzle, solve_sudoku
+from dataclasses import dataclass, field
+
+from app.puzzles.atlas import load_atlas
 from app.puzzles.crossword import (
-    make_crossword, CrosswordPuzzle, solve_crossword,
+    make_crossword,
 )
+from app.puzzles.sudoku import make_sudoku
 
 KINDS = ("sudoku", "crossword", "rubik", "tictactoe", "gridworld")
 
@@ -19,9 +19,9 @@ KINDS = ("sudoku", "crossword", "rubik", "tictactoe", "gridworld")
 class Config:
     kind: str = "sudoku"
     difficulty: str = "medium"
-    categories: List[str] = field(default_factory=list)
+    categories: list[str] = field(default_factory=list)
     seed: int = 0
-    meta: Dict = field(default_factory=dict)
+    meta: dict = field(default_factory=dict)
 
     def validate(self):
         if self.kind not in KINDS:
@@ -83,7 +83,7 @@ def configure(cfg: Config) -> dict:
                 "pool": puzzle.pool_size}
 
     if cfg.kind == "rubik":
-        from app.puzzles.rubik import scramble, solve_cube
+        from app.puzzles.rubik import scramble
         depth = {"easy": 6, "medium": 9, "hard": 11}[cfg.difficulty]
         state = scramble(n_moves=depth, seed=cfg.seed)
         return {"kind": "rubik", "state": state, "scramble_depth": depth}
@@ -99,7 +99,7 @@ def configure(cfg: Config) -> dict:
     raise RuntimeError("unreachable")
 
 
-def reconfig(cfg: Config, change: Dict) -> Config:
+def reconfig(cfg: Config, change: dict) -> Config:
     new = Config(
         kind=change.get("kind", cfg.kind),
         difficulty=change.get("difficulty", cfg.difficulty),
@@ -113,20 +113,20 @@ def reconfig(cfg: Config, change: Dict) -> Config:
 
 @dataclass
 class Configurator:
-    history: List[Config] = field(default_factory=list)
+    history: list[Config] = field(default_factory=list)
 
     def configure(self, cfg: Config) -> dict:
         self.history.append(cfg)
         return configure(cfg)
 
-    def reconfig(self, change: Dict) -> dict:
+    def reconfig(self, change: dict) -> dict:
         if not self.history:
             raise RuntimeError("no prior config")
         new = reconfig(self.history[-1], change)
         self.history.append(new)
         return configure(new)
 
-    def undo(self) -> Optional[Config]:
+    def undo(self) -> Config | None:
         if len(self.history) < 2:
             return None
         self.history.pop()

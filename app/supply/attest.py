@@ -1,13 +1,16 @@
 """in-toto Statement v1 attestation."""
 from __future__ import annotations
-import json, time
-from typing import Dict
-from app.supply.sign import sign, verify, key_id
 
-def _canon(d: Dict) -> bytes:
+import json
+import time
+
+from app.supply.sign import key_id, sign, verify
+
+
+def _canon(d: dict) -> bytes:
     return json.dumps(d, sort_keys=True).encode()
 
-def build_attestation(sbom: Dict, key: bytes) -> Dict:
+def build_attestation(sbom: dict, key: bytes) -> dict:
     subject = [{"name": c["name"], "digest": {"sha256": c["hashes"][0]["content"]}}
                for c in sbom["components"]]
     predicate = {"builder":{"id":"app.supply"},
@@ -23,7 +26,7 @@ def build_attestation(sbom: Dict, key: bytes) -> Dict:
     stmt["key_id"] = key_id(key)
     return stmt
 
-def verify_attestation(stmt: Dict, key: bytes) -> bool:
+def verify_attestation(stmt: dict, key: bytes) -> bool:
     st = dict(stmt)
     sig = st.pop("signature", None)
     kid = st.pop("key_id", None)

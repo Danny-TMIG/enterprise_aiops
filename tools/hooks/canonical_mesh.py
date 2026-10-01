@@ -1,17 +1,18 @@
 """Mesh operations. Canonical — do not edit in place."""
 from __future__ import annotations
+
 import hashlib
-from typing import Any, Dict, List
+from typing import Any
 
 
-def weave(*args) -> Dict[str, Any]:
+def weave(*args) -> dict[str, Any]:
     runs = list(args[0]) if len(args) == 1 and isinstance(args[0], (list, tuple)) else list(args)
     return {"runs": len(runs),
             "outcomes": sum(len(getattr(r, "outcomes", [])) for r in runs),
             "digests": [getattr(r, "digest", None) for r in runs]}
 
 
-def criss_cross(a, b) -> Dict[str, Any]:
+def criss_cross(a, b) -> dict[str, Any]:
     h = hashlib.sha256(((getattr(a, "digest", "") or "") + "|" +
                         (getattr(b, "digest", "") or "")).encode()).hexdigest()
     return {"a_index": getattr(a, "index", None),
@@ -21,7 +22,7 @@ def criss_cross(a, b) -> Dict[str, Any]:
             "combined": "sha256:" + h[:16], "length": len(h)}
 
 
-def trans(runs, key_fn=None) -> Dict[str, Any]:
+def trans(runs, key_fn=None) -> dict[str, Any]:
     by_id = {}
     for i, r in enumerate(runs):
         rid = getattr(r, "id", None) or getattr(r, "digest", None) or str(i)
@@ -52,7 +53,7 @@ def trans(runs, key_fn=None) -> Dict[str, Any]:
             "reachable": reachable, "reach": reach}
 
 
-def pollinate(a, b) -> List[Dict[str, Any]]:
+def pollinate(a, b) -> list[dict[str, Any]]:
     ra = getattr(a, "rates", {}) or {}
     rb = getattr(b, "rates", {}) or {}
     ka, kb = set(ra), set(rb)

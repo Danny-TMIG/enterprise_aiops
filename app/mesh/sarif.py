@@ -1,11 +1,11 @@
 """Parse CodeQL SARIF into mesh nodes."""
 from __future__ import annotations
+
 import json
 from pathlib import Path
-from typing import Dict, List
 
 
-def parse_sarif(path: str) -> List[Dict]:
+def parse_sarif(path: str) -> list[dict]:
     p = Path(path)
     if not p.exists():
         return []
@@ -13,7 +13,7 @@ def parse_sarif(path: str) -> List[Dict]:
         d = json.loads(p.read_text())
     except Exception:
         return []
-    out: List[Dict] = []
+    out: list[dict] = []
     for run in d.get("runs", []):
         for res in run.get("results", []):
             rule = res.get("ruleId", "")

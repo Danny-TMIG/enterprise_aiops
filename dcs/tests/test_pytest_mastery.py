@@ -118,7 +118,7 @@ def test_missing_field_raises(tmp_path):
 
 
 def test_invalid_state_raises(tmp_path):
-    from dcs.sdlc_engine import SDLCEngine, REQUIRED_FIELDS
+    from dcs.sdlc_engine import REQUIRED_FIELDS, SDLCEngine
     req = {f: None for f in REQUIRED_FIELDS}
     req["id"] = "SDLC-BAD"
     req["state"] = "BOGUS"
@@ -149,7 +149,8 @@ def test_integration_marker(repo_root):
 
 
 try:
-    from hypothesis import given, settings, strategies as st
+    from hypothesis import given, settings
+    from hypothesis import strategies as st
 
     @settings(max_examples=50, deadline=None)
     @given(st.text(min_size=1, max_size=20))

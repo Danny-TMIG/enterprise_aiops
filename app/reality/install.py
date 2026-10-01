@@ -1,7 +1,9 @@
 """Install plan. Network operations require AIOPS_ALLOW_NETWORK=1."""
 from __future__ import annotations
-import os, shutil
-from typing import Any, Dict, List
+
+import os
+import shutil
+from typing import Any
 
 INSTALLABLE = {
     "codeql": {
@@ -29,7 +31,7 @@ def _mod(name: str) -> bool:
     return importlib.util.find_spec(name) is not None
 
 
-def install_local(allow_network: bool = False) -> List[Dict[str, Any]]:
+def install_local(allow_network: bool = False) -> list[dict[str, Any]]:
     out = []
     for name, spec in INSTALLABLE.items():
         present = bool(spec["check"]())

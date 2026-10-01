@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Seed the capability registry, wire the bridges, report status."""
 from __future__ import annotations
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from app.core.capabilities import CAPS, BRIDGES, DDL, status, by_category
 import sqlite3
+
+from app.core.capabilities import BRIDGES, CAPS, DDL, by_category, status
 
 DB = Path(__file__).resolve().parent.parent / "data" / "fabric.sqlite3"
 

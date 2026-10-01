@@ -1,19 +1,18 @@
 """CodeQL execution runner handling database creation and analysis."""
 
-import subprocess
 import logging
-from pathlib import Path
-from typing import List, Optional
+import subprocess
+
 from .config import CodeQLConfig
 
 logger = logging.getLogger(__name__)
 
 class CodeQLRunner:
-    def __init__(self, config: Optional[CodeQLConfig] = None):
+    def __init__(self, config: CodeQLConfig | None = None):
         self.config = config or CodeQLConfig()
         self.config.ensure_directories()
 
-    def run_command(self, args: List[str]) -> subprocess.CompletedProcess:
+    def run_command(self, args: list[str]) -> subprocess.CompletedProcess:
         cmd = [str(self.config.binary_path)] + args
         logger.info("running: %s", " ".join(cmd))
         print(f" running: {' '.join(cmd)}")
@@ -22,7 +21,7 @@ class CodeQLRunner:
             logger.error("CodeQL command failed: %s", result.stderr)
         return result
 
-    def create_database(self, source_root: Optional[str] = None, language: str = "python") -> bool:
+    def create_database(self, source_root: str | None = None, language: str = "python") -> bool:
         src = source_root or str(self.config.workspace_dir)
         args = ["create", str(self.config.db_path), f"--language={language}", f"--source-root={src}", "--overwrite"]
         res = self.run_command(args)
@@ -32,7 +31,7 @@ class CodeQLRunner:
         args = [
             "analyze",
             str(self.config.db_path),
-            f"--format=sarif-latest",
+            "--format=sarif-latest",
             f"--output={self.config.results_sarif}",
             f"--threads={threads}",
             "--download",

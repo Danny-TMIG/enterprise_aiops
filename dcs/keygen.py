@@ -10,7 +10,9 @@ import sys  # pragma: no cover
 from pathlib import Path  # pragma: no cover
 
 from cryptography.hazmat.primitives import serialization  # pragma: no cover
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey  # pragma: no cover
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+    Ed25519PrivateKey,  # pragma: no cover
+)
 
 ROOT = Path(__file__).resolve().parent
 

@@ -6,10 +6,9 @@ license does NOT certify. Together they close the gap between what
 readers infer and what the license actually asserts.
 """
 from __future__ import annotations  # pragma: no cover
-import json  # pragma: no cover
-from dataclasses import dataclass, asdict  # pragma: no cover
-from pathlib import Path  # pragma: no cover
 
+import json  # pragma: no cover
+from pathlib import Path  # pragma: no cover
 
 CORRECTED = {
     "not_aligned": {

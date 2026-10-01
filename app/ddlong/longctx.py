@@ -9,8 +9,9 @@ This is what lets a hopping schedule run for hours without the
 phase reference drifting.
 """
 from __future__ import annotations
+
+from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import Iterable, List
 
 from app.ddlong.dd import DD
 
@@ -23,14 +24,12 @@ class LongAccumulator:
     min: DD = field(default_factory=lambda: DD(float("inf"), 0.0))
     max: DD = field(default_factory=lambda: DD(float("-inf"), 0.0))
 
-    def add(self, x) -> "LongAccumulator":
+    def add(self, x) -> LongAccumulator:
         xd = x if isinstance(x, DD) else DD.from_float(float(x))
         self.sum = self.sum + xd
         self.count += 1
-        if xd < self.min:
-            self.min = xd
-        if self.max < xd:
-            self.max = xd
+        self.min = min(self.min, xd)
+        self.max = max(self.max, xd)
         return self
 
     def mean(self) -> DD:

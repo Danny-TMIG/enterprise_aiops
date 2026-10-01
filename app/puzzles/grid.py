@@ -1,28 +1,30 @@
 """A generic constraint grid."""
 from __future__ import annotations
+
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any
 
 VarId = str
-Coord = Tuple[int, int]
+Coord = tuple[int, int]
 Cell = Coord
 
 
 @dataclass
 class Var:
     id: VarId
-    domain: List[Any]
-    coords: List[Coord] = field(default_factory=list)
-    meta: Dict[str, Any] = field(default_factory=dict)
+    domain: list[Any]
+    coords: list[Coord] = field(default_factory=list)
+    meta: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
 class Constraint:
     id: str
-    scope: List[VarId]
-    check: Callable[[Dict[VarId, Any]], bool]
+    scope: list[VarId]
+    check: Callable[[dict[VarId, Any]], bool]
 
-    def satisfied(self, assignment: Dict[VarId, Any]) -> bool:
+    def satisfied(self, assignment: dict[VarId, Any]) -> bool:
         try:
             return bool(self.check(assignment))
         except Exception:
@@ -31,9 +33,9 @@ class Constraint:
 
 @dataclass
 class Grid:
-    vars: Dict[VarId, Var] = field(default_factory=dict)
-    constraints: List[Constraint] = field(default_factory=list)
-    meta: Dict[str, Any] = field(default_factory=dict)
+    vars: dict[VarId, Var] = field(default_factory=dict)
+    constraints: list[Constraint] = field(default_factory=list)
+    meta: dict[str, Any] = field(default_factory=dict)
 
     def add_var(self, v: Var) -> None:
         self.vars[v.id] = v

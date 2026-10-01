@@ -5,8 +5,8 @@ shortest path. Not adversarial, so minimax doesn't apply — this
 is the "video game" side of the pair.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Dict, List, Tuple
+
+from dataclasses import dataclass
 
 from app.puzzles.tree import DecisionTree
 
@@ -27,7 +27,7 @@ class GWState:
 
 @dataclass
 class Gridworld(DecisionTree):
-    layout: Tuple[str, ...] = (
+    layout: tuple[str, ...] = (
         "#########",
         "#.......#",
         "#..K....#",
@@ -45,7 +45,7 @@ class Gridworld(DecisionTree):
     def initial(self) -> GWState:
         return GWState(x=1, y=1, has_key=False, door_open=False)
 
-    def actions(self, s: GWState) -> List[str]:
+    def actions(self, s: GWState) -> list[str]:
         if self.is_terminal(s):
             return []
         acts = []

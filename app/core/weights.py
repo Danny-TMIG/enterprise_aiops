@@ -13,12 +13,12 @@ scale, use the natural scale; if it doesn't, say so.
 Self-registers as capability `weights`.
 """
 from __future__ import annotations
-import math
-from typing import Any, Dict, List, Tuple
 
+import math
+from typing import Any
 
 # ── SI 2019 defining constants (exact by definition) ────────────────
-SI_2019: Dict[str, float] = {
+SI_2019: dict[str, float] = {
     "c":      299_792_458.0,      # speed of light          m/s   (exact)
     "h":      6.626_070_15e-34,   # Planck constant         J s   (exact)
     "e":      1.602_176_634e-19,  # elementary charge       C     (exact)
@@ -37,7 +37,7 @@ SI_2019: Dict[str, float] = {
 
 
 # ── dimensionless constants (measured) ──────────────────────────────
-DIMENSIONLESS: Dict[str, float] = {
+DIMENSIONLESS: dict[str, float] = {
     "alpha":      7.297_352_5693e-3,  # fine structure constant
     "alpha_inv":  137.035_999_084,    # 1/alpha
     "alpha_s":    0.1181,             # strong coupling at M_Z
@@ -62,7 +62,7 @@ def derive(name: str) -> float:
     D = DIMENSIONLESS
     S = SI_2019
 
-    table: Dict[str, Tuple[float, str]] = {
+    table: dict[str, tuple[float, str]] = {
         # time-scale weights (decay, learning rate)
         "decay.alpha":        (D["alpha"],                       "fine structure constant"),
         "decay.alpha_sq":     (D["alpha"]**2,                    "alpha squared (grain)"),
@@ -116,16 +116,16 @@ def derive(name: str) -> float:
     return table[name][0]
 
 
-def provenance(name: str) -> Dict[str, Any]:
+def provenance(name: str) -> dict[str, Any]:
     """Where did this weight come from?"""
     val = derive(name)
     src = "constant" if name in SI_2019 or name in DIMENSIONLESS else "derived"
     return {"name": name, "value": val, "source": src}
 
 
-def by_class() -> Dict[str, List[str]]:
+def by_class() -> dict[str, list[str]]:
     """Weights grouped by the fabric parameter class they serve."""
-    out: Dict[str, List[str]] = {}
+    out: dict[str, list[str]] = {}
     for k in ("decay.alpha", "decay.alpha_sq", "decay.alpha_over_mu",
               "hierarchy.phi", "hierarchy.phi_inv", "hierarchy.silver",
               "hierarchy.plastic", "grain.alpha2", "grain.alpha3",
@@ -141,7 +141,7 @@ def by_class() -> Dict[str, List[str]]:
 
 
 # ── integration: use derived weights as fabric parameters ───────────
-def physarum_params_from_constants() -> Dict[str, float]:
+def physarum_params_from_constants() -> dict[str, float]:
     """Translate derived weights into PhysarumRouter parameters."""
     return {
         "delta":       derive("decay.alpha"),          # 7.297e-3 (slow decay)
@@ -157,7 +157,7 @@ def kuramoto_K_from_constants() -> float:
     return 1.0 / DIMENSIONLESS["alpha"] / 100.0     # ~1.37
 
 
-def self_registered_entry() -> Dict[str, Any]:
+def self_registered_entry() -> dict[str, Any]:
     return {
         "module": "app.core.weights",
         "n_si": len(SI_2019),
@@ -176,7 +176,7 @@ def _self_register() -> None:
         return
 
     @register("weights")
-    def _entry(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _entry(*args: Any, **kwargs: Any) -> dict[str, Any]:
         name = kwargs.get("name") or (args[0] if args else None)
         if name:
             return provenance(name)
@@ -187,6 +187,11 @@ _self_register()
 
 
 __all__ = [
-    "SI_2019", "DIMENSIONLESS", "derive", "provenance", "by_class",
-    "physarum_params_from_constants", "kuramoto_K_from_constants",
+    "DIMENSIONLESS",
+    "SI_2019",
+    "by_class",
+    "derive",
+    "kuramoto_K_from_constants",
+    "physarum_params_from_constants",
+    "provenance",
 ]

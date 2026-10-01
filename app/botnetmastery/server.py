@@ -1,9 +1,10 @@
 import time
 import uuid
-from typing import Any, Dict, List, Optional
+from typing import Any
+
 
 class Bot:
-    def __init__(self, id: str, host: str, os: str, arch: str, status: str = "active", last_seen: Optional[float] = None):
+    def __init__(self, id: str, host: str, os: str, arch: str, status: str = "active", last_seen: float | None = None):
         self.id = id
         self.host = host
         self.os = os
@@ -50,7 +51,7 @@ class Bot:
 
 
 class Task:
-    def __init__(self, id: str, bot_id: str, command: str, args: Dict[str, Any], status: str = "pending", result: Optional[Any] = None):
+    def __init__(self, id: str, bot_id: str, command: str, args: dict[str, Any], status: str = "pending", result: Any | None = None):
         self.id = id
         self.bot_id = bot_id
         self.command = command
@@ -67,7 +68,7 @@ class Task:
         }
 
     @classmethod
-    def new(cls, bot_id: str, command: str, args: Dict[str, Any]) -> "Task":
+    def new(cls, bot_id: str, command: str, args: dict[str, Any]) -> "Task":
         task_id = f"task-{uuid.uuid4().hex[:8]}"
         return cls(id=task_id, bot_id=bot_id, command=command, args=args)
 
@@ -88,8 +89,8 @@ class Task:
 class C2Server:
     def __init__(self, db_path: str = "botnet.db", *args: Any, **kwargs: Any):
         self.db_path = db_path
-        self.bots: Dict[str, Bot] = {}
-        self.tasks: Dict[str, Task] = {}
+        self.bots: dict[str, Bot] = {}
+        self.tasks: dict[str, Task] = {}
         self.kill_switch_engaged = False
         self.killed = False
 
@@ -116,7 +117,7 @@ class C2Server:
         self.tasks[task.id] = task
         return {"task_id": task.id, "bot_id": task.bot_id, "command": task.command}
 
-    def dispatch_next(self, bot_id: str) -> Optional[Task]:
+    def dispatch_next(self, bot_id: str) -> Task | None:
         if self.kill_switch_engaged or self.killed:
             return None
         for task in self.tasks.values():
@@ -134,14 +135,14 @@ class C2Server:
             task._data["status"] = "completed"
             task._data["result"] = result
 
-    def pending_tasks(self, bot_id: str) -> List[Task]:
+    def pending_tasks(self, bot_id: str) -> list[Task]:
         return [t for t in self.tasks.values() if t.bot_id == bot_id and t.status in ("pending", "dispatched")]
 
     def heartbeat(self, bot_id: str) -> None:
         if bot_id in self.bots:
             self.bots[bot_id].update_status("active")
 
-    def engage_kill_switch(self, reason: str = "manual") -> Dict[str, Any]:
+    def engage_kill_switch(self, reason: str = "manual") -> dict[str, Any]:
         self.kill_switch_engaged = True
         self.killed = True
         for bot in self.bots.values():
@@ -166,10 +167,10 @@ class Simulation:
     def __init__(self, srv: C2Server, seed: int = 1, *args: Any, **kwargs: Any):
         self.srv = srv
         self.seed = seed
-        self.spawned_bots: List[Bot] = []
-        self.broadcast_queue: List[Dict[str, Any]] = []
+        self.spawned_bots: list[Bot] = []
+        self.broadcast_queue: list[dict[str, Any]] = []
 
-    def spawn(self, n: int) -> List[Bot]:
+    def spawn(self, n: int) -> list[Bot]:
         bots = []
         for i in range(n):
             b = Bot.new(f"host-{i}", "linux", "x86_64")

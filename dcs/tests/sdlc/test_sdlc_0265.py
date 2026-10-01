@@ -1,6 +1,7 @@
 """Derived from NIST AI RMF 1.0 / NIST: MAP 1-5."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

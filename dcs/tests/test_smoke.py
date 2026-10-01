@@ -1,5 +1,8 @@
 """Smoke tests: import every dcs module, call public no-arg callables."""
-import importlib, inspect, pkgutil
+import importlib
+import inspect
+import pkgutil
+
 import dcs
 
 

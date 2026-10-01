@@ -5,12 +5,13 @@ Wire format: Vertex AI Agent Builder tool call (protobuf JSON).
     response: {"fulfillmentResponse": {"messages": [...]}}
 """
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import Any
 
 from app.proprietary.base import ProprietaryObject
 
 
-def _local_verify(payload: Dict[str, Any]) -> Dict[str, Any]:
+def _local_verify(payload: dict[str, Any]) -> dict[str, Any]:
     params = payload.get("parameters") or payload
     claim = params.get("claim", "")
     ok = bool(claim)

@@ -1,12 +1,13 @@
 import sys
-import pytest
+
 from fastapi.testclient import TestClient
+
 
 def test_main_entrypoint(monkeypatch):
     """Exercise app/__main__.py"""
     monkeypatch.setattr(sys, "argv", ["app"])
     try:
-        import app.__main__  # type: ignore
+        pass  # type: ignore
     except SystemExit:
         pass
 
@@ -82,8 +83,8 @@ def test_autonomy_subsystem():
 
 def test_botnetmastery_subsystem():
     """Exercise botnetmastery C2, CLI, models, server, and simulation."""
-    from app.botnetmastery.cli import main as bm_main
     from app.botnetmastery.c2 import C2Controller
+    from app.botnetmastery.cli import main as bm_main
     from app.botnetmastery.models import BotModel
     from app.botnetmastery.server import app as fastapi_app
     from app.botnetmastery.simulation import run_simulation

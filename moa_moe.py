@@ -1,6 +1,5 @@
 import logging
-import asyncio
-from typing import List, Dict, Any
+from typing import Any
 
 logger = logging.getLogger("enterprise_aiops.moa_moe")
 
@@ -31,7 +30,7 @@ class MixtureOfAgentsPipeline:
     """Executes multi-tier agent collaboration (Proposers -> Aggregator)."""
 
     @staticmethod
-    async def synthesize(intent: str, expert_persona: str, context_nodes: List[Any]) -> Dict[str, Any]:
+    async def synthesize(intent: str, expert_persona: str, context_nodes: list[Any]) -> dict[str, Any]:
         logger.info(f"[MoA] Initializing multi-agent pipeline for expert domain: {expert_persona}")
         
         proposer_perspectives = [

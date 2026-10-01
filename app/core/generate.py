@@ -11,9 +11,11 @@ are NOT in this class. They are declared by app/localmodel.py and
 app/bridges/*, honestly, as external.
 """
 from __future__ import annotations
+
 import random
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
-from typing import Any, Callable, Iterable, List, Optional, Sequence, Tuple
+from typing import Any
 
 Invariant = Callable[[Any, Any], bool]
 Template = Callable[..., Callable]
@@ -43,7 +45,7 @@ def _t_chunk2(xs): return [xs[i:i+2] for i in range(0, len(xs), 2)]
 def _t_pairs(xs): return list(zip(xs, xs[1:]))
 
 
-TEMPLATES: List[Tuple[str, Template]] = [
+TEMPLATES: list[tuple[str, Template]] = [
     ("sorted",        lambda: _t_sorted),
     ("sorted_rev",    lambda: _t_sorted_rev),
     ("identity",      lambda: _t_unsorted),
@@ -72,11 +74,11 @@ TEMPLATES: List[Tuple[str, Template]] = [
 class Synthesis:
     name: str
     invariant: Invariant
-    template_used: Optional[str] = None
-    impl: Optional[Callable] = None
+    template_used: str | None = None
+    impl: Callable | None = None
     attempts: int = 0
     passed: bool = False
-    failures: List[Tuple[str, str]] = field(default_factory=list)
+    failures: list[tuple[str, str]] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {"name": self.name, "template": self.template_used,
@@ -84,11 +86,11 @@ class Synthesis:
                 "failures": self.failures[:6]}
 
 
-def _default_inputs(rng: random.Random, n: int = 64) -> List[Any]:
+def _default_inputs(rng: random.Random, n: int = 64) -> list[Any]:
     """Random inputs an implementation might see. Generators can
     extend this list. Only flat int-lists — nested inputs are for a
     different tool family and are not synthesized here."""
-    out: List[Any] = []
+    out: list[Any] = []
     for _ in range(n):
         k = rng.randint(0, 5)
         size = rng.randint(0, 12)
@@ -105,8 +107,8 @@ def _default_inputs(rng: random.Random, n: int = 64) -> List[Any]:
 def synthesize(name: str,
                invariant: Invariant,
                *,
-               pool: Optional[Sequence[Tuple[str, Template]]] = None,
-               inputs: Optional[List[Any]] = None,
+               pool: Sequence[tuple[str, Template]] | None = None,
+               inputs: list[Any] | None = None,
                seed: int = 0) -> Synthesis:
     rng = random.Random(seed)
     pool = list(pool or TEMPLATES)
@@ -205,7 +207,7 @@ def _self_register() -> None:
 
 _self_register()
 
-__all__ = ["synthesize", "generate_all", "INVARIANTS", "TEMPLATES", "Synthesis"]
+__all__ = ["INVARIANTS", "TEMPLATES", "Synthesis", "generate_all", "synthesize"]
 
 # ── held-out accuracy ──────────────────────────────────────────────
 def accuracy(*, seed: int = 999, n: int = 256) -> dict:

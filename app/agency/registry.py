@@ -4,21 +4,26 @@ Records are never mutated in place. Revocation is a new record.
 The registry is a JSONL file so that history is the registry.
 """
 from __future__ import annotations
-import json, os, threading
-from dataclasses import asdict, is_dataclass
+
+import json
+import threading
+from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any
 
 from app.agency.primitives import (
-    Agency, License, Certification, Expertise,
+    Agency,
+    Certification,
+    Expertise,
+    License,
 )
 
 _DEFAULT = Path(".agency/registry.jsonl")
 _LOCK = threading.Lock()
-_INSTANCE: Optional["Registry"] = None
+_INSTANCE: Registry | None = None
 
 
-def _to_obj(kind: str, d: Dict[str, Any]):
+def _to_obj(kind: str, d: dict[str, Any]):
     d = {k: v for k, v in d.items() if k != "kind"}
     if kind == "agency":
         return Agency(**d)
@@ -31,7 +36,7 @@ def _to_obj(kind: str, d: Dict[str, Any]):
     raise ValueError(f"unknown kind: {kind}")
 
 
-def _to_record(obj) -> Dict[str, Any]:
+def _to_record(obj) -> dict[str, Any]:
     d = asdict(obj)
     d["kind"] = obj.__class__.__name__.lower()
     if isinstance(obj, Certification):
@@ -47,24 +52,22 @@ class Registry:
 
     # ── write ────────────────────────────────────────────────────
     def append(self, obj) -> str:
-        with _LOCK:
-            with self.path.open("a") as f:
-                f.write(json.dumps(_to_record(obj)) + "\n")
+        with _LOCK, self.path.open("a") as f:
+            f.write(json.dumps(_to_record(obj)) + "\n")
         return getattr(obj, "id", "")
 
     def revoke(self, kind: str, id_: str, by: str, reason: str) -> None:
-        with _LOCK:
-            with self.path.open("a") as f:
-                f.write(json.dumps({
-                    "kind": "revocation",
-                    "target_kind": kind,
-                    "target_id": id_,
-                    "by": by,
-                    "reason": reason,
-                }) + "\n")
+        with _LOCK, self.path.open("a") as f:
+            f.write(json.dumps({
+                "kind": "revocation",
+                "target_kind": kind,
+                "target_id": id_,
+                "by": by,
+                "reason": reason,
+            }) + "\n")
 
     # ── read ─────────────────────────────────────────────────────
-    def _load(self) -> List[Dict[str, Any]]:
+    def _load(self) -> list[dict[str, Any]]:
         out = []
         for line in self.path.read_text().splitlines():
             line = line.strip()
@@ -73,18 +76,18 @@ class Registry:
             out.append(json.loads(line))
         return out
 
-    def all(self) -> Dict[str, List[Any]]:
+    def all(self) -> dict[str, list[Any]]:
         rows = self._load()
-        revoked: Dict[str, set] = {}
+        revoked: dict[str, set] = {}
         for r in rows:
             if r.get("kind") == "revocation":
                 revoked.setdefault(r["target_kind"], set()).add(r["target_id"])
 
-        out: Dict[str, List[Any]] = {
+        out: dict[str, list[Any]] = {
             "agency": [], "license": [], "cert": [], "expertise": [],
         }
         # expertise accumulates across records for the same subject+domain
-        exp_acc: Dict[str, Expertise] = {}
+        exp_acc: dict[str, Expertise] = {}
 
         for r in rows:
             k = r.get("kind")
@@ -107,13 +110,13 @@ class Registry:
         out["expertise"] = list(exp_acc.values())
         return out
 
-    def for_subject(self, subject: str) -> Dict[str, List[Any]]:
+    def for_subject(self, subject: str) -> dict[str, list[Any]]:
         everything = self.all()
         return {k: [r for r in v if getattr(r, "subject", None) == subject]
                 for k, v in everything.items()}
 
 
-def get_registry(path: Optional[str] = None) -> Registry:
+def get_registry(path: str | None = None) -> Registry:
     global _INSTANCE
     if _INSTANCE is None:
         _INSTANCE = Registry(Path(path) if path else _DEFAULT)

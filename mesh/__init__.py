@@ -3,16 +3,24 @@
 The canonical implementation is app.mesh. This module exists
 so that any code still doing `import mesh` keeps working.
 """
-from app.mesh import *  # noqa: F401,F403
+from app.mesh import *
 from app.mesh import (  # noqa: F401
-    MeshGraph, Node, Edge,
+    PLANES,
+    RESULT_STATES,
+    ROUTING_DIMENSIONS,
+    SKILL_FAMILIES,
+    Edge,
+    MeshGraph,
+    MeshRuntime,
+    Node,
+    get_mesh,
     route,
-    MeshRuntime, get_mesh,
-    PLANES, SKILL_FAMILIES, RESULT_STATES, ROUTING_DIMENSIONS,
 )
+
 try:
     from app.mesh.convergence import (  # noqa: F401
-        MeshConvergenceValidator, ConvergenceMetrics,
+        ConvergenceMetrics,
+        MeshConvergenceValidator,
     )
 except Exception:
     pass

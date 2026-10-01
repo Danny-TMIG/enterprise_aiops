@@ -1,9 +1,10 @@
 """Score = sum over completed loops of nontriviality · reversibility."""
 from __future__ import annotations
-from typing import Any, Dict, List
+
+from typing import Any
 
 
-def k(loops: List[Dict[str, Any]]) -> Dict[str, Any]:
+def k(loops: list[dict[str, Any]]) -> dict[str, Any]:
     complete = [l for l in loops if l.get("status") == "complete"]
     if not complete:
         return {"k": 0.0, "loops": 0, "mean_nontriviality": 0.0,
@@ -22,7 +23,7 @@ def k(loops: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
-def report(loops: List[Dict[str, Any]]) -> str:
+def report(loops: list[dict[str, Any]]) -> str:
     s = k(loops)
     lines = [
         "── Constructive Self-Transcendence ──",

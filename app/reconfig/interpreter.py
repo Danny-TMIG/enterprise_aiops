@@ -1,6 +1,6 @@
 from __future__ import annotations
+
 import re
-from typing import Dict, List, Tuple
 
 from app.reconfig.intent_ir import IntentIR
 
@@ -63,7 +63,7 @@ def interpret(raw: str, source: str = "user") -> IntentIR:
         if re.search(rf"\b{re.escape(w)}\b", low) and t not in targets:
             targets.append(t)
 
-    objects: Dict[str, str] = {}
+    objects: dict[str, str] = {}
     for pat, role in _OBJECT_ROLES.items():
         m = re.search(pat, low)
         if m and role not in objects:

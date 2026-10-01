@@ -1,5 +1,6 @@
-from app.seed.manifest import CPVORates, Manifest, load_manifest
 from app.seed.cpvo import CPVOMeter, CPVORecord
+from app.seed.manifest import CPVORates, load_manifest
+
 
 def test_cpvo_measurement():
     rates = CPVORates(rate=2.0)

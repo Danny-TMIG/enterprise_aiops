@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Fix P3, P6, P10 in one pass. Prints every step."""
-import os, re, shutil, sqlite3, subprocess, sys
+import os
+import re
+import shutil
+import sqlite3
+import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -23,14 +28,14 @@ hr("1. locate capabilities DB")
 
 cap_py = ROOT / "app/core/capabilities.py"
 src = cap_py.read_text()
-m = re.search(r'^DB\s*=\s*(.+)$', src, re.M)
+m = re.search(r'^DB\s*=\s*(.+)$', src, re.MULTILINE)
 print(f"DB line in capabilities.py: {m.group(0) if m else '(not found)'}")
 
 # eval the DB expression
 db_expr = m.group(1).strip() if m else None
 db_path = None
 if db_expr:
-    m2 = re.search(r'ROOT\s*=\s*(.+)$', src, re.M)
+    m2 = re.search(r'ROOT\s*=\s*(.+)$', src, re.MULTILINE)
     ns = {"Path": Path, "ROOT": ROOT}
     if m2:
         try: ns["ROOT"] = eval(m2.group(1).strip(), ns)

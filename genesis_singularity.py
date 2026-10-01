@@ -9,8 +9,8 @@ and an autonomous enterprise AIOps state machine into a single executable.
 
 import hashlib
 import json
-import sys
 import time
+
 
 class SingularityEngine:
     def __init__(self):
@@ -53,9 +53,7 @@ class SingularityEngine:
                         for dr in (-1, 0, 1) for dc in (-1, 0, 1)
                         if dr != 0 or dc != 0
                     )
-                    if grid[r][c] == 1 and neighbors in (2, 3):
-                        new_grid[r][c] = 1
-                    elif grid[r][c] == 0 and neighbors == 3:
+                    if grid[r][c] == 1 and neighbors in (2, 3) or grid[r][c] == 0 and neighbors == 3:
                         new_grid[r][c] = 1
             grid = new_grid
             time.sleep(0.15)

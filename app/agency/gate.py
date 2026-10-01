@@ -12,8 +12,9 @@ Returns one of the RESULT STATES from the atlas:
 The gate never consults an LLM. It consults the registry.
 """
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from app.agency.registry import Registry, get_registry
 
@@ -24,9 +25,9 @@ class Decision:
     subject: str
     capability: str
     reason: str = ""
-    evidence: List[str] = None
+    evidence: list[str] = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "state": self.state,
             "subject": self.subject,
@@ -47,10 +48,10 @@ def gate(
     scope: str,
     domain: str,
     jurisdiction: str,
-    required_standard: Optional[str] = None,
-    required_level: Optional[str] = None,
+    required_standard: str | None = None,
+    required_level: str | None = None,
     min_expertise: float = 0.0,
-    registry: Optional[Registry] = None,
+    registry: Registry | None = None,
 ) -> Decision:
     reg = registry or get_registry()
     everything = reg.for_subject(subject)
@@ -113,10 +114,10 @@ class GateEvaluator:
     (or uses the context dict directly as a registry lookup key), calls
     gate() against the real registry, and returns the Decision dict.
     """
-    def __init__(self, registry: Optional[Registry] = None):
+    def __init__(self, registry: Registry | None = None):
         self.registry = registry or get_registry()
 
-    def evaluate(self, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def evaluate(self, context: dict[str, Any] | None = None) -> dict[str, Any]:
         ctx = dict(context or {})
         subj = ctx.get("subject")
         cap = ctx.get("capability")

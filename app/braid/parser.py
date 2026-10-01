@@ -11,14 +11,15 @@ Syntax:
 Compiles to a plan dict with tasks in topological order.
 """
 from __future__ import annotations
+
 import re
 from dataclasses import dataclass
-from typing import Dict, List
+
 
 @dataclass
 class Workflow:
     name: str
-    statements: List[dict]
+    statements: list[dict]
 
 _HEADER = re.compile(r'^workflow\s+(\w+)\s*\{\s*$')
 _CLOSE = re.compile(r'^\}\s*$')
@@ -43,7 +44,7 @@ def parse_workflow(src: str) -> Workflow:
             raise ValueError(f"cannot parse: {line!r}")
     return Workflow(name=name, statements=stmts)
 
-def compile_workflow(wf: Workflow) -> Dict:
+def compile_workflow(wf: Workflow) -> dict:
     defined = set()
     tasks = []
     for st in wf.statements:

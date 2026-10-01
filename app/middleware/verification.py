@@ -1,13 +1,15 @@
-import hashlib, time
-from typing import Set
+import hashlib
+import time
+
 from fastapi import HTTPException, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+
 
 class EnterpriseStateEngine:
     def __init__(self):
         self.locked = False
         self.owner = None
-        self.corpus_registry: Set[str] = set()
+        self.corpus_registry: set[str] = set()
         self.last_transition = time.time()
 
     def acquire(self, client_id: str) -> bool:

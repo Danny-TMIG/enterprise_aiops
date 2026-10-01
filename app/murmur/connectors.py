@@ -6,18 +6,19 @@ local. A real HTTP call happens only when MURMUR_LIVE=1 AND the
 tool's env var is set. Nothing is fetched by default.
 """
 from __future__ import annotations
+
 import json
 import os
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
-
+from typing import Any
 
 LOG_PATH = Path(".murmur/connectors.jsonl")
 
 
-def _log(tool: str, verb: str, payload: Dict[str, Any], ok: bool,
+def _log(tool: str, verb: str, payload: dict[str, Any], ok: bool,
          detail: str = "") -> None:
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     rec = {"ts": time.time(), "tool": tool, "verb": verb,
@@ -30,7 +31,7 @@ def _live() -> bool:
     return os.environ.get("MURMUR_LIVE") == "1"
 
 
-def _post(url: str, payload: Dict[str, Any], timeout: float = 5.0) -> bool:
+def _post(url: str, payload: dict[str, Any], timeout: float = 5.0) -> bool:
     try:
         import urllib.request
         data = json.dumps(payload).encode()
@@ -48,15 +49,15 @@ class Connector:
     name: str
     category: str
     env_key: str = ""
-    capabilities: List[str] = field(default_factory=list)
-    local: Optional[Callable[[str, Dict[str, Any]], Dict[str, Any]]] = None
+    capabilities: list[str] = field(default_factory=list)
+    local: Callable[[str, dict[str, Any]], dict[str, Any]] | None = None
 
-    def remote_url(self) -> Optional[str]:
+    def remote_url(self) -> str | None:
         if not self.env_key:
             return None
         return os.environ.get(self.env_key)
 
-    def call(self, verb: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    def call(self, verb: str, payload: dict[str, Any]) -> dict[str, Any]:
         if verb not in self.capabilities:
             return {"ok": False, "detail": "unsupported verb"}
 
@@ -98,8 +99,8 @@ def _message(verb, payload):
 
 
 # ── the 46-tool registry ──────────────────────────────────────
-def _reg() -> Dict[str, Connector]:
-    tools: List[Dict[str, Any]] = [
+def _reg() -> dict[str, Connector]:
+    tools: list[dict[str, Any]] = [
         # observability / product / analytics
         ("Amplitude",   "observability", "AMPLITUDE_KEY",   _metric),
         ("Mixpanel",    "observability", "MIXPANEL_TOKEN",  _metric),
@@ -155,7 +156,7 @@ def _reg() -> Dict[str, Connector]:
         # misc / data
         ("Ashby",       "data",          "ASHBY_KEY",       _pass),
     ]
-    out: Dict[str, Connector] = {}
+    out: dict[str, Connector] = {}
     for name, cat, env, impl in tools:
         out[name] = Connector(
             name=name, category=cat, env_key=env,
@@ -167,21 +168,21 @@ def _reg() -> Dict[str, Connector]:
     return out
 
 
-REGISTRY: Dict[str, Connector] = _reg()
+REGISTRY: dict[str, Connector] = _reg()
 
 
-def list_tools() -> List[str]:
+def list_tools() -> list[str]:
     return sorted(REGISTRY)
 
 
-def by_category() -> Dict[str, List[str]]:
-    out: Dict[str, List[str]] = {}
+def by_category() -> dict[str, list[str]]:
+    out: dict[str, list[str]] = {}
     for name, c in REGISTRY.items():
         out.setdefault(c.category, []).append(name)
     return {k: sorted(v) for k, v in out.items()}
 
 
-def call(tool: str, verb: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+def call(tool: str, verb: str, payload: dict[str, Any]) -> dict[str, Any]:
     c = REGISTRY.get(tool)
     if not c:
         return {"ok": False, "detail": "unknown tool"}

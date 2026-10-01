@@ -1,6 +1,7 @@
 """Derived from CCPA / Privacy: Non-Discrimination."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

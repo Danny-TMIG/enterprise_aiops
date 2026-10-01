@@ -1,5 +1,7 @@
 import asyncio
+
 from app.grammar import MasteryEngine, MeshConvergenceValidator
+
 
 def test_mastery_engine():
     engine = MasteryEngine()

@@ -1,6 +1,9 @@
 """Flocking — local rules producing global order."""
-import math, random
+import math
+import random
+
 from dcs.generate import requirement
+
 
 def boids(n=40, steps=100, seed=0):
     rng = random.Random(seed)

@@ -5,10 +5,11 @@ Ports are (node_id, port_index).  Index 0 = principal, 1 = aux0, 2 = aux1.
 Wires is a symmetric dict: port -> port.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Dict, Iterable, Iterator, List, Optional, Tuple
 
-Port = Tuple[int, int]      # (node_id, port_index)
+from collections.abc import Iterator
+from dataclasses import dataclass, field
+
+Port = tuple[int, int]      # (node_id, port_index)
 G = "g"                     # γ  (constructor)
 D = "d"                     # δ  (duplicator)
 E = "e"                     # ε  (eraser)
@@ -18,8 +19,8 @@ _NUM_PORTS = {G: 3, D: 3, E: 1}
 
 @dataclass
 class Graph:
-    nodes: Dict[int, str] = field(default_factory=dict)
-    wires: Dict[Port, Port] = field(default_factory=dict)
+    nodes: dict[int, str] = field(default_factory=dict)
+    wires: dict[Port, Port] = field(default_factory=dict)
     _next_id: int = 0
 
     # ── construction ────────────────────────────────────────────
@@ -31,13 +32,13 @@ class Graph:
         self.nodes[nid] = kind
         return nid
 
-    def wire(self, p1: Optional[Port], p2: Optional[Port]) -> None:
+    def wire(self, p1: Port | None, p2: Port | None) -> None:
         if p1 is None or p2 is None:
             return
         self.wires[p1] = p2
         self.wires[p2] = p1
 
-    def detach(self, p: Port) -> Optional[Port]:
+    def detach(self, p: Port) -> Port | None:
         """Remove the wire at port p from both ends and return the
         other end, or None if p was not wired."""
         other = self.wires.pop(p, None)
@@ -54,7 +55,7 @@ class Graph:
         del self.nodes[nid]
 
     # ── queries ─────────────────────────────────────────────────
-    def active_pairs(self) -> Iterator[Tuple[int, int]]:
+    def active_pairs(self) -> Iterator[tuple[int, int]]:
         for nid, kind in list(self.nodes.items()):
             if kind == E:
                 continue
@@ -69,7 +70,7 @@ class Graph:
                 continue
             yield nid, onid
 
-    def copy(self) -> "Graph":
+    def copy(self) -> Graph:
         g = Graph()
         g.nodes = dict(self.nodes)
         g.wires = dict(self.wires)
@@ -80,8 +81,8 @@ class Graph:
         """Deterministic string form for hashing. Node ids are
         re-canonicalised by BFS from the smallest id."""
         # build adjacency on re-indexed ids
-        remap: Dict[int, int] = {}
-        order: List[int] = []
+        remap: dict[int, int] = {}
+        order: list[int] = []
 
         def visit(nid: int):
             if nid in remap:
@@ -96,7 +97,7 @@ class Graph:
         for nid in sorted(self.nodes):
             visit(nid)
 
-        lines: List[str] = []
+        lines: list[str] = []
         for nid in order:
             kind = self.nodes[nid]
             rn = remap[nid]

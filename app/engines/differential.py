@@ -11,25 +11,25 @@ differences over a sequence of generations:
 Level 3 is the one that answers "is s1 gaining on s2".
 """
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
 
 
 @dataclass
 class DiffLevels:
     kind: str
-    solvers: List[str]
+    solvers: list[str]
     # rate[g][solver] = success rate at generation g
-    rate: List[Dict[str, float]] = field(default_factory=list)
+    rate: list[dict[str, float]] = field(default_factory=list)
     # delta[g][(s1, s2)] = rate[s1] - rate[s2]  (positive => s1 > s2)
-    delta: List[Dict[Tuple[str, str], float]] = field(default_factory=list)
+    delta: list[dict[tuple[str, str], float]] = field(default_factory=list)
     # ddelta[g][(s1, s2)] = delta[g] - delta[g-1]
-    ddelta: List[Dict[Tuple[str, str], float]] = field(default_factory=list)
+    ddelta: list[dict[tuple[str, str], float]] = field(default_factory=list)
 
-    def push(self, rate: Dict[str, float]) -> None:
+    def push(self, rate: dict[str, float]) -> None:
         self.rate.append(rate)
         solvers = self.solvers
-        d: Dict[Tuple[str, str], float] = {}
+        d: dict[tuple[str, str], float] = {}
         for s1 in solvers:
             for s2 in solvers:
                 if s1 == s2:
@@ -42,27 +42,27 @@ class DiffLevels:
             prev = self.delta[-2]
             self.ddelta.append({k: d[k] - prev.get(k, 0.0) for k in d})
 
-    def latest_delta(self) -> Dict[Tuple[str, str], float]:
+    def latest_delta(self) -> dict[tuple[str, str], float]:
         return self.delta[-1] if self.delta else {}
 
-    def latest_ddelta(self) -> Dict[Tuple[str, str], float]:
+    def latest_ddelta(self) -> dict[tuple[str, str], float]:
         return self.ddelta[-1] if self.ddelta else {}
 
-    def dominant(self) -> Optional[str]:
+    def dominant(self) -> str | None:
         """Solver with highest mean rate over all generations."""
         if not self.rate:
             return None
-        acc: Dict[str, List[float]] = {s: [] for s in self.solvers}
+        acc: dict[str, list[float]] = {s: [] for s in self.solvers}
         for r in self.rate:
             for s in self.solvers:
                 acc[s].append(r.get(s, 0.0))
         return max(acc, key=lambda s: sum(acc[s]) / max(len(acc[s]), 1))
 
-    def improving(self) -> List[Tuple[str, float]]:
+    def improving(self) -> list[tuple[str, float]]:
         """(solver, sum of positive ddelta) sorted descending."""
         if not self.ddelta:
             return []
-        acc: Dict[str, float] = {s: 0.0 for s in self.solvers}
+        acc: dict[str, float] = {s: 0.0 for s in self.solvers}
         for dd in self.ddelta:
             for (s1, s2), v in dd.items():
                 if v > 0:
@@ -73,13 +73,13 @@ class DiffLevels:
 class DiffEngine:
     """One DiffLevels per kind."""
 
-    def __init__(self, solvers_by_kind: Dict[str, List[str]]):
-        self.by_kind: Dict[str, DiffLevels] = {
+    def __init__(self, solvers_by_kind: dict[str, list[str]]):
+        self.by_kind: dict[str, DiffLevels] = {
             k: DiffLevels(kind=k, solvers=list(v))
             for k, v in solvers_by_kind.items()
         }
 
-    def push(self, kind: str, rate: Dict[str, float]) -> None:
+    def push(self, kind: str, rate: dict[str, float]) -> None:
         self.by_kind[kind].push(rate)
 
     def summary(self) -> dict:

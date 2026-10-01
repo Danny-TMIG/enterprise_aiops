@@ -1,9 +1,9 @@
-import os
-import mmap
-import struct
 import hashlib
+import mmap
+import os
+import struct
 import time
-from typing import Optional, Dict, Any
+from typing import Any
 
 # International Standards Bodies Compliance Mapping
 STANDARDS_COMPLIANCE = {
@@ -40,7 +40,7 @@ class RAMStateEngine:
         self.file_obj = open(self.backing_path, "r+b")
         self.mmap_buf = mmap.mmap(self.file_obj.fileno(), self.total_size, access=mmap.ACCESS_WRITE)
 
-    def write_agent_state(self, slot_id: int, state_hash: str, consensus_ratio: float, active_agents: int) -> Dict[str, Any]:
+    def write_agent_state(self, slot_id: int, state_hash: str, consensus_ratio: float, active_agents: int) -> dict[str, Any]:
         """
         Atomically writes agent execution state directly to the memory-mapped RAM slot.
         Format: [Slot Status (1B)] [State Hash (32B)] [Metrics Payload: =d I d (20B)]
@@ -71,7 +71,7 @@ class RAMStateEngine:
             "timestamp": timestamp
         }
 
-    def read_agent_state(self, slot_id: int) -> Optional[Dict[str, Any]]:
+    def read_agent_state(self, slot_id: int) -> dict[str, Any] | None:
         """Reads agent state directly from RAM with zero deserialization penalty."""
         if slot_id >= self.max_slots:
             return None
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     engine = RAMStateEngine()
     test_hash = hashlib.sha256(b"sovereign_standards_v1").hexdigest()
     result = engine.write_agent_state(slot_id=0, state_hash=test_hash, consensus_ratio=0.999, active_agents=256)
-    print(f"[+] State committed under international standards compliance profiles.")
+    print("[+] State committed under international standards compliance profiles.")
     print(f"[+] Block Signature: {result['block_signature']}")
     print(f"[+] Compliance Map: {result['standards_compliance']}")
     read_back = engine.read_agent_state(0)

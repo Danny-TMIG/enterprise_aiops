@@ -1,6 +1,7 @@
 """Derived from PCI DSS 4.0 / Privacy: 9 Physical."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

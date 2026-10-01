@@ -6,6 +6,7 @@ real code and inspecting real outputs. No AST walking. No mocks.
 The system runs, and the claim either holds or doesn't.
 """
 from __future__ import annotations
+
 import json
 import socket
 import sys
@@ -17,11 +18,9 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from dcs import rogue
-from dcs.certify import issue_license, verify_license, Certification, Scope, NonClaims
-from dcs.ct import TransparencyLog, verify_inclusion, make_inclusion_proof
+from dcs.certify import issue_license, verify_license
+from dcs.ct import TransparencyLog
 from dcs.triad.kernel import Kernel
-from dcs.triad.lattice import PASS, FAIL, UNKNOWN, CONFLICT
-
 
 KEY = b"dynamic-grounding-key-not-for-production"
 

@@ -1,6 +1,10 @@
 """HMAC-SHA256 signing. Real key, real verify."""
 from __future__ import annotations
-import hashlib, hmac, secrets
+
+import hashlib
+import hmac
+import secrets
+
 
 def generate_key() -> bytes: return secrets.token_bytes(32)
 

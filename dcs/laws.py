@@ -214,7 +214,13 @@ def _():  # pragma: no cover
 # ── Puzzle laws ──────────────────────────────────────────────────
 @law("RUBIK-REPLAY-FIXES", "solve_cube output replays to SOLVED", "puzzles")
 def _():  # pragma: no cover
-    from app.puzzles.rubik import MOVES, SOLVED, apply_move, scramble, solve_cube  # pragma: no cover
+    from app.puzzles.rubik import (  # pragma: no cover
+        MOVES,
+        SOLVED,
+        apply_move,
+        scramble,
+        solve_cube,
+    )
 
     for d in (2, 4, 6, 8):
         s = scramble(n_moves=d, seed=42)

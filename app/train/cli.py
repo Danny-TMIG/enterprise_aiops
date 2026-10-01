@@ -1,6 +1,7 @@
 """Parallel training + mesh resolution."""
 from __future__ import annotations
-import json, sys
+
+import sys
 
 from app.train.core import TrainConfig
 from app.train.driver import TrainDriver

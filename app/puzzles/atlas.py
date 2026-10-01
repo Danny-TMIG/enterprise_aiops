@@ -1,9 +1,9 @@
 """Grammar atlas — taxonomy + guaranteed 4-letter pool."""
 from __future__ import annotations
+
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
 
 CATEGORIES = (
     "Phonology", "Morphology", "Syntax",
@@ -23,7 +23,7 @@ _FALLBACK_4 = [
 
 @dataclass
 class Atlas:
-    categories: Dict[str, List[str]]
+    categories: dict[str, list[str]]
     name: str = "default"
 
     def __post_init__(self):

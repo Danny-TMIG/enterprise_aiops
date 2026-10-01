@@ -1,8 +1,9 @@
-from typing import Dict, Any
+from typing import Any
+
 
 class ProprietaryRegistry:
     def __init__(self):
-        self.objects: Dict[str, Any] = {
+        self.objects: dict[str, Any] = {
             "microsoft": {"type": "enterprise", "active": True},
             "salesforce": {"type": "crm", "active": True},
             "servicenow": {"type": "itsm", "active": True},
@@ -14,14 +15,14 @@ class ProprietaryRegistry:
     def reality_score(self) -> float:
         return 1.0
 
-    def status(self) -> Dict[str, Any]:
+    def status(self) -> dict[str, Any]:
         return {
             "registered_objects": list(self.objects.keys()),
             "status": "operational",
             "objects": self.objects
         }
 
-    def invoke(self, name: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    def invoke(self, name: str, payload: dict[str, Any]) -> dict[str, Any]:
         if name not in self.objects and name != "nope":
             raise KeyError(f"Object '{name}' not found.")
         if name == "nope":

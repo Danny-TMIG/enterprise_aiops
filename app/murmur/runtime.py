@@ -1,10 +1,8 @@
 from __future__ import annotations
-from typing import Optional
 
 from app.murmur.flock import Flock
 
-
-_RT: Optional[Flock] = None
+_RT: Flock | None = None
 
 
 def get_flock(n: int = 8) -> Flock:

@@ -1,6 +1,7 @@
 """Derived from OpenSSF Scorecard / Supply: CI-Tests."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

@@ -8,14 +8,15 @@ For each prompt:
     - record: does the code reference names it does not define?
 """
 from __future__ import annotations
-import ast, builtins, sys
-from typing import Dict, List
 
-from app.origami.library import get as get_grammar
-from app.origami.swarm import Swarm
+import ast
+import builtins
+import sys
+
 from app.origami.dispatch import dispatch
+from app.origami.library import get as get_grammar
 from app.origami.sheaf import site_summary
-
+from app.origami.swarm import Swarm
 
 PROMPTS = [
     "add rate limiting to /api/checkout",
@@ -35,7 +36,7 @@ _B = set(dir(builtins)) | {
 }
 
 
-def _undef(source: str) -> List[str]:
+def _undef(source: str) -> list[str]:
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -56,9 +57,7 @@ def _undef(source: str) -> List[str]:
             for t in node.targets:
                 if isinstance(t, ast.Name):
                     defd.add(t.id)
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            defd.add(node.target.id)
-        elif isinstance(node, ast.For) and isinstance(node.target, ast.Name):
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) or isinstance(node, ast.For) and isinstance(node.target, ast.Name):
             defd.add(node.target.id)
         elif isinstance(node, ast.withitem) and isinstance(node.optional_vars, ast.Name):
             defd.add(node.optional_vars.id)
@@ -86,7 +85,7 @@ def main() -> int:
                      seed=i, max_depth=10, max_tokens=128)
         glued = bool(r.code)
         parses = False
-        und: List[str] = []
+        und: list[str] = []
         if glued:
             try:
                 ast.parse(r.code)

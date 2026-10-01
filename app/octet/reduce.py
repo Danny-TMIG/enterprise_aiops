@@ -1,8 +1,7 @@
 from __future__ import annotations
-from typing import Dict, List, Optional, Tuple
 
-from app.octet.graph import OctetGraph, Port
-from app.octet.octet import G, D, E
+from app.octet.graph import OctetGraph
+from app.octet.octet import D, E, G
 
 
 def _annihilate(g: OctetGraph, n1: int, n2: int) -> None:
@@ -86,9 +85,9 @@ def step(g: OctetGraph) -> str:
 
 
 def normalise(g: OctetGraph, max_steps: int = 10_000
-              ) -> Tuple[OctetGraph, int, List[str]]:
+              ) -> tuple[OctetGraph, int, list[str]]:
     n = 0
-    trace: List[str] = []
+    trace: list[str] = []
     while n < max_steps:
         rule = step(g)
         if rule == "stuck":

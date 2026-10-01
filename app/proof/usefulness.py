@@ -9,8 +9,11 @@ Operational definition. An artifact is useful if it passes six:
   6. no_placeholders — no template markers
 """
 from __future__ import annotations
-import ast, builtins, re, sys
-from typing import Dict, List
+
+import ast
+import builtins
+import re
+import sys
 
 _B = set(dir(builtins)) | {
     "__name__", "__file__", "__doc__", "__builtins__", "__package__",
@@ -31,7 +34,7 @@ def _kw(text: str) -> set:
     return {t for t in toks if t not in STOP and len(t) >= 3}
 
 
-def _func_names(source: str) -> List[str]:
+def _func_names(source: str) -> list[str]:
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -40,7 +43,7 @@ def _func_names(source: str) -> List[str]:
             if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
 
 
-def _undefined(source: str) -> List[str]:
+def _undefined(source: str) -> list[str]:
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -61,9 +64,7 @@ def _undefined(source: str) -> List[str]:
             for t in node.targets:
                 if isinstance(t, ast.Name):
                     defined.add(t.id)
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            defined.add(node.target.id)
-        elif isinstance(node, ast.For) and isinstance(node.target, ast.Name):
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) or isinstance(node, ast.For) and isinstance(node.target, ast.Name):
             defined.add(node.target.id)
         elif isinstance(node, ast.withitem) and isinstance(node.optional_vars, ast.Name):
             defined.add(node.optional_vars.id)
@@ -107,7 +108,7 @@ def _no_placeholders(source: str) -> bool:
     return not any(p in source for p in PLACEHOLDERS)
 
 
-def score(intent: str, source: str) -> Dict[str, object]:
+def score(intent: str, source: str) -> dict[str, object]:
     try:
         ast.parse(source)
         parses = True
@@ -153,9 +154,9 @@ PROMPTS = [
 
 def main() -> int:
     print("-- usefulness -- 10 prompts --")
+    from app.origami.dispatch import dispatch
     from app.origami.library import get as get_grammar
     from app.origami.swarm import Swarm
-    from app.origami.dispatch import dispatch
     swarm = Swarm(n_workers=1)
     grammar = get_grammar("rich_module")
     tot = 0.0

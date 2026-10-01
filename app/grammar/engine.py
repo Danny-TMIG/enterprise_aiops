@@ -1,5 +1,6 @@
 import asyncio
-from typing import Callable, Any
+from collections.abc import Callable
+
 
 class MasteryEngine:
     def __init__(self):

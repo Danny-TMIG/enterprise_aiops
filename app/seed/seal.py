@@ -11,26 +11,30 @@ API unchanged from the HMAC version:
     unwrap(envelope) -> payload
 """
 from __future__ import annotations
-import base64, json, os, time
+
+import base64
+import json
+import os
+import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 KEY_DIR = Path.home() / ".mesh-seed"
 KEY_PATH = KEY_DIR / "seal_key.pem"
 PUB_PATH = KEY_DIR / "seal_pub.pem"
 
 
-def _canonical(payload: Dict[str, Any]) -> bytes:
+def _canonical(payload: dict[str, Any]) -> bytes:
     return json.dumps(payload, sort_keys=True,
                       separators=(",", ":"),
                       default=str).encode()
 
 
 def _load_or_create_key():
+    from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric.ed25519 import (
         Ed25519PrivateKey,
     )
-    from cryptography.hazmat.primitives import serialization
 
     if KEY_PATH.exists():
         raw = KEY_PATH.read_bytes()
@@ -67,8 +71,8 @@ def _load_or_create_key():
     return key
 
 
-def seal(payload: Dict[str, Any],
-         keyid: Optional[str] = None) -> Dict[str, Any]:
+def seal(payload: dict[str, Any],
+         keyid: str | None = None) -> dict[str, Any]:
     from cryptography.hazmat.primitives import serialization
     key = _load_or_create_key()
     body = _canonical(payload)
@@ -89,13 +93,13 @@ def seal(payload: Dict[str, Any],
     }
 
 
-def verify_seal(envelope: Dict[str, Any],
-                keyid: Optional[str] = None,
-                pubkey: Optional[bytes] = None) -> bool:
+def verify_seal(envelope: dict[str, Any],
+                keyid: str | None = None,
+                pubkey: bytes | None = None) -> bool:
+    from cryptography.exceptions import InvalidSignature
     from cryptography.hazmat.primitives.asymmetric.ed25519 import (
         Ed25519PublicKey,
     )
-    from cryptography.exceptions import InvalidSignature
     try:
         body = base64.b64decode(envelope["payload"])
         for s in envelope.get("signatures", []):
@@ -115,13 +119,13 @@ def verify_seal(envelope: Dict[str, Any],
         return False
 
 
-def unwrap(envelope: Dict[str, Any]) -> Dict[str, Any]:
+def unwrap(envelope: dict[str, Any]) -> dict[str, Any]:
     body = base64.b64decode(envelope["payload"])
     return json.loads(body.decode())
 
 
-def rotate(keyid: Optional[str] = None) -> str:
-    backup: Optional[Path] = None
+def rotate(keyid: str | None = None) -> str:
+    backup: Path | None = None
     if KEY_PATH.exists():
         ts = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
         backup = KEY_PATH.with_name(f"seal_key.pem.bak.{ts}")

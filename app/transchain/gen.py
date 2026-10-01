@@ -5,11 +5,12 @@ For alphabet size n:
     total  = sum_{k=1..n} P(n,k)
 """
 from __future__ import annotations
-import math
-from itertools import permutations
-from typing import Dict, Iterator, Tuple
 
-from app.transchain.atoms import ALPHABET, letters
+import math
+from collections.abc import Iterator
+from itertools import permutations
+
+from app.transchain.atoms import ALPHABET
 from app.transchain.chain import Chain
 
 
@@ -19,7 +20,7 @@ def P(n: int, k: int) -> int:
     return math.factorial(n) // math.factorial(n - k)
 
 
-def counts(n: int = 26) -> Dict[int, int]:
+def counts(n: int = 26) -> dict[int, int]:
     """Length k -> count of length-k chains over an n-letter alphabet."""
     return {k: P(n, k) for k in range(1, n + 1)}
 
@@ -28,7 +29,7 @@ def total_count(n: int = 26) -> int:
     return sum(counts(n).values())
 
 
-def chains_of_length(k: int, alpha: Tuple[str, ...] = ALPHABET
+def chains_of_length(k: int, alpha: tuple[str, ...] = ALPHABET
                      ) -> Iterator[Chain]:
     if k < 1 or k > len(alpha):
         return
@@ -36,7 +37,7 @@ def chains_of_length(k: int, alpha: Tuple[str, ...] = ALPHABET
         yield Chain(p)
 
 
-def all_chains(alpha: Tuple[str, ...] = ALPHABET,
+def all_chains(alpha: tuple[str, ...] = ALPHABET,
                max_len: int | None = None) -> Iterator[Chain]:
     """Every chain of every length 1..len(alpha). Lazy."""
     top = max_len if max_len is not None else len(alpha)
@@ -44,7 +45,7 @@ def all_chains(alpha: Tuple[str, ...] = ALPHABET,
         yield from chains_of_length(k, alpha)
 
 
-def chains_from(a: str, k: int, alpha: Tuple[str, ...] = ALPHABET
+def chains_from(a: str, k: int, alpha: tuple[str, ...] = ALPHABET
                 ) -> Iterator[Chain]:
     """Length-k chains starting at letter `a`."""
     rest = tuple(x for x in alpha if x != a)
@@ -55,7 +56,7 @@ def chains_from(a: str, k: int, alpha: Tuple[str, ...] = ALPHABET
         yield Chain((a,) + p)
 
 
-def chains_to(z: str, k: int, alpha: Tuple[str, ...] = ALPHABET
+def chains_to(z: str, k: int, alpha: tuple[str, ...] = ALPHABET
               ) -> Iterator[Chain]:
     """Length-k chains ending at letter `z`."""
     rest = tuple(x for x in alpha if x != z)
@@ -66,7 +67,7 @@ def chains_to(z: str, k: int, alpha: Tuple[str, ...] = ALPHABET
         yield Chain(p + (z,))
 
 
-def chains_a_to_z(k: int, alpha: Tuple[str, ...] = ALPHABET
+def chains_a_to_z(k: int, alpha: tuple[str, ...] = ALPHABET
                   ) -> Iterator[Chain]:
     """Length-k chains from A to Z."""
     a, z = alpha[0], alpha[-1]

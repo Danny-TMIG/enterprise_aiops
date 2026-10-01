@@ -1,8 +1,10 @@
 """Run one model against one workload. Record the outcome."""
 from __future__ import annotations
-import hashlib, time
+
+import hashlib
+import time
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any
 
 from app.delta.model import Model
 
@@ -23,7 +25,7 @@ class Probe:
     def passed(self) -> bool:
         return self.verdict_state == "PASS"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "model_id": self.model_id,
             "workload_id": self.workload_id,

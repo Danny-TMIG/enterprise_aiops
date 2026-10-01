@@ -1,23 +1,26 @@
 """Autoregistration. Hardcoded dicts become discovered registries."""
 from __future__ import annotations
-import importlib, threading, time
-from dataclasses import dataclass, field
+
+import importlib
+import threading
+import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 APP  = ROOT / "app"
 
 _LOCK = threading.RLock()
 
-CAPABILITIES: Dict[str, Dict[str, Any]] = {}
-QUERIES:      Dict[str, Dict[str, Callable]] = {}
-TEMPLATES:    Dict[str, Callable] = {}
-PRIMITIVES:   Dict[str, Dict[str, Callable]] = {"int": {}, "list": {}, "binary": {}}
-PHENOMENA:    Dict[str, tuple] = {}
-ECOSYSTEMS:   Dict[str, Dict[str, Any]] = {}
-LANES:        Dict[str, List[str]] = {}
-MODELS:       Dict[str, Dict[str, Any]] = {}
+CAPABILITIES: dict[str, dict[str, Any]] = {}
+QUERIES:      dict[str, dict[str, Callable]] = {}
+TEMPLATES:    dict[str, Callable] = {}
+PRIMITIVES:   dict[str, dict[str, Callable]] = {"int": {}, "list": {}, "binary": {}}
+PHENOMENA:    dict[str, tuple] = {}
+ECOSYSTEMS:   dict[str, dict[str, Any]] = {}
+LANES:        dict[str, list[str]] = {}
+MODELS:       dict[str, dict[str, Any]] = {}
 
 
 def cap(code: str, *, category: str = "core", equation: str = "",
@@ -71,7 +74,7 @@ def ecosystem(name: str, **fields: Any) -> Callable:
     return deco
 
 
-def lane(name: str, reqs: Optional[List[str]] = None) -> Callable:
+def lane(name: str, reqs: list[str] | None = None) -> Callable:
     def deco(fn):
         with _LOCK:
             LANES[name] = list(reqs or [])
@@ -90,7 +93,7 @@ def model(code: str, **fields: Any) -> Callable:
 _SKIP = {"__pycache__", ".venv", ".lanes", ".git", "node_modules", "generated"}
 
 
-def discover(*, reset: bool = False) -> Dict[str, int]:
+def discover(*, reset: bool = False) -> dict[str, int]:
     if reset:
         with _LOCK:
             CAPABILITIES.clear(); QUERIES.clear(); TEMPLATES.clear()
@@ -102,8 +105,7 @@ def discover(*, reset: bool = False) -> Dict[str, int]:
             continue
         rel = p.relative_to(ROOT)
         mod = str(rel.with_suffix("")).replace("/", ".")
-        if mod.endswith(".__init__"):
-            mod = mod[:-9]
+        mod = mod.removesuffix(".__init__")
         try:
             importlib.import_module(mod)
             n += 1
@@ -112,7 +114,7 @@ def discover(*, reset: bool = False) -> Dict[str, int]:
     return snapshot()
 
 
-def snapshot() -> Dict[str, int]:
+def snapshot() -> dict[str, int]:
     with _LOCK:
         return {
             "capabilities":   len(CAPABILITIES),
@@ -127,7 +129,7 @@ def snapshot() -> Dict[str, int]:
         }
 
 
-def state() -> Dict[str, Any]:
+def state() -> dict[str, Any]:
     with _LOCK:
         return {
             "capabilities": {k: {kk: vv for kk, vv in v.items() if kk != "obj"}
@@ -145,9 +147,9 @@ def state() -> Dict[str, Any]:
         }
 
 
-def watch(callback: Callable[[Dict[str, int]], None],
+def watch(callback: Callable[[dict[str, int]], None],
           *, interval: float = 2.0,
-          stop: Optional[threading.Event] = None) -> threading.Thread:
+          stop: threading.Event | None = None) -> threading.Thread:
     def _run():
         last = _tree_mtime()
         while not (stop and stop.is_set()):
@@ -174,9 +176,24 @@ def _tree_mtime() -> float:
 
 
 __all__ = [
-    "CAPABILITIES", "QUERIES", "TEMPLATES", "PRIMITIVES", "PHENOMENA",
-    "ECOSYSTEMS", "LANES", "MODELS",
-    "cap", "query", "template", "primitive", "phenomenon",
-    "ecosystem", "lane", "model",
-    "discover", "snapshot", "state", "watch",
+    "CAPABILITIES",
+    "ECOSYSTEMS",
+    "LANES",
+    "MODELS",
+    "PHENOMENA",
+    "PRIMITIVES",
+    "QUERIES",
+    "TEMPLATES",
+    "cap",
+    "discover",
+    "ecosystem",
+    "lane",
+    "model",
+    "phenomenon",
+    "primitive",
+    "query",
+    "snapshot",
+    "state",
+    "template",
+    "watch",
 ]

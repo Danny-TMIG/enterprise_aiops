@@ -1,8 +1,9 @@
 """Training core. Canonical — do not edit in place; edit here and run tools/hooks/sync.sh."""
 from __future__ import annotations
-import time, hashlib
+
+import hashlib
+import time
 from dataclasses import dataclass, field, replace
-from typing import Dict, List, Optional, Tuple
 
 from app.engines.kinds import KINDS, SOLVERS
 
@@ -16,11 +17,11 @@ def _h(*parts) -> str:
 
 @dataclass
 class TrainConfig:
-    kinds: List[str] = field(default_factory=lambda: sorted(KINDS.keys()))
-    difficulties: List[str] = field(default_factory=lambda: ["easy", "medium", "hard"])
+    kinds: list[str] = field(default_factory=lambda: sorted(KINDS.keys()))
+    difficulties: list[str] = field(default_factory=lambda: ["easy", "medium", "hard"])
     puzzles_per_tile: int = 4
     seed: int = 0
-    max_workers: Optional[int] = None
+    max_workers: int | None = None
 
 
 @dataclass
@@ -68,18 +69,18 @@ class TrainTile:
 @dataclass
 class Run:
     index: int
-    tiles: List[TrainTile]
-    outcomes: List[TrainOutcome]
+    tiles: list[TrainTile]
+    outcomes: list[TrainOutcome]
     duration_ms: float
     digest: str
-    parent_id: Optional[str] = None
+    parent_id: str | None = None
 
     @property
     def id(self) -> str:
         return self.digest
 
     @property
-    def rates(self) -> Dict[str, float]:
+    def rates(self) -> dict[str, float]:
         return {t.key: t.rate for t in self.tiles}
 
     def to_dict(self):
@@ -94,8 +95,8 @@ class Run:
 class Trainer:
     def __init__(self, cfg: TrainConfig):
         self.cfg = cfg
-        self.runs: List[Run] = []
-        self.last_run: Optional[Run] = None
+        self.runs: list[Run] = []
+        self.last_run: Run | None = None
 
     def _one(self, kind, solver, difficulty, seed, puzzle_id) -> TrainOutcome:
         t0 = time.time()

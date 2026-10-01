@@ -1,7 +1,5 @@
-import sys  # pragma: no cover
-import json  # pragma: no cover
-import string  # pragma: no cover
 import re  # pragma: no cover
+import string  # pragma: no cover
 
 __version__ = "2.0.0"
 

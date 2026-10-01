@@ -1,9 +1,7 @@
 """Source article → math → target module."""
 from __future__ import annotations
-from typing import Any, Dict, List
 
-
-CATALOG: List[Dict[str, str]] = [
+CATALOG: list[dict[str, str]] = [
     {"source": "Connectome",
      "math": "Adjacency A, degree D, Laplacian L = D - A",
      "target": "app.mesh / app.math.graph.laplacian"},
@@ -52,9 +50,9 @@ CATALOG: List[Dict[str, str]] = [
 ]
 
 
-def by_target(substr: str) -> List[Dict[str, str]]:
+def by_target(substr: str) -> list[dict[str, str]]:
     return [e for e in CATALOG if substr in e["target"]]
 
 
-def active() -> List[Dict[str, str]]:
+def active() -> list[dict[str, str]]:
     return [e for e in CATALOG if not e["target"].startswith("skipped")]

@@ -5,9 +5,12 @@ target — derived from the frozen spec. This is what the mesh ships
 to scan/prove. The shape is a real diff the human reviews at gate 2.
 """
 from __future__ import annotations
-import hashlib, json, re
+
+import hashlib
+import json
+import re
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any
 
 from app.seed.spec import Spec
 
@@ -15,8 +18,8 @@ from app.seed.spec import Spec
 @dataclass
 class Artifact:
     spec_id: str
-    files: Dict[str, str] = field(default_factory=dict)
-    tests: Dict[str, str] = field(default_factory=dict)
+    files: dict[str, str] = field(default_factory=dict)
+    tests: dict[str, str] = field(default_factory=dict)
     proof_target: str = ""
     summary: str = ""
     id: str = ""
@@ -31,7 +34,7 @@ class Artifact:
             }, sort_keys=True)
             self.id = "art-" + hashlib.sha256(blob.encode()).hexdigest()[:12]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id, "spec_id": self.spec_id,
             "files": list(self.files.keys()),

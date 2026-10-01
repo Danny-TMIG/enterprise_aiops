@@ -1,12 +1,13 @@
 """A chain is a finite sequence of distinct letters."""
 from __future__ import annotations
+
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable, Tuple
 
 
 @dataclass(frozen=True)
 class Chain:
-    seq: Tuple[str, ...]
+    seq: tuple[str, ...]
 
     def __post_init__(self):
         if not self.seq:
@@ -35,14 +36,14 @@ class Chain:
     def id(self) -> str:
         return str(self)
 
-    def extend(self, x: str) -> "Chain":
+    def extend(self, x: str) -> Chain:
         return Chain(self.seq + (x,))
 
-    def is_prefix_of(self, other: "Chain") -> bool:
+    def is_prefix_of(self, other: Chain) -> bool:
         return (len(self) <= len(other)
                 and other.seq[:len(self)] == self.seq)
 
-    def overlap(self, other: "Chain") -> int:
+    def overlap(self, other: Chain) -> int:
         """Longest k such that self.seq[-k:] == other.seq[:k]."""
         k_max = min(len(self), len(other))
         for k in range(k_max, 0, -1):

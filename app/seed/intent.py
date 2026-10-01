@@ -1,8 +1,10 @@
 from __future__ import annotations
-import hashlib, re
+
+import hashlib
+import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 
 def _now() -> str:
@@ -17,7 +19,7 @@ class Intent:
     target: str = ""           # file/route/module the intent touches
     ts: str = field(default_factory=_now)
     id: str = ""
-    keywords: List[str] = field(default_factory=list)
+    keywords: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         if not self.keywords:
@@ -26,7 +28,7 @@ class Intent:
             blob = f"{self.channel}:{self.author}:{self.raw}"
             self.id = "int-" + hashlib.sha256(blob.encode()).hexdigest()[:12]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id, "raw": self.raw, "channel": self.channel,
             "author": self.author, "target": self.target,
@@ -40,7 +42,7 @@ _STOP = {
 }
 
 
-def _keywords(text: str) -> List[str]:
+def _keywords(text: str) -> list[str]:
     toks = re.findall(r"[A-Za-z0-9_/]+", text.lower())
     return [t for t in toks if t not in _STOP and len(t) >= 3]
 
@@ -49,7 +51,7 @@ def from_cli(text: str, target: str = "", author: str = "user") -> Intent:
     return Intent(raw=text, channel="cli", target=target, author=author)
 
 
-def from_api(payload: Dict[str, Any]) -> Intent:
+def from_api(payload: dict[str, Any]) -> Intent:
     return Intent(
         raw=str(payload.get("intent", "")),
         channel="api",

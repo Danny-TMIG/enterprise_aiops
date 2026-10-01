@@ -1,6 +1,9 @@
 """Foraging strategies — heavy-tailed vs diffusive search."""
-import math, random
+import math
+import random
+
 from dcs.generate import requirement
+
 
 def levy_step(rng, alpha=1.5):
     # Mantegna's algorithm for alpha-stable random step

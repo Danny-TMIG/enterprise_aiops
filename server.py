@@ -1,9 +1,9 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import time
 import hashlib
-import json
+import time
+
 from enterprise_aiops.prime_engine import RollingPrimeSubstrateEngine
+from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI(title="Enterprise AIOps Sovereign Kernel", version="2.0.0")
 substrate_engine = RollingPrimeSubstrateEngine("enterprise_aiops/prime_state.mmap", prime_capacity=1031)
@@ -85,6 +85,7 @@ async def trigger_audit(req: AuditRequest):
 
 
 from gossip_bridge import bridge
+
 
 @app.get("/cluster/status")
 async def cluster_status():

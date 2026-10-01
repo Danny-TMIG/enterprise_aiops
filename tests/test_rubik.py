@@ -1,7 +1,13 @@
 """Rubik-specific tests, runnable in isolation: `pytest tests/test_rubik.py`."""
 import pytest
+
 from app.puzzles.rubik import (
-    RubikCube, scramble, solve_cube, SOLVED, MOVES, apply_move,
+    MOVES,
+    SOLVED,
+    RubikCube,
+    apply_move,
+    scramble,
+    solve_cube,
 )
 
 

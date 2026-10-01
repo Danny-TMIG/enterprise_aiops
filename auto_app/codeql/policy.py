@@ -2,14 +2,15 @@
 
 import json
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
+
 
 class CodeQLPolicy:
     def __init__(self, max_critical: int = 0, max_high: int = 0):
         self.max_critical = max_critical
         self.max_high = max_high
 
-    def evaluate(self, sarif_path: Path) -> Dict[str, Any]:
+    def evaluate(self, sarif_path: Path) -> dict[str, Any]:
         if not sarif_path.exists():
             return {"passed": True, "violations": [], "findings": 0}
 

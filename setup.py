@@ -1,4 +1,5 @@
-from setuptools import setup, Extension
+from setuptools import Extension, setup
+
 try:
     from Cython.Build import cythonize
 except ImportError:

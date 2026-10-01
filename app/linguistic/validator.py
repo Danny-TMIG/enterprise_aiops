@@ -1,6 +1,8 @@
 import asyncio
 import time
-from typing import Any, Callable, Dict, Optional
+from collections.abc import Callable
+from typing import Any
+
 
 class ConvergenceMetrics:
     def __init__(self, achieved_value: float, **kwargs: Any):

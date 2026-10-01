@@ -1,6 +1,8 @@
-from typing import Any, Dict, List, Optional, Union
 from dataclasses import dataclass, field
+from typing import Any
+
 from app.core.manifest import CPVO
+
 
 class CPVOMeter:
     def __init__(self, cpvo):

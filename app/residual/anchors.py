@@ -3,14 +3,13 @@
 The chain always ends at Ω. A module with no anchor is unfaithful.
 """
 from __future__ import annotations
-from typing import Dict, List
 
 from app.residual import register as R
 
 OMEGA = "Ω"
 
 # module_name → [residual_id, ...]
-ANCHORS: Dict[str, List[str]] = {
+ANCHORS: dict[str, list[str]] = {
     # ── our conversation's modules ────────────────────────────
     "app.cst":        ["T-07","T-17","T-32","T-35","T-41"],
     "app.dispatchpatchsolve":   ["Z-01","Z-10","Z-12","B-16","L-15"],
@@ -49,17 +48,17 @@ ANCHORS: Dict[str, List[str]] = {
 }
 
 
-def anchors_for(module: str) -> List[str]:
+def anchors_for(module: str) -> list[str]:
     return list(ANCHORS.get(module, []))
 
 
-def all_modules() -> List[str]:
+def all_modules() -> list[str]:
     return sorted(ANCHORS.keys())
 
 
-def validate() -> Dict[str, object]:
+def validate() -> dict[str, object]:
     """Check every anchor id is a valid register entry."""
-    bad: Dict[str, List[str]] = {}
+    bad: dict[str, list[str]] = {}
     for m, ids in ANCHORS.items():
         invalid = [i for i in ids if not R.is_valid(i)]
         if invalid:

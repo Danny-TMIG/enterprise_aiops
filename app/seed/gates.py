@@ -1,8 +1,9 @@
 """Two human gates. One review. One decision. Not per-agent."""
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 def _now() -> str:
@@ -21,7 +22,7 @@ class GateDecision:
     note: str = ""
     ts: str = field(default_factory=_now)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"gate": self.gate, "approved": self.approved,
                 "by": self.by, "note": self.note, "ts": self.ts}
 
@@ -29,7 +30,7 @@ class GateDecision:
 @dataclass
 class Gate:
     name: str
-    decision: Optional[GateDecision] = None
+    decision: GateDecision | None = None
 
     @property
     def passed(self) -> bool:
@@ -51,7 +52,7 @@ class Gate:
         if not self.passed:
             raise GateError(f"gate '{self.name}' not passed")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"name": self.name,
                 "decision": self.decision.to_dict() if self.decision else None,
                 "passed": self.passed}

@@ -1,12 +1,17 @@
 """Unified entry point: python3 -m app <cmd> [args]"""
 from __future__ import annotations
-import argparse, json, sys
+
+import argparse
+import json
+import sys
+
 
 def _supply(argv):
-    from app.supply.sbom import build_sbom, sbom_digest
-    from app.supply.sign import generate_key, sign, key_id
-    from app.supply.attest import build_attestation, verify_attestation
     from pathlib import Path
+
+    from app.supply.attest import build_attestation, verify_attestation
+    from app.supply.sbom import build_sbom, sbom_digest
+    from app.supply.sign import generate_key, key_id, sign
     root = Path.cwd()
     sbom = build_sbom("enterprise_aiops", "0.1.0", root)
     d = sbom_digest(sbom)
@@ -30,7 +35,7 @@ def _supply(argv):
     print(f"         {out}/sbom.att.json")
 
 def _policy(argv):
-    from app.policy.parser import parse_policy, evaluate
+    from app.policy.parser import evaluate, parse_policy
     p = argparse.ArgumentParser(prog="app policy")
     p.add_argument("file", nargs="?")
     p.add_argument("--ctx", default="{}")
@@ -48,7 +53,7 @@ def _policy(argv):
     print(f"  ctx={ctx}  ->  {res}")
 
 def _braid(argv):
-    from app.braid.parser import parse_workflow, compile_workflow
+    from app.braid.parser import compile_workflow, parse_workflow
     p = argparse.ArgumentParser(prog="app braid")
     p.add_argument("file", nargs="?")
     a = p.parse_args(argv)
@@ -65,7 +70,7 @@ def _braid(argv):
     print(json.dumps(plan, indent=2))
 
 def _cd(argv):
-    from app.cd_nand.compute import verify_all_levels, nand_cd
+    from app.cd_nand.compute import nand_cd, verify_all_levels
     r = verify_all_levels(6)
     print(f"  CD NAND verify all levels 0..6: {r}")
     for a in (False, True):
@@ -73,8 +78,10 @@ def _cd(argv):
             print(f"    nand_cd({a},{b},level=3) = {nand_cd(a, b, 3)}")
 
 def _atlas(argv):
-    from app.atlas.algorithms import validate as av, ALGORITHMS
-    from app.atlas.moats import validate as mv, all_moats
+    from app.atlas.algorithms import ALGORITHMS
+    from app.atlas.algorithms import validate as av
+    from app.atlas.moats import all_moats
+    from app.atlas.moats import validate as mv
     print(f"  algorithms: {len(ALGORITHMS)}  {av()}")
     print(f"  moats:      {len(all_moats())}  {mv()}")
 

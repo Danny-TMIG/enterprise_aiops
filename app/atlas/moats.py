@@ -14,9 +14,9 @@ This is a live registry. The markdown projection is generated
 from the data here by `write_markdown()`.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field, asdict
+
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 
 @dataclass(frozen=True)
@@ -25,15 +25,15 @@ class Moat:
     name: str
     description: str
     value: str
-    implementers: Tuple[str, ...]
-    residuals: Tuple[str, ...]
+    implementers: tuple[str, ...]
+    residuals: tuple[str, ...]
     status: str
 
     def to_dict(self) -> dict:
         return asdict(self)
 
 
-_MOATS: Tuple[Moat, ...] = (
+_MOATS: tuple[Moat, ...] = (
     Moat(
         id=1,
         name="Braided multimodal fusion engine",
@@ -235,13 +235,13 @@ _MOATS: Tuple[Moat, ...] = (
 
 
 # ── queries ─────────────────────────────────────────────────────
-def by_status(status: str) -> List[Moat]:
+def by_status(status: str) -> list[Moat]:
     return [m for m in _MOATS if m.status == status]
 
 
-def by_implementer(module_substr: str) -> List[Moat]:
+def by_implementer(module_substr: str) -> list[Moat]:
     s = module_substr.lower()
-    out: List[Moat] = []
+    out: list[Moat] = []
     for m in _MOATS:
         for impl in m.implementers:
             if s in impl.lower():
@@ -250,11 +250,11 @@ def by_implementer(module_substr: str) -> List[Moat]:
     return out
 
 
-def by_residual(rid: str) -> List[Moat]:
+def by_residual(rid: str) -> list[Moat]:
     return [m for m in _MOATS if rid in m.residuals]
 
 
-def search(substr: str) -> List[Moat]:
+def search(substr: str) -> list[Moat]:
     s = substr.lower()
     return [m for m in _MOATS
             if s in m.name.lower()
@@ -262,7 +262,7 @@ def search(substr: str) -> List[Moat]:
             or s in m.value.lower()]
 
 
-def all_moats() -> Tuple[Moat, ...]:
+def all_moats() -> tuple[Moat, ...]:
     return _MOATS
 
 
@@ -273,7 +273,7 @@ def validate() -> dict:
     except Exception as e:
         return {"ok": False, "reason": f"register not importable: {e}"}
 
-    bad: Dict[int, List[str]] = {}
+    bad: dict[int, list[str]] = {}
     for m in _MOATS:
         for rid in m.residuals:
             if not R.is_valid(rid):
@@ -292,7 +292,7 @@ def validate() -> dict:
 
 # ── markdown projection ────────────────────────────────────────
 def render_markdown() -> str:
-    out: List[str] = []
+    out: list[str] = []
     out.append("# Ten Moats — Unique Core Algorithms / Architectures")
     out.append("")
     out.append("A live registry. The doc is a projection of")
@@ -348,7 +348,7 @@ def render_markdown() -> str:
     return "\n".join(out)
 
 
-def write_markdown(path: Optional[Path] = None) -> Path:
+def write_markdown(path: Path | None = None) -> Path:
     p = Path(path) if path else (
         Path(__file__).resolve().parent.parent.parent
         / "docs" / "moats.md"

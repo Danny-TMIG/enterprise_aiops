@@ -7,7 +7,11 @@ HF_HUB_OFFLINE / TRANSFORMERS_OFFLINE so the loader is cache-only.
 Run a full grammar -> swarm -> refine -> ast.parse pipeline.
 """
 from __future__ import annotations
-import os, socket, sys, traceback
+
+import os
+import socket
+import sys
+import traceback
 
 
 class _Blocked(RuntimeError):
@@ -34,10 +38,11 @@ def main() -> int:
         setattr(socket, n, _ban)
 
     try:
+        import ast
+
+        from app.origami.dispatch import dispatch, refine
         from app.origami.library import get as get_grammar
         from app.origami.swarm import Swarm
-        from app.origami.dispatch import dispatch, refine
-        import ast
 
         g = get_grammar("code_artifact")
         s = Swarm(n_workers=1)

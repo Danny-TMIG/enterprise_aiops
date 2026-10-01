@@ -1,9 +1,12 @@
 """Print everything that fails to parse, for one prompt."""
 from __future__ import annotations
-import ast, sys
+
+import ast
+import sys
+
+from app.origami.dispatch import dispatch
 from app.origami.library import get as get_grammar
 from app.origami.swarm import Swarm
-from app.origami.dispatch import dispatch
 
 
 def main() -> int:

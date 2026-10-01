@@ -1,25 +1,28 @@
 from __future__ import annotations
-from typing import Any, Dict, List
+
+from typing import Any
 
 from app.dispatch.orchestration.base import (
-    OrchestratorBackend, VerificationClaim, VerificationVerdict,
+    OrchestratorBackend,
+    VerificationClaim,
+    VerificationVerdict,
 )
+from app.dispatch.orchestration.google import GoogleBackend
 from app.dispatch.orchestration.microsoft import MicrosoftBackend
 from app.dispatch.orchestration.salesforce import SalesforceBackend
 from app.dispatch.orchestration.servicenow import ServiceNowBackend
-from app.dispatch.orchestration.google import GoogleBackend
 
 
 class OrchestrationRegistry:
     def __init__(self) -> None:
-        self.backends: Dict[str, OrchestratorBackend] = {
+        self.backends: dict[str, OrchestratorBackend] = {
             "microsoft":  MicrosoftBackend(),
             "salesforce": SalesforceBackend(),
             "servicenow": ServiceNowBackend(),
             "google":     GoogleBackend(),
         }
 
-    def list(self) -> Dict[str, Any]:
+    def list(self) -> dict[str, Any]:
         return {n: {"available": b.available()}
                 for n, b in self.backends.items()}
 

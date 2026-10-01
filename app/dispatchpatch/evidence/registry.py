@@ -1,13 +1,14 @@
-from typing import Dict, Type
+
 from app.dispatchpatch.evidence.base import DispatchEvidence
 
+
 class EvidenceRegistry:
-    _registry: Dict[str, Type[DispatchEvidence]] = {}
+    _registry: dict[str, type[DispatchEvidence]] = {}
 
     @classmethod
-    def register(cls, name: str, evidence_cls: Type[DispatchEvidence]):
+    def register(cls, name: str, evidence_cls: type[DispatchEvidence]):
         cls._registry[name] = evidence_cls
 
     @classmethod
-    def get(cls, name: str) -> Type[DispatchEvidence]:
+    def get(cls, name: str) -> type[DispatchEvidence]:
         return cls._registry.get(name, DispatchEvidence)

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Final repair + full diagnostic. Prints everything we need in one run."""
-import ast, os, re, shutil, subprocess, sys
+import os
+import re
+import shutil
+import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -45,10 +49,10 @@ if sp.exists():
             r'from Cython\.Build import cythonize',
             'try:\n    from Cython.Build import cythonize\nexcept ImportError:\n    cythonize = lambda *a, **kw: []',
             s, count=1)
-    if re.search(r'^import Cython\b', s, re.M):
+    if re.search(r'^import Cython\b', s, re.MULTILINE):
         s = re.sub(r'^import Cython\b',
                    'try:\n    import Cython\nexcept ImportError:\n    Cython = None',
-                   s, count=1, flags=re.M)
+                   s, count=1, flags=re.MULTILINE)
     sp.write_text(s)
     print("Cython references guarded")
     print("\n--- new head ---")

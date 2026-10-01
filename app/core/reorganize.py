@@ -21,10 +21,12 @@ proposals derive from.
 Dry run by default. Pass apply=True to commit.
 """
 from __future__ import annotations
-import json, sqlite3
-from dataclasses import dataclass, field, asdict
+
+import json
+import sqlite3
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 DB = ROOT / "data" / "fabric.sqlite3"
@@ -51,18 +53,18 @@ class Proposal:
     before: Any
     after: Any
     reason: str
-    trigger_seq: Optional[int] = None
+    trigger_seq: int | None = None
 
 
 @dataclass
 class Report:
     read: int = 0
-    dispatch_stats: Dict[str, DispatchStat] = field(default_factory=dict)
-    proposals: List[Proposal] = field(default_factory=list)
-    applied: List[Proposal] = field(default_factory=list)
+    dispatch_stats: dict[str, DispatchStat] = field(default_factory=dict)
+    proposals: list[Proposal] = field(default_factory=list)
+    applied: list[Proposal] = field(default_factory=list)
     dry_run: bool = True
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "read": self.read,
             "dry_run": self.dry_run,
@@ -80,8 +82,8 @@ def _connect(db: Path = DB) -> sqlite3.Connection:
 
 
 def _read_dispatch_events(con: sqlite3.Connection,
-                          window: int = 500) -> Dict[str, DispatchStat]:
-    stats: Dict[str, DispatchStat] = {}
+                          window: int = 500) -> dict[str, DispatchStat]:
+    stats: dict[str, DispatchStat] = {}
     for seq, payload in con.execute(
         "SELECT seq, payload FROM events "
         "WHERE kind='dispatch' ORDER BY seq DESC LIMIT ?", (window,)
@@ -106,7 +108,7 @@ def _read_dispatch_events(con: sqlite3.Connection,
 
 # ── propose ─────────────────────────────────────────────────────────
 def _cap_row(con: sqlite3.Connection, code: str
-             ) -> Optional[Tuple[str, str]]:
+             ) -> tuple[str, str] | None:
     r = con.execute(
         "SELECT status, home FROM capabilities WHERE code=?", (code,)
     ).fetchone()
@@ -122,8 +124,8 @@ def _has_registered_impl(code: str) -> bool:
         return False
 
 
-def propose(stats: Dict[str, DispatchStat]) -> List[Proposal]:
-    out: List[Proposal] = []
+def propose(stats: dict[str, DispatchStat]) -> list[Proposal]:
+    out: list[Proposal] = []
     con = _connect()
     for code, s in stats.items():
         row = _cap_row(con, code)
@@ -148,12 +150,12 @@ def propose(stats: Dict[str, DispatchStat]) -> List[Proposal]:
 
 
 # ── apply ───────────────────────────────────────────────────────────
-def apply_proposals(proposals: List[Proposal],
-                    sub: Any) -> List[Proposal]:
+def apply_proposals(proposals: list[Proposal],
+                    sub: Any) -> list[Proposal]:
     """Mutate the capability table, then close. The ledger write
     happens after the mutation connection is released, so two
     writers never contend for the same lock."""
-    applied: List[Proposal] = []
+    applied: list[Proposal] = []
     for p in proposals:
         if p.field != "status":
             continue
@@ -218,7 +220,7 @@ def _self_register() -> None:
         return
 
     @register("reorganize")
-    def _entry(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _entry(*args: Any, **kwargs: Any) -> dict[str, Any]:
         rep = run(apply=bool(kwargs.get("apply", False)))
         return rep.to_dict()
 
@@ -226,5 +228,11 @@ def _self_register() -> None:
 _self_register()
 
 
-__all__ = ["DispatchStat", "Proposal", "Report", "run",
-           "propose", "apply_proposals"]
+__all__ = [
+    "DispatchStat",
+    "Proposal",
+    "Report",
+    "apply_proposals",
+    "propose",
+    "run",
+]

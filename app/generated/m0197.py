@@ -1,6 +1,7 @@
 """Auto-generated from capabilities DB."""
 from __future__ import annotations
 
+
 def impl_genmod_m0197_abs(a=None, b=None, x=None, xs=None, **kw):
     return abs(x if x is not None else -1)
 

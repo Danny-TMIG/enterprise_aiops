@@ -5,14 +5,14 @@ This is the meta-receipt: the chain that attests the chains that
 attest the actions.
 """
 from __future__ import annotations  # pragma: no cover
+
 import hashlib  # pragma: no cover
 import json  # pragma: no cover
 import subprocess  # pragma: no cover
 import sys  # pragma: no cover
 import time  # pragma: no cover
+from dataclasses import asdict, dataclass  # pragma: no cover
 from pathlib import Path  # pragma: no cover
-from dataclasses import dataclass, field, asdict  # pragma: no cover
-
 
 ROOT = Path(__file__).resolve().parents[1]
 

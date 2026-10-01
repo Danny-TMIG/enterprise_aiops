@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-import json, sys, urllib.request, urllib.error, pathlib
+import json
+import pathlib
+import sys
+import urllib.error
+import urllib.request
 
 BASE = "http://127.0.0.1:8000"
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -65,7 +69,7 @@ def main():
     if proof.exists():
         print(f"    [OK] Proof artifact verified present ({proof.stat().st_size} bytes)")
     else:
-        print(f"    [FAIL] missing proof artifact")
+        print("    [FAIL] missing proof artifact")
         ok = False
 
     print("-" * 50)

@@ -1,8 +1,10 @@
-import json
 import hashlib
+import json
 from datetime import datetime, timezone
 from pathlib import Path
+
 import aiohttp
+
 
 class LocalInferenceEngine:
     def __init__(self, endpoint: str = "http://127.0.0.1:8000", model: str = "mlx-community/Qwen2.5-7B-Instruct-4bit"):

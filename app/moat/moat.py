@@ -5,10 +5,12 @@
 Each factor is computed from on-disk state. Nothing is stubbed.
 """
 from __future__ import annotations
-import json, time
-from dataclasses import dataclass, field
+
+import json
+import time
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 def _count_jsonl(p: Path) -> int:
@@ -25,7 +27,7 @@ def _count_jsonl(p: Path) -> int:
 class MoatEquation:
     root: Path
 
-    def factors(self) -> Dict[str, float]:
+    def factors(self) -> dict[str, float]:
         r = self.root
         n_py = sum(1 for _ in r.rglob("app/**/*.py"))
         n_sbom = 1 if (r / "dist" / "sbom.cdx.json").exists() else 0
@@ -49,9 +51,9 @@ class MoatEquation:
 
 
 class MoatMesh:
-    def __init__(self, axes: Optional[Dict[str, float]] = None,
-                 root: Optional[str] = None):
-        self.axes: Dict[str, float] = dict(axes or {})
+    def __init__(self, axes: dict[str, float] | None = None,
+                 root: str | None = None):
+        self.axes: dict[str, float] = dict(axes or {})
         self.root = Path(root) if root else Path.cwd()
         self.equation = MoatEquation(self.root)
         self._refresh()
@@ -62,11 +64,11 @@ class MoatMesh:
             if k not in self.axes:
                 self.axes[k] = v
 
-    def refresh(self) -> "MoatMesh":
+    def refresh(self) -> MoatMesh:
         self._refresh()
         return self
 
-    def score_all(self, scope: Optional[str] = None) -> Dict[str, Any]:
+    def score_all(self, scope: str | None = None) -> dict[str, Any]:
         out = dict(self.axes)
         if "Q_g" not in out or out.get("Q_g", 0.0) <= 0.0:
             vals = [v for k, v in out.items()
@@ -76,7 +78,7 @@ class MoatMesh:
             out["scope"] = scope
         return out
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "root": str(self.root),
             "factors": self.equation.factors(),
@@ -84,7 +86,7 @@ class MoatMesh:
         }
 
 
-def record_run(run: Dict[str, Any], merged: bool = True) -> str:
+def record_run(run: dict[str, Any], merged: bool = True) -> str:
     """Append a run to .moat/runs.jsonl. Creates the directory."""
     p = Path.cwd() / ".moat" / "runs.jsonl"
     p.parent.mkdir(parents=True, exist_ok=True)

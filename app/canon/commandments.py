@@ -5,10 +5,10 @@ Each commandment names a risk (what happens if violated), a reward
 a deterministic predicate over a Run.
 """
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Any, Callable, List, Tuple
 
-from app.residual import register as R
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -17,7 +17,7 @@ class Commandment:
     statement: str
     risk: str
     reward: str
-    residual_ids: Tuple[str, ...]
+    residual_ids: tuple[str, ...]
     check: Callable[[Any], bool]
 
 
@@ -77,7 +77,7 @@ def _cmd10(run) -> bool:
     return _cmd5(run)
 
 
-COMMANDMENTS: Tuple[Commandment, ...] = (
+COMMANDMENTS: tuple[Commandment, ...] = (
     Commandment(1,
         "Do not claim what you cannot verify.",
         "fabricated evidence enters the mesh",
@@ -141,7 +141,7 @@ COMMANDMENTS: Tuple[Commandment, ...] = (
 )
 
 
-def enumerate_commandments() -> List[dict]:
+def enumerate_commandments() -> list[dict]:
     return [{
         "index": c.index,
         "statement": c.statement,
@@ -151,8 +151,8 @@ def enumerate_commandments() -> List[dict]:
     } for c in COMMANDMENTS]
 
 
-def audit(run) -> List[dict]:
-    out: List[dict] = []
+def audit(run) -> list[dict]:
+    out: list[dict] = []
     for c in COMMANDMENTS:
         try:
             ok = bool(c.check(run))

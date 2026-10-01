@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Rewrite setup.py cleanly, create missing modules, reinstall, verify."""
-import os, re, shutil, subprocess, sys, time
+import os
+import shutil
+import subprocess
+import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 

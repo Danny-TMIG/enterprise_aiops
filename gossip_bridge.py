@@ -1,7 +1,7 @@
 import asyncio
 import json
 import logging
-from typing import Dict, Any
+from typing import Any
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("GossipBridge")
@@ -10,7 +10,7 @@ class ClusterGossipClient:
     def __init__(self, primary_port: int = 9001):
         self.primary_port = primary_port
 
-    async def get_cluster_state(self) -> Dict[str, Any]:
+    async def get_cluster_state(self) -> dict[str, Any]:
         """Queries the local P2P gossip node for active cluster telemetry and epoch."""
         try:
             reader, writer = await asyncio.open_connection("127.0.0.1", self.primary_port)

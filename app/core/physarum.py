@@ -23,11 +23,14 @@ the ledger.
 Self-registers as capability `physarum`.
 """
 from __future__ import annotations
+
+import math
 import random
-import math, threading, time
-from collections import defaultdict, deque
-from dataclasses import dataclass, field, asdict
-from typing import Any, Deque, Dict, Iterable, List, Optional, Tuple
+import threading
+from collections import deque
+from collections.abc import Iterable
+from dataclasses import asdict, dataclass, field
+from typing import Any
 
 
 # ── edge ────────────────────────────────────────────────────────────
@@ -39,13 +42,13 @@ class Edge:
     D: float = 1.0            # conductance (the mold's tube width)
     Q: float = 0.0            # last flux
     flow_total: float = 0.0
-    flow_window: Deque[float] = field(default_factory=lambda: deque(maxlen=64))
+    flow_window: deque[float] = field(default_factory=lambda: deque(maxlen=64))
     pruned: bool = False
 
-    def key(self) -> Tuple[str, str]:
+    def key(self) -> tuple[str, str]:
         return (self.src, self.dst)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
         d["flow_window"] = list(self.flow_window)
         return d
@@ -67,14 +70,14 @@ class PhysarumRouter:
         self.prune_below = prune_below
         self.reinforce_above = reinforce_above
         self.prune_window = prune_window
-        self._edges: Dict[Tuple[str, str], Edge] = {}
+        self._edges: dict[tuple[str, str], Edge] = {}
         self._lock = threading.RLock()
         self._tick = 0
 
     # ── topology ────────────────────────────────────────────────────
     def add(self, src: str, dst: str, *, L: float = 1.0,
-            D: Optional[float] = None, jitter: float = 0.35,
-            seed: Optional[int] = None) -> Edge:
+            D: float | None = None, jitter: float = 0.35,
+            seed: int | None = None) -> Edge:
         with self._lock:
             k = (src, dst)
             if k in self._edges:
@@ -90,12 +93,12 @@ class PhysarumRouter:
             return e
 
     def add_path(self, chain: Iterable[str], *,
-                 L: float = 1.0) -> List[Edge]:
+                 L: float = 1.0) -> list[Edge]:
         chain = list(chain)
         return [self.add(chain[i], chain[i+1], L=L)
                 for i in range(len(chain) - 1)]
 
-    def edges(self, *, include_pruned: bool = False) -> List[Edge]:
+    def edges(self, *, include_pruned: bool = False) -> list[Edge]:
         with self._lock:
             return [e for e in self._edges.values()
                     if include_pruned or not e.pruned]
@@ -135,14 +138,11 @@ class PhysarumRouter:
         # conductance has fallen below the floor is dead. Both
         # conditions must hold; a fresh edge (flow_total>0) survives a
         # single quiet tick.
-        if e.D < self.prune_below and e.flow_total <= 0.0:
-            e.pruned = True
-        elif e.D < self.prune_below / 2.0:
+        if e.D < self.prune_below and e.flow_total <= 0.0 or e.D < self.prune_below / 2.0:
             e.pruned = True
 
         # cap
-        if e.D > 8.0:
-            e.D = 8.0
+        e.D = min(e.D, 8.0)
 
     def tick(self, *, n: int = 1) -> int:
         """One local pass. Every live edge updates itself. Returns the
@@ -160,7 +160,7 @@ class PhysarumRouter:
         return pruned
 
     # ── observation ─────────────────────────────────────────────────
-    def topology(self) -> Dict[str, Any]:
+    def topology(self) -> dict[str, Any]:
         with self._lock:
             live = [e for e in self._edges.values() if not e.pruned]
             dead = [e for e in self._edges.values() if e.pruned]
@@ -176,7 +176,7 @@ class PhysarumRouter:
                 "pruned": [f"{e.src}->{e.dst}" for e in dead],
             }
 
-    def routes_from(self, src: str, *, min_D: float = 0.1) -> List[Edge]:
+    def routes_from(self, src: str, *, min_D: float = 0.1) -> list[Edge]:
         with self._lock:
             out = [e for e in self._edges.values()
                    if e.src == src and not e.pruned and e.D >= min_D]
@@ -208,7 +208,7 @@ def _self_register() -> None:
         return
 
     @register("physarum")
-    def _entrypoint(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _entrypoint(*args: Any, **kwargs: Any) -> dict[str, Any]:
         r = from_capabilities()
         return {
             "module": "app.core.physarum",

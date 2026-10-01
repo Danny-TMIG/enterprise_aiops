@@ -7,10 +7,15 @@ create_database — `codeql database create` for Python.
 analyze       — `codeql database analyze` producing SARIF.
 """
 from __future__ import annotations
-import os, platform, shutil, subprocess, tarfile, urllib.request
-from dataclasses import dataclass, field
+
+import os
+import platform
+import shutil
+import subprocess
+import tarfile
+import urllib.request
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 from app.codeql.config import Config, load_config
 
@@ -31,7 +36,7 @@ class Database:
 @dataclass
 class Analysis:
     sarif_path: Path
-    queries: Tuple[str, ...]
+    queries: tuple[str, ...]
     exit_code: int
     stdout: str = ""
     stderr: str = ""
@@ -42,12 +47,12 @@ class Analysis:
 
 
 # ── CLI lifecycle ───────────────────────────────────────────────
-def cli_present(cfg: Optional[Config] = None) -> bool:
+def cli_present(cfg: Config | None = None) -> bool:
     cfg = cfg or load_config()
     return cfg.codeql_bin.is_file() and os.access(cfg.codeql_bin, os.X_OK)
 
 
-def cli_version(cfg: Optional[Config] = None) -> str:
+def cli_version(cfg: Config | None = None) -> str:
     cfg = cfg or load_config()
     if not cli_present(cfg):
         return "not-installed"
@@ -77,7 +82,7 @@ def _bundle_url(version: str) -> str:
             f"codeql-bundle-{version}/{bundle}")
 
 
-def install_cli(cfg: Optional[Config] = None,
+def install_cli(cfg: Config | None = None,
                 force: bool = False) -> Config:
     cfg = cfg or load_config()
     if cli_present(cfg) and not force:
@@ -114,9 +119,9 @@ def install_cli(cfg: Optional[Config] = None,
 
 
 # ── database ────────────────────────────────────────────────────
-def create_database(cfg: Optional[Config] = None,
+def create_database(cfg: Config | None = None,
                     force: bool = False,
-                    overrides: Optional[Dict[str, str]] = None) -> Database:
+                    overrides: dict[str, str] | None = None) -> Database:
     cfg = cfg or load_config()
     if not cli_present(cfg):
         raise RuntimeError("CodeQL CLI not present; run install_cli()")
@@ -147,10 +152,10 @@ def create_database(cfg: Optional[Config] = None,
 
 
 # ── analysis ────────────────────────────────────────────────────
-def analyze(cfg: Optional[Config] = None,
-            db: Optional[Database] = None,
+def analyze(cfg: Config | None = None,
+            db: Database | None = None,
             download: bool = True,
-            extra_queries: Optional[List[str]] = None) -> Analysis:
+            extra_queries: list[str] | None = None) -> Analysis:
     cfg = cfg or load_config()
     if not cli_present(cfg):
         raise RuntimeError("CodeQL CLI not present; run install_cli()")

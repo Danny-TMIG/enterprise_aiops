@@ -5,8 +5,9 @@ None or a Decision. No rule can see the whole flock, no rule
 plans more than one tick ahead.
 """
 from __future__ import annotations
+
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable, List, Optional
 
 from app.murmur.state import AgentState, Decision
 
@@ -14,13 +15,13 @@ from app.murmur.state import AgentState, Decision
 @dataclass
 class Rule:
     name: str
-    when: Callable[[AgentState, List[AgentState]], bool]
-    act: Callable[[AgentState, List[AgentState]], Decision]
+    when: Callable[[AgentState, list[AgentState]], bool]
+    act: Callable[[AgentState, list[AgentState]], Decision]
     priority: int = 100
     weight: float = 1.0
 
 
-def _avg_neighbor(state: AgentState, neighbors: List[AgentState],
+def _avg_neighbor(state: AgentState, neighbors: list[AgentState],
                   key: str, default: float = 0.0) -> float:
     if not neighbors:
         return default
@@ -31,8 +32,8 @@ def _avg_neighbor(state: AgentState, neighbors: List[AgentState],
 
 
 # ── the default flock rule set ─────────────────────────────────
-def default_rules() -> List[Rule]:
-    rules: List[Rule] = []
+def default_rules() -> list[Rule]:
+    rules: list[Rule] = []
 
     def drift_when(s, ns):
         return s.deviation() > s.thresholds.get("drift", 0.5)
@@ -91,8 +92,8 @@ def default_rules() -> List[Rule]:
     return rules
 
 
-def select(state: AgentState, neighbors: List[AgentState],
-           rules: List[Rule]) -> Optional[Decision]:
+def select(state: AgentState, neighbors: list[AgentState],
+           rules: list[Rule]) -> Decision | None:
     for r in sorted(rules, key=lambda x: x.priority):
         try:
             if r.when(state, neighbors):

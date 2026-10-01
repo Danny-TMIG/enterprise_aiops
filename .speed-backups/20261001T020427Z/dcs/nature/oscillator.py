@@ -1,6 +1,9 @@
 """Coupled oscillators — synchronisation and excitable dynamics."""
-import math, random
+import math
+import random
+
 from dcs.generate import requirement
+
 
 def kuramoto(n=100, K=2.0, steps=500, dt=0.01, seed=0):
     rng = random.Random(seed)

@@ -1,11 +1,13 @@
 """Canonical Bot and Task."""
 from __future__ import annotations
-import time, uuid
-from typing import Any, Dict, Optional
+
+import time
+import uuid
+from typing import Any
 
 
 class Bot:
-    def __init__(self, id: Optional[str] = None,
+    def __init__(self, id: str | None = None,
                  hostname: str = "", os: str = "", arch: str = "",
                  last_seen: float = 0.0, status: str = "active"):
         self.id = id or str(uuid.uuid4())
@@ -21,7 +23,7 @@ class Bot:
 
     @classmethod
     def new(cls, hostname: str, os: str, arch: str,
-            id: Optional[str] = None) -> "Bot":
+            id: str | None = None) -> Bot:
         return cls(id=id, hostname=hostname, os=os, arch=arch)
 
     def __getitem__(self, key: str):
@@ -35,7 +37,7 @@ class Bot:
 
 class Task:
     def __init__(self, id: str, bot_id: str, cmd: str,
-                 args: Optional[Dict[str, Any]] = None,
+                 args: dict[str, Any] | None = None,
                  status: str = "queued"):
         self.id = id
         self.bot_id = bot_id
@@ -45,7 +47,7 @@ class Task:
 
     @classmethod
     def new(cls, bot_id: str, cmd: str,
-            args: Optional[Dict[str, Any]] = None) -> "Task":
+            args: dict[str, Any] | None = None) -> Task:
         return cls(id=str(uuid.uuid4()), bot_id=bot_id, cmd=cmd, args=args)
 
     def __getitem__(self, key: str):

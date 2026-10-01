@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-import hashlib, json, subprocess
+import hashlib
+import json
+import subprocess
 from datetime import datetime, timezone
 from importlib.metadata import distributions
 from pathlib import Path

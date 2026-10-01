@@ -11,9 +11,11 @@ A Solver is a named strategy for one kind:
 Kinds and solvers compose into the parallel grid.
 """
 from __future__ import annotations
-import math, random
+
+import random
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any
 
 
 @dataclass
@@ -93,8 +95,8 @@ def _sudoku_full(puzzle, seed):
 # CROSSWORD
 # ─────────────────────────────────────────────────────────────────
 def _cw_sample(difficulty: str, seed: int):
-    from app.puzzles.crossword import make_crossword
     from app.puzzles.atlas import load_atlas
+    from app.puzzles.crossword import make_crossword
     return make_crossword(atlas=load_atlas(), seed=seed)
 
 
@@ -194,7 +196,7 @@ def _rubik_bfs(puzzle, seed):
     r = solve_cube(puzzle)
     if not r["solved"]:
         return None
-    from app.puzzles.rubik import MOVES, apply_move, SOLVED
+    from app.puzzles.rubik import MOVES, apply_move
     s = puzzle
     for m in r["solution"]:
         s = apply_move(MOVES[m], s)
@@ -206,7 +208,7 @@ def _rubik_bfs(puzzle, seed):
 # ─────────────────────────────────────────────────────────────────
 def _ttt_sample(difficulty: str, seed: int):
     """Sample a random mid-game board with X to move."""
-    from app.puzzles.tictactoe import TTState, EMPTY, X, O
+    from app.puzzles.tictactoe import EMPTY, O, TTState, X
     rng = random.Random(seed)
     b = [EMPTY]*9
     n = rng.randint(0, 6)
@@ -223,7 +225,7 @@ def _ttt_sample(difficulty: str, seed: int):
 
 def _ttt_verify(puzzle, attempt):
     """Attempt is a move index. Verify it is not losing."""
-    from app.puzzles.tictactoe import TicTacToe, EMPTY
+    from app.puzzles.tictactoe import EMPTY, TicTacToe
     if attempt is None or not (0 <= attempt < 9):
         return False
     if puzzle.board[attempt] != EMPTY:
@@ -233,7 +235,6 @@ def _ttt_verify(puzzle, attempt):
     new_state = t.apply(state, attempt)
     if t.is_terminal(new_state):
         w = new_state.winner()
-        from app.puzzles.tictactoe import X
         return w == state.to_move   # win is fine, draw is fine
     # ensure opponent cannot immediately win on next move
     for opp_move in t.actions(new_state):
@@ -268,8 +269,8 @@ def _ttt_center(puzzle, seed):
 
 
 def _ttt_minimax(puzzle, seed):
+    from app.puzzles.tictactoe import TicTacToe
     from app.puzzles.tree import alpha_beta
-    from app.puzzles.tictactoe import TicTacToe, TTState
 
     class _Wrap:
         def __init__(self, state):
@@ -294,7 +295,6 @@ def _gw_sample(difficulty: str, seed: int):
 
 def _gw_verify(puzzle, attempt):
     """Attempt is a list of actions. Verify the path reaches goal."""
-    from app.puzzles.gridworld import Gridworld
     if not attempt:
         return False
     g = puzzle
@@ -314,7 +314,6 @@ def _gw_format(p):
 
 
 def _gw_random(puzzle, seed):
-    from app.puzzles.gridworld import Gridworld
     g = puzzle
     rng = random.Random(seed)
     s = g.initial()
@@ -333,7 +332,6 @@ def _gw_random(puzzle, seed):
 
 def _gw_bfs(puzzle, seed):
     from app.puzzles.tree import bfs
-    from app.puzzles.gridworld import Gridworld
     g = puzzle
     r = bfs(g, max_nodes=10_000)
     return list(r.path) if r.found else None
@@ -342,7 +340,7 @@ def _gw_bfs(puzzle, seed):
 # ─────────────────────────────────────────────────────────────────
 # Registry
 # ─────────────────────────────────────────────────────────────────
-KINDS: Dict[str, Kind] = {
+KINDS: dict[str, Kind] = {
     "sudoku":    Kind("sudoku",    _sudoku_sample, _sudoku_verify, _sudoku_format),
     "crossword": Kind("crossword", _cw_sample,     _cw_verify,     _cw_format),
     "rubik":     Kind("rubik",     _rubik_sample,  _rubik_verify,  _rubik_format),
@@ -350,7 +348,7 @@ KINDS: Dict[str, Kind] = {
     "gridworld": Kind("gridworld", _gw_sample,     _gw_verify,     _gw_format),
 }
 
-SOLVERS: Dict[str, Dict[str, Callable]] = {
+SOLVERS: dict[str, dict[str, Callable]] = {
     "sudoku":    {"random": _sudoku_random, "greedy": _sudoku_greedy, "full": _sudoku_full},
     "crossword": {"random": _cw_random,     "greedy": _cw_greedy,     "full": _cw_full},
     "rubik":     {"random": _rubik_random,  "bfs":    _rubik_bfs},

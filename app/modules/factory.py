@@ -7,12 +7,13 @@ capability. Nothing is faked; each emitted function satisfies its
 invariant on held-out inputs or the generator rejects it.
 """
 from __future__ import annotations
+
+import random
 import re
-import importlib.util, itertools, random, textwrap
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
-
+from typing import Any
 
 BUILTIN_NAMES = frozenset({
     "abs","all","any","bin","bool","chr","dict","float","hex","int",
@@ -85,7 +86,7 @@ class FnSpec:
     kind: str           # "unary_int" | "unary_list" | "binary_int"
     body: str
     invariant_src: str  # python expression using "result"
-    invariant: Optional[Callable] = None
+    invariant: Callable | None = None
     passed: bool = False
 
 
@@ -93,7 +94,7 @@ class FnSpec:
 class ModSpec:
     name: str
     category: str
-    fns: List[FnSpec] = field(default_factory=list)
+    fns: list[FnSpec] = field(default_factory=list)
 
 
 # ── source emission ────────────────────────────────────────────
@@ -171,10 +172,10 @@ def _check(fn: FnSpec, rng: random.Random, n: int = 64) -> bool:
 
 # ── spec construction ───────────────────────────────────────────
 def make_module(name: str, category: str,
-                int_fns: List[str] = (), list_fns: List[str] = (),
-                bin_fns: List[str] = (), seed: int = 0) -> Optional[ModSpec]:
+                int_fns: list[str] = (), list_fns: list[str] = (),
+                bin_fns: list[str] = (), seed: int = 0) -> ModSpec | None:
     rng = random.Random(seed)
-    fns: List[FnSpec] = []
+    fns: list[FnSpec] = []
     for fname in int_fns:
         body, inv = UNARY_INT[fname]
         f = FnSpec(name=fname, param="i", kind="unary_int",
@@ -200,14 +201,14 @@ def make_module(name: str, category: str,
 
 
 # ── enumerate a cartesian batch ─────────────────────────────────
-def batch(prefix: str = "m", n: int = 256, seed: int = 0) -> List[ModSpec]:
+def batch(prefix: str = "m", n: int = 256, seed: int = 0) -> list[ModSpec]:
     """Deterministic enumeration: each module is a distinct tuple of
     primitive functions. `n` caps the run."""
     rng = random.Random(seed)
     int_names  = list(UNARY_INT)
     list_names = list(UNARY_LIST)
     bin_names  = list(BINARY)
-    out: List[ModSpec] = []
+    out: list[ModSpec] = []
     for i in range(n):
         picks_int  = rng.sample(int_names,  rng.randint(1, 3))
         picks_list = rng.sample(list_names, rng.randint(1, 3))
@@ -221,7 +222,7 @@ def batch(prefix: str = "m", n: int = 256, seed: int = 0) -> List[ModSpec]:
     return out
 
 
-def write_all(specs: List[ModSpec]) -> int:
+def write_all(specs: list[ModSpec]) -> int:
     written = 0
     for s in specs:
         emit(s)
@@ -236,7 +237,7 @@ def _self_register() -> None:
         return
 
     @register("modulefactory")
-    def _entry(*args: Any, **kwargs: Any) -> Dict[str, Any]:
+    def _entry(*args: Any, **kwargs: Any) -> dict[str, Any]:
         n = int(kwargs.get("n", 32))
         s = batch(n=n)
         return {"generated": len(s), "of": n,
@@ -247,4 +248,4 @@ def _self_register() -> None:
 
 _self_register()
 
-__all__ = ["make_module", "batch", "write_all", "emit", "ModSpec", "FnSpec"]
+__all__ = ["FnSpec", "ModSpec", "batch", "emit", "make_module", "write_all"]

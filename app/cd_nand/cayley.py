@@ -1,7 +1,9 @@
 """Cayley-Dickson doubling over an arbitrary base algebra."""
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Any
 
 
 # ── Alg: the operations on a carrier ────────────────────────────
@@ -32,26 +34,26 @@ class CD:
     level: int
     op: Alg
 
-    def __add__(self, other: "CD") -> "CD":
+    def __add__(self, other: CD) -> CD:
         return CD(self.op.add(self.hi, other.hi),
                   self.op.add(self.lo, other.lo),
                   level=self.level, op=self.op)
 
-    def __sub__(self, other: "CD") -> "CD":
+    def __sub__(self, other: CD) -> CD:
         return CD(self.op.sub(self.hi, other.hi),
                   self.op.sub(self.lo, other.lo),
                   level=self.level, op=self.op)
 
-    def __neg__(self) -> "CD":
+    def __neg__(self) -> CD:
         return CD(self.op.neg(self.hi), self.op.neg(self.lo),
                   level=self.level, op=self.op)
 
-    def conj(self) -> "CD":
+    def conj(self) -> CD:
         """(a, b)* = (a*, -b)"""
         return CD(self.op.conj(self.hi), self.op.neg(self.lo),
                   level=self.level, op=self.op)
 
-    def __mul__(self, other: "CD") -> "CD":
+    def __mul__(self, other: CD) -> CD:
         """(a, b)(c, d) = (a c - d* b,  d a + b c*)"""
         a, b = self.hi, self.lo
         c, d = other.hi, other.lo

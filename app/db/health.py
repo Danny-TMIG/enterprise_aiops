@@ -4,17 +4,18 @@ Returns a dict describing the fabric's database state. Read-only.
 Never raises — a down database is a health finding, not an exception.
 """
 from __future__ import annotations
+
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 DB = ROOT / "data" / "fabric.sqlite3"
 
 
-def db_health(path: Path | None = None) -> Dict[str, Any]:
+def db_health(path: Path | None = None) -> dict[str, Any]:
     p = Path(path) if path else DB
-    out: Dict[str, Any] = {
+    out: dict[str, Any] = {
         "path": str(p),
         "exists": p.exists(),
     }
@@ -41,4 +42,4 @@ def db_health(path: Path | None = None) -> Dict[str, Any]:
     return out
 
 
-__all__ = ["db_health", "DB"]
+__all__ = ["DB", "db_health"]

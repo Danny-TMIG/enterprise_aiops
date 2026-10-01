@@ -4,7 +4,12 @@ import argparse  # pragma: no cover
 import json  # pragma: no cover
 
 from dcs.mesh.behavior import pipeline  # pragma: no cover
-from dcs.mesh.report import family_table, law_report, ucs_diagram, verify_report  # pragma: no cover
+from dcs.mesh.report import (  # pragma: no cover
+    family_table,
+    law_report,
+    ucs_diagram,
+    verify_report,
+)
 from dcs.mesh.taxonomy import stage as get_stage  # pragma: no cover
 
 

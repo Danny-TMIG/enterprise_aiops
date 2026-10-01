@@ -1,16 +1,15 @@
 """CodeQL configuration."""
 from __future__ import annotations
+
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Tuple
 
-
-DEFAULT_QUERIES: Tuple[str, ...] = (
+DEFAULT_QUERIES: tuple[str, ...] = (
     "codeql/python-queries:codeql-suites/python-security-and-quality.qls",
 )
 
-DEFAULT_PACKS: Tuple[str, ...] = (
+DEFAULT_PACKS: tuple[str, ...] = (
     "codeql/python-queries",
 )
 
@@ -22,15 +21,15 @@ class Config:
     sarif_dir: Path
     source_root: Path
     language: str
-    queries: Tuple[str, ...]
-    packs: Tuple[str, ...]
+    queries: tuple[str, ...]
+    packs: tuple[str, ...]
     threads: int
     ram_mb: int
     codeql_home: Path
     codeql_bin: Path
     version: str
-    extra_args: Tuple[str, ...] = ()
-    env: Dict[str, str] = field(default_factory=dict)
+    extra_args: tuple[str, ...] = ()
+    env: dict[str, str] = field(default_factory=dict)
 
 
 CodeQLConfig = Config

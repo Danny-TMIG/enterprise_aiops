@@ -1,14 +1,13 @@
 """Demonstrate the octet substrate dissolving the five limits."""
 from __future__ import annotations
-import json, sys
 
-from app.octet.intake import from_any, from_text, from_json, from_bytes
-from app.octet.reduce import normalise
-from app.octet.hyper import HyperDecomposer
-from app.octet.bypass import bypass
-from app.octet.jellyfish import Bloom
+import sys
+
 from app.octet.backrooms import Backrooms, OctetEntry
-
+from app.octet.bypass import bypass
+from app.octet.hyper import HyperDecomposer
+from app.octet.intake import from_any, from_text
+from app.octet.jellyfish import Bloom
 
 FIGMA_LIKE = {
     "document": {

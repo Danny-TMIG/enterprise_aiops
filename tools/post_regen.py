@@ -1,5 +1,6 @@
 """Restore core.py + mesh.py patches that the generator omits."""
-import ast, re
+import ast
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent

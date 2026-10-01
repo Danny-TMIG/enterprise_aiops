@@ -1,8 +1,9 @@
 """Graph metrics from connectomics. Operates on MeshGraph."""
 from __future__ import annotations
+
 import collections
 from itertools import combinations
-from typing import Any, Dict
+from typing import Any
 
 try:
     import numpy as np
@@ -50,7 +51,7 @@ def laplacian(nodes, edges):
     return L, A, idx
 
 
-def fiedler(nodes, edges) -> Dict[str, Any]:
+def fiedler(nodes, edges) -> dict[str, Any]:
     if not _HAVE_NP:
         return {"available": False, "reason": "numpy missing"}
     L, _, _ = laplacian(nodes, edges)
@@ -66,7 +67,7 @@ def fiedler(nodes, edges) -> Dict[str, Any]:
     }
 
 
-def modularity(nodes, edges, attr: str = "kind") -> Dict[str, Any]:
+def modularity(nodes, edges, attr: str = "kind") -> dict[str, Any]:
     if not _HAVE_NP:
         return {"available": False, "reason": "numpy missing"}
     A, _ = adjacency(nodes, edges)
@@ -88,7 +89,7 @@ def modularity(nodes, edges, attr: str = "kind") -> Dict[str, Any]:
             "m": int(m2 // 2), "communities": len(set(comm))}
 
 
-def clustering_and_path(nodes, edges) -> Dict[str, Any]:
+def clustering_and_path(nodes, edges) -> dict[str, Any]:
     if not _HAVE_NP:
         return {"available": False, "reason": "numpy missing"}
     A, _ = adjacency(nodes, edges)

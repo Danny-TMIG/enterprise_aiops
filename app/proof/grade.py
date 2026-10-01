@@ -10,16 +10,23 @@ Six axes, each independently checked:
   6. refine_reduces_undefined   refined ≤ raw on undefined-name count
 """
 from __future__ import annotations
-import ast, builtins, json, os, subprocess, sys, tempfile, textwrap
-from pathlib import Path
-from typing import Callable, Dict, List, Tuple
+
+import ast
+import builtins
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import textwrap
+from collections.abc import Callable
 
 BUILTINS = set(dir(builtins)) | {
     "__name__", "__file__", "__doc__", "__builtins__", "__package__",
 }
 
 
-def undefined_names(source: str) -> List[str]:
+def undefined_names(source: str) -> list[str]:
     tree = ast.parse(source)
     defined = set()
     for node in ast.walk(tree):
@@ -38,9 +45,7 @@ def undefined_names(source: str) -> List[str]:
             for t in node.targets:
                 if isinstance(t, ast.Name):
                     defined.add(t.id)
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            defined.add(node.target.id)
-        elif isinstance(node, ast.For) and isinstance(node.target, ast.Name):
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) or isinstance(node, ast.For) and isinstance(node.target, ast.Name):
             defined.add(node.target.id)
         elif isinstance(node, ast.withitem) and isinstance(node.optional_vars, ast.Name):
             defined.add(node.optional_vars.id)
@@ -58,7 +63,7 @@ def undefined_names(source: str) -> List[str]:
 
 
 # ── 1. asymmetric signature ─────────────────────────────────────
-def axis_signature() -> Tuple[bool, str]:
+def axis_signature() -> tuple[bool, str]:
     try:
         from cryptography.hazmat.primitives.asymmetric.ed25519 import (
             Ed25519PrivateKey,
@@ -95,7 +100,7 @@ VERIFIER = textwrap.dedent('''
 ''').strip()
 
 
-def axis_independent_verification() -> Tuple[bool, str]:
+def axis_independent_verification() -> tuple[bool, str]:
     try:
         from cryptography.hazmat.primitives.asymmetric.ed25519 import (
             Ed25519PrivateKey,
@@ -125,10 +130,10 @@ def axis_independent_verification() -> Tuple[bool, str]:
 
 
 # ── 3+6. refine quality ─────────────────────────────────────────
-def _run_pipeline() -> Tuple[str, str]:
+def _run_pipeline() -> tuple[str, str]:
+    from app.origami.dispatch import dispatch, refine
     from app.origami.library import get as get_grammar
     from app.origami.swarm import Swarm
-    from app.origami.dispatch import dispatch, refine
     g = get_grammar("code_artifact")
     s = Swarm(n_workers=1)
     r = dispatch(g, s, seed=3, max_depth=6, max_tokens=48)
@@ -137,16 +142,16 @@ def _run_pipeline() -> Tuple[str, str]:
     return raw, refined
 
 
-_CACHE: Dict[str, Tuple[str, str]] = {}
+_CACHE: dict[str, tuple[str, str]] = {}
 
 
-def _pipeline() -> Tuple[str, str]:
+def _pipeline() -> tuple[str, str]:
     if "v" not in _CACHE:
         _CACHE["v"] = _run_pipeline()
     return _CACHE["v"]
 
 
-def axis_refined_has_no_undefined() -> Tuple[bool, str]:
+def axis_refined_has_no_undefined() -> tuple[bool, str]:
     try:
         _, refined = _pipeline()
         und = undefined_names(refined)
@@ -155,7 +160,7 @@ def axis_refined_has_no_undefined() -> Tuple[bool, str]:
         return False, f"{type(e).__name__}: {e}"
 
 
-def axis_refine_reduces_undefined() -> Tuple[bool, str]:
+def axis_refine_reduces_undefined() -> tuple[bool, str]:
     try:
         raw, refined = _pipeline()
         a = len(undefined_names(raw))
@@ -166,9 +171,9 @@ def axis_refine_reduces_undefined() -> Tuple[bool, str]:
 
 
 # ── 4. determinism ──────────────────────────────────────────────
-def axis_grammar_is_deterministic() -> Tuple[bool, str]:
-    from app.origami.library import get as get_grammar
+def axis_grammar_is_deterministic() -> tuple[bool, str]:
     from app.origami.grammar import expand
+    from app.origami.library import get as get_grammar
     g = get_grammar("code_artifact")
     for seed in range(100):
         a = expand(g, max_depth=6, seed=seed)["terminals"]
@@ -179,9 +184,9 @@ def axis_grammar_is_deterministic() -> Tuple[bool, str]:
 
 
 # ── 5. graceful failure ─────────────────────────────────────────
-def axis_failures_are_graceful() -> Tuple[bool, str]:
-    from app.origami.grammar import expand, WeightedGrammar
+def axis_failures_are_graceful() -> tuple[bool, str]:
     from app.origami.dispatch import clean_payload
+    from app.origami.grammar import WeightedGrammar, expand
 
     checks = []
     # empty grammar
@@ -209,7 +214,7 @@ def axis_failures_are_graceful() -> Tuple[bool, str]:
     return ok, "; ".join(f"{k}={v}" for k, v in checks)
 
 
-AXES: List[Tuple[str, Callable[[], Tuple[bool, str]]]] = [
+AXES: list[tuple[str, Callable[[], tuple[bool, str]]]] = [
     ("signature_is_asymmetric", axis_signature),
     ("independent_verification", axis_independent_verification),
     ("refined_has_no_undefined", axis_refined_has_no_undefined),

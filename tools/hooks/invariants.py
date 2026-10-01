@@ -1,5 +1,7 @@
 """Assertions that must hold for core.py and mesh.py to be correct."""
-import ast, importlib, sys
+import ast
+import importlib
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent

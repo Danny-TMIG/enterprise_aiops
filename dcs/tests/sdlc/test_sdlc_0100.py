@@ -1,6 +1,7 @@
 """Derived from IEEE 29119 / IEEE: Part 1 Concepts."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

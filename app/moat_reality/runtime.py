@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 def score_subsystem(name: str, path: Path | str | None = None, content: str | None = None, *args, **kwargs) -> float:
     base_score = 1.0
     if content and len(content) > 0:

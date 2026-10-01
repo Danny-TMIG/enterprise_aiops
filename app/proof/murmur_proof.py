@@ -9,9 +9,10 @@ where bits are:
     effect_ok / recentered / aligned / verdict_ok / stable / capped
 """
 from __future__ import annotations
-import sys
-from app.murmur.flock import Flock
 
+import sys
+
+from app.murmur.flock import Flock
 
 TICKS = 60
 N = 8

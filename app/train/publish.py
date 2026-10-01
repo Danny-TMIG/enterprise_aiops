@@ -2,12 +2,12 @@
 fold every hop into a DD reference, and return a single bundle.
 """
 from __future__ import annotations
-import hashlib, json
-from dataclasses import dataclass, field
-from typing import Any, Dict, List
+
+import hashlib
+from dataclasses import dataclass
 
 from app.ddlong.chain import DDChain
-from app.ddlong.hop import hop_encode, hop_decode
+from app.ddlong.hop import hop_decode, hop_encode
 from app.train.core import Run
 
 

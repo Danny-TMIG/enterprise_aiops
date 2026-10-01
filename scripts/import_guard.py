@@ -1,4 +1,5 @@
-import sys, importlib
+import importlib
+import sys
 
 PROTECTED_MODULES = ["numpy", "fastapi", "uvicorn", "pydantic", "networkx", "redis", "mlx"]
 

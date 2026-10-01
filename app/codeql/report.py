@@ -1,10 +1,11 @@
 """SARIF parser + markdown renderer."""
 from __future__ import annotations
+
 import json
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -35,20 +36,20 @@ class Finding:
 
 @dataclass
 class Report:
-    findings: List[Finding] = field(default_factory=list)
+    findings: list[Finding] = field(default_factory=list)
     tool: str = "CodeQL"
     version: str = ""
-    raw: Dict[str, Any] = field(default_factory=dict)
+    raw: dict[str, Any] = field(default_factory=dict)
 
     @property
     def total(self) -> int:
         return len(self.findings)
 
-    def by_severity(self) -> Dict[str, int]:
+    def by_severity(self) -> dict[str, int]:
         c = Counter(f.severity for f in self.findings)
         return dict(c)
 
-    def by_rule(self) -> Dict[str, int]:
+    def by_rule(self) -> dict[str, int]:
         c = Counter(f.rule_id for f in self.findings)
         return dict(c)
 
@@ -105,7 +106,7 @@ def parse_sarif(path: Path) -> Report:
     return report
 
 
-def summarize(report: Report) -> Dict[str, Any]:
+def summarize(report: Report) -> dict[str, Any]:
     return {
         "tool": report.tool,
         "version": report.version,
@@ -117,7 +118,7 @@ def summarize(report: Report) -> Dict[str, Any]:
 
 
 def render_markdown(report: Report) -> str:
-    lines: List[str] = []
+    lines: list[str] = []
     lines.append(f"# CodeQL report — {report.tool} {report.version}")
     lines.append("")
     lines.append(f"Total findings: **{report.total}**")

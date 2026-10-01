@@ -14,7 +14,13 @@ Every fixer is idempotent and reversible: it writes a .bak.<ts> before
 touching a file, and refuses to re-apply the same patch twice.
 """
 from __future__ import annotations
-import argparse, re, subprocess, sys, time, shutil
+
+import argparse
+import re
+import shutil
+import subprocess
+import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -84,7 +90,7 @@ def fix_cannot_import(f):
     if key in APPLIED:
         return False
     src = p.read_text()
-    if re.search(rf"^\s*(class|def)\s+{re.escape(name)}\b", src, re.M):
+    if re.search(rf"^\s*(class|def)\s+{re.escape(name)}\b", src, re.MULTILINE):
         return False
     stub = {
         "OrigamiGrammar": '\n\nclass OrigamiGrammar:\n    def __init__(self, *a, **k):\n        self.start = k.get("start", "Start")\n        self.name = k.get("name", "origami")\n\n    def fold(self, shape: str) -> str:\n        return f"folded:{shape}"\n',
@@ -119,7 +125,7 @@ def fix_missing_attr_stats(f):
     if key in APPLIED:
         return False
     src = p.read_text()
-    if re.search(r"^\s*def stats\b", src, re.M):
+    if re.search(r"^\s*def stats\b", src, re.MULTILINE):
         return False
     src = src.rstrip() + '''
 
@@ -151,7 +157,7 @@ def fix_missing_kwarg(f):
     hits = list((ROOT / "app").rglob("*.py"))
     for p in hits:
         src = p.read_text()
-        pat = re.compile(rf"^def {re.escape(fn)}\(([^)]*)\):", re.M)
+        pat = re.compile(rf"^def {re.escape(fn)}\(([^)]*)\):", re.MULTILINE)
         mm = pat.search(src)
         if not mm:
             continue
@@ -179,7 +185,7 @@ def fix_positional_arity(f):
     fn = nm.group(1)
     for p in (ROOT / "app").rglob("*.py"):
         src = p.read_text()
-        pat = re.compile(rf"^def {re.escape(fn)}\(([^)]*)\):", re.M)
+        pat = re.compile(rf"^def {re.escape(fn)}\(([^)]*)\):", re.MULTILINE)
         mm = pat.search(src)
         if not mm:
             continue

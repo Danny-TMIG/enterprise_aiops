@@ -1,10 +1,9 @@
 """Proposer — ask the local model for a patch."""
 from __future__ import annotations
+
 import json
-from typing import Any, Dict, List
 
 from app.meta.observer import Observation
-
 
 _SYSTEM = (
     "You are a senior Python engineer. You receive a failing "

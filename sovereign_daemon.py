@@ -1,12 +1,9 @@
-import os
-import sys
-import mmap
-import struct
 import hashlib
-import time
-import logging
 import json
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import logging
+import struct
+import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from multiprocessing import shared_memory
 
 logging.basicConfig(level=logging.INFO, format="[SOVEREIGN KERNEL] %(asctime)s [%(levelname)s] %(message)s")

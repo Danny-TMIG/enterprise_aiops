@@ -6,12 +6,13 @@ parallel threads.  Model weights are shared — only the KV cache
 and prompt differ per worker.
 """
 from __future__ import annotations
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from app.dispatch.models.local_mlx import LocalMLXProvider, _mlx_available
 from app.dispatch.models.base import ModelRequest
+from app.dispatch.models.local_mlx import LocalMLXProvider, _mlx_available
 
 
 @dataclass
@@ -21,9 +22,9 @@ class WorkerResult:
     dry_run: bool
     provider: str
     model: str
-    usage: Dict[str, int] = field(default_factory=dict)
+    usage: dict[str, int] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"index": self.index, "text": self.text,
                 "dry_run": self.dry_run, "provider": self.provider,
                 "model": self.model, "usage": self.usage}
@@ -31,12 +32,12 @@ class WorkerResult:
 
 @dataclass
 class SwarmResult:
-    workers: List[WorkerResult]
+    workers: list[WorkerResult]
     stitched: str
     n_workers: int
     dry_run_all: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"n_workers": self.n_workers,
                 "dry_run_all": self.dry_run_all,
                 "workers": [w.to_dict() for w in self.workers],
@@ -46,17 +47,17 @@ class SwarmResult:
 class Swarm:
     """N local workers.  Shared weights, per-worker prompts."""
 
-    def __init__(self, n_workers: int = 4, model_id: Optional[str] = None):
+    def __init__(self, n_workers: int = 4, model_id: str | None = None):
         self.n = n_workers
         self.model_id = model_id
-        self._workers: List[LocalMLXProvider] = []
+        self._workers: list[LocalMLXProvider] = []
         for i in range(n_workers):
             p = LocalMLXProvider(f"swarm-{i}", model_id=model_id)
             self._workers.append(p)
 
     # ── single-shot ────────────────────────────────────────────
     def run_one(self, index: int, prompt: str,
-                system: Optional[str] = None,
+                system: str | None = None,
                 max_tokens: int = 256,
                 temperature: float = 0.0) -> WorkerResult:
         if not self.available():
@@ -81,13 +82,13 @@ class Swarm:
         )
 
     # ── parallel fan-out ──────────────────────────────────────
-    def fan(self, prompts: List[str],
-            system: Optional[str] = None,
+    def fan(self, prompts: list[str],
+            system: str | None = None,
             max_tokens: int = 256,
             temperature: float = 0.0,
-            workers: Optional[int] = None) -> SwarmResult:
+            workers: int | None = None) -> SwarmResult:
         workers = workers or self.n
-        results: List[WorkerResult] = []
+        results: list[WorkerResult] = []
         with ThreadPoolExecutor(max_workers=workers) as pool:
             futures = {
                 pool.submit(self.run_one, i, p, system,
@@ -106,7 +107,7 @@ class Swarm:
     # ── double-double long context ────────────────────────────
     def run_double_double(self, text: str, instruction: str,
                           max_tokens: int = 256) -> SwarmResult:
-        from app.origami.context import shard, DoubleDouble
+        from app.origami.context import DoubleDouble, shard
         parts = [s.text for s in shard(text, n=4)]
         dd = DoubleDouble(parts=parts)
 

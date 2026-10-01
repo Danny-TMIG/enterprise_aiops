@@ -1,6 +1,7 @@
 """Derived from ISO/IEC 42001 / AI: 7 Support."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

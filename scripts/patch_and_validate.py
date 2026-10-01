@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import sys
+
 import subprocess
+import sys
 from pathlib import Path
+
 
 def main() -> None:
     print("=== [Enterprise AIOps] Patching & Validation ===")
@@ -23,8 +25,6 @@ def main() -> None:
 
     print("\n[1/3] Verifying core Python imports...")
     try:
-        import fastapi
-        import uvicorn
         from app.mesh import get_mesh
         print("  -> Core packages & mesh module verified successfully.")
     except Exception as e:

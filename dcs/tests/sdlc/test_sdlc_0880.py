@@ -1,6 +1,7 @@
 """Derived from SWIFT CSCF / FinTech: 1-8 Controls."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

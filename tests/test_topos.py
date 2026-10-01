@@ -1,4 +1,5 @@
-from app.topos import Object, Morphism, Category
+from app.topos import Morphism, Object
+
 
 def test_category_objects():
     obj_a = Object(name="A")

@@ -1,14 +1,15 @@
 """Reporting utilities for CodeQL results."""
 
-from pathlib import Path
-from typing import Dict, Any
 import json
+from pathlib import Path
+from typing import Any
+
 
 class CodeQLReporter:
     def __init__(self, results_path: Path):
         self.results_path = results_path
 
-    def generate_summary(self) -> Dict[str, Any]:
+    def generate_summary(self) -> dict[str, Any]:
         if not self.results_path.exists():
             return {"status": "no_results", "total_issues": 0}
 

@@ -6,8 +6,9 @@ hash. No canonicalization of the input is required, because the
 normal form is already canonical.
 """
 from __future__ import annotations
+
 import hashlib
-from typing import Any, Dict
+from typing import Any
 
 from app.combinator.graph import Graph
 from app.combinator.reduce import normalise
@@ -20,7 +21,7 @@ def hash_graph(g: Graph) -> str:
 
 def normal_form_id(g: Graph,
                    max_steps: int = 10_000
-                   ) -> Dict[str, Any]:
+                   ) -> dict[str, Any]:
     ng, n, terminated = normalise(g.copy(), max_steps=max_steps)
     return {
         "normal_form_hash": hash_graph(ng),

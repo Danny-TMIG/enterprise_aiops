@@ -14,18 +14,20 @@ We provide:
     be dropped in with the same six rules.
 """
 from __future__ import annotations
-import json, tempfile
+
+import json
+import tempfile
 from pathlib import Path
-from typing import Protocol, Tuple
+from typing import Protocol
 
 from app.combinator.graph import Graph
-from app.combinator.reduce import step, normalise
+from app.combinator.reduce import normalise, step
 
 
 class Substrate(Protocol):
     name: str
     def normalise(self, g: Graph,
-                  max_steps: int = 10_000) -> Tuple[Graph, int, bool]:
+                  max_steps: int = 10_000) -> tuple[Graph, int, bool]:
         ...
 
 

@@ -1,6 +1,8 @@
 """Claim 3: HMAC-with-default-key is not a signature chain."""
 from __future__ import annotations
-import inspect, sys
+
+import inspect
+import sys
 
 
 def check_asymmetric() -> tuple:

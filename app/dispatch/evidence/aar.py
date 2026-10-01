@@ -1,6 +1,8 @@
 from __future__ import annotations
-from typing import Any, Dict
-from app.dispatch.evidence.base import EvidenceStore, EvidenceRecord
+
+from typing import Any
+
+from app.dispatch.evidence.base import EvidenceRecord, EvidenceStore
 
 
 class AARStore(EvidenceStore):
@@ -11,15 +13,15 @@ class AARStore(EvidenceStore):
     """
     name = "aar-alc"
     def __init__(self) -> None:
-        self._log: Dict[str, Dict[str, Any]] = {}
+        self._log: dict[str, dict[str, Any]] = {}
 
-    def _record(self, r: EvidenceRecord) -> Dict[str, Any]:
+    def _record(self, r: EvidenceRecord) -> dict[str, Any]:
         lesson = self._distill(r)
         self._log[r.id] = {**r.to_dict(), "lesson": lesson}
         return {"store": self.name, "status": "PASS",
                 "id": r.id, "lesson": lesson}
 
-    def _distill(self, r: EvidenceRecord) -> Dict[str, Any]:
+    def _distill(self, r: EvidenceRecord) -> dict[str, Any]:
         p = r.payload or {}
         outcome = p.get("status") or p.get("outcome") or "UNKNOWN"
         return {

@@ -1,6 +1,7 @@
 """The shape is verifiable: three adjunctions, one meta-anchor."""
 from __future__ import annotations
 
+
 def test_three_adjunctions():
     from app.shape import ADJUNCTIONS
     assert len(ADJUNCTIONS) == 3

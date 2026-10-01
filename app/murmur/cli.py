@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import argparse
 import json
 import sys
 
+from app.murmur.connectors import by_category, list_tools
 from app.murmur.flock import Flock
-from app.murmur.connectors import list_tools, by_category
 
 
 def main(argv=None) -> int:

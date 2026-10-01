@@ -1,6 +1,7 @@
 """Derived from ISO 15408 / ISO: ST."""
 import json
 from pathlib import Path
+
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

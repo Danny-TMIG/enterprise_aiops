@@ -1,4 +1,5 @@
 import pytest
+
 from app.botnetmastery.c2 import C2Server
 from app.botnetmastery.models import Bot, Task
 from app.botnetmastery.simulation import Simulation

@@ -22,9 +22,13 @@ Ledger:
     that can disagree with what was actually run.
 """
 from __future__ import annotations
-import re, threading, time
-from dataclasses import dataclass, field, asdict
-from typing import Any, Callable, Dict, List, Optional
+
+import re
+import threading
+import time
+from collections.abc import Callable
+from dataclasses import asdict, dataclass, field
+from typing import Any
 
 from app.core import autoreg
 from app.core.ram_substrate import RAMSubstrate
@@ -40,7 +44,7 @@ class Hat:
     covers: str              # regex against capability code or category
     description: str = ""
 
-    def matches(self, cap_code: str, cap: Dict[str, Any]) -> bool:
+    def matches(self, cap_code: str, cap: dict[str, Any]) -> bool:
         hay = f"{cap_code} {cap.get('category','')} {cap.get('home','')}"
         try:
             return bool(re.search(self.covers, hay))
@@ -56,7 +60,7 @@ class Skill:
     home: str
     probe: Callable[[], tuple]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"code": self.code, "hat": self.hat_code,
                 "category": self.category, "home": self.home}
 
@@ -70,13 +74,13 @@ class Attestation:
     evidence_seq: int = 0
     when: float = field(default_factory=time.time)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
 # ── registries ──────────────────────────────────────────────────
-HATS: Dict[str, Hat] = {}
-_SKILL_PROBES: Dict[str, Callable[[], tuple]] = {}
+HATS: dict[str, Hat] = {}
+_SKILL_PROBES: dict[str, Callable[[], tuple]] = {}
 
 
 # ── decorators ──────────────────────────────────────────────────
@@ -157,7 +161,7 @@ for _row in HAT_TABLE:
 
 
 # ── default probe for a capability ──────────────────────────────
-def _default_probe(cap_code: str, cap: Dict[str, Any]) -> Callable[[], tuple]:
+def _default_probe(cap_code: str, cap: dict[str, Any]) -> Callable[[], tuple]:
     def probe() -> tuple:
         try:
             from app.core.capabilities import dispatch
@@ -172,12 +176,12 @@ def _default_probe(cap_code: str, cap: Dict[str, Any]) -> Callable[[], tuple]:
 
 
 # ── discovery: map every capability to every matching hat ───────
-def discover_skills() -> Dict[str, List[Skill]]:
+def discover_skills() -> dict[str, list[Skill]]:
     """Walk autoreg.CAPABILITIES; for each, all hats whose regex matches."""
     with _LOCK:
         caps = dict(autoreg.CAPABILITIES)
         hats = dict(HATS)
-    by_hat: Dict[str, List[Skill]] = {code: [] for code in hats}
+    by_hat: dict[str, list[Skill]] = {code: [] for code in hats}
     for cap_code, cap in caps.items():
         probe = _SKILL_PROBES.get(cap_code) or _default_probe(cap_code, cap)
         for hat_code, h in hats.items():
@@ -192,7 +196,7 @@ def discover_skills() -> Dict[str, List[Skill]]:
 
 
 # ── attest: probe one skill, write ledger ──────────────────────
-_SUB: Optional[RAMSubstrate] = None
+_SUB: RAMSubstrate | None = None
 
 
 def _sub() -> RAMSubstrate:
@@ -224,25 +228,25 @@ class HatReport:
     hat_code: str
     skills: int
     mastered: int
-    unmastered: List[str] = field(default_factory=list)
-    missing: List[str] = field(default_factory=list)
+    unmastered: list[str] = field(default_factory=list)
+    missing: list[str] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
         return self.skills > 0 and self.mastered == self.skills
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"hat": self.hat_code, "skills": self.skills,
                 "mastered": self.mastered, "ok": self.ok,
                 "unmastered": self.unmastered[:8],
                 "missing": self.missing}
 
 
-def master_autonomous(*, hats: Optional[List[str]] = None) -> Dict[str, HatReport]:
+def master_autonomous(*, hats: list[str] | None = None) -> dict[str, HatReport]:
     """Run every skill probe under every hat. Report mastery."""
     skills_by_hat = discover_skills()
     want = set(hats) if hats else set(skills_by_hat)
-    report: Dict[str, HatReport] = {}
+    report: dict[str, HatReport] = {}
     for hat_code in sorted(want):
         skills = skills_by_hat.get(hat_code, [])
         if not skills:
@@ -251,7 +255,7 @@ def master_autonomous(*, hats: Optional[List[str]] = None) -> Dict[str, HatRepor
                                          missing=["no capabilities matched"])
             continue
         ok_n = 0
-        bad: List[str] = []
+        bad: list[str] = []
         for s in skills:
             a = attest(s)
             if a.ok:
@@ -265,9 +269,9 @@ def master_autonomous(*, hats: Optional[List[str]] = None) -> Dict[str, HatRepor
 
 
 # ── atlas: the full map ────────────────────────────────────────
-def atlas() -> Dict[str, Any]:
+def atlas() -> dict[str, Any]:
     skills_by_hat = discover_skills()
-    out: Dict[str, Any] = {"hats": {}, "counts": {}}
+    out: dict[str, Any] = {"hats": {}, "counts": {}}
     for hat_code, h in HATS.items():
         skills = skills_by_hat.get(hat_code, [])
         out["hats"][hat_code] = {
@@ -312,7 +316,15 @@ def _self_register() -> None:
 _self_register()
 
 __all__ = [
-    "Hat", "Skill", "Attestation", "HatReport",
-    "HATS", "hat", "skill", "attest",
-    "discover_skills", "master_autonomous", "atlas",
+    "HATS",
+    "Attestation",
+    "Hat",
+    "HatReport",
+    "Skill",
+    "atlas",
+    "attest",
+    "discover_skills",
+    "hat",
+    "master_autonomous",
+    "skill",
 ]

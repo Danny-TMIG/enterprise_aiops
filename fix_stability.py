@@ -1,5 +1,5 @@
-from pathlib import Path
 import re
+from pathlib import Path
 
 path = Path("scripts/stability.py")
 code = path.read_text()

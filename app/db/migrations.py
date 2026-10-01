@@ -5,19 +5,20 @@ exposes the same operation as a callable so init_db.py and other
 bootstrap paths can run it without shelling out.
 """
 from __future__ import annotations
+
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 DB = ROOT / "data" / "fabric.sqlite3"
 
 
-def run_migrations(path: Path | None = None) -> Dict[str, Any]:
+def run_migrations(path: Path | None = None) -> dict[str, Any]:
     """Apply the base schema. Idempotent. Returns a report dict."""
     p = Path(path) if path else DB
     p.parent.mkdir(parents=True, exist_ok=True)
-    report: Dict[str, Any] = {"path": str(p), "applied": 0, "skipped": 0}
+    report: dict[str, Any] = {"path": str(p), "applied": 0, "skipped": 0}
     try:
         from app.core.schema import ddl
     except Exception as e:
@@ -37,4 +38,4 @@ def run_migrations(path: Path | None = None) -> Dict[str, Any]:
     return report
 
 
-__all__ = ["run_migrations", "DB"]
+__all__ = ["DB", "run_migrations"]

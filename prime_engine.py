@@ -1,10 +1,11 @@
+import hashlib
+import logging
 import mmap
 import os
 import struct
-import hashlib
 import time
-import logging
-from typing import Generator, Dict, Any
+from collections.abc import Generator
+from typing import Any
 
 logging.basicConfig(level=logging.INFO, format="[+] %(asctime)s [%(levelname)s] %(message)s")
 
@@ -33,7 +34,7 @@ class RollingPrimeSubstrateEngine:
         int_val = int.from_bytes(key_hash[:8], byteorder='big')
         return int_val % self.prime_capacity
 
-    def commit_rolling_state(self, state_hash: str, floating_weight: float) -> Dict[str, Any]:
+    def commit_rolling_state(self, state_hash: str, floating_weight: float) -> dict[str, Any]:
         hash_bytes = bytes.fromhex(state_hash)
         slot_index = self._prime_modulo_address(hash_bytes)
         offset = self.header_size + (slot_index * self.slot_footprint)
@@ -56,7 +57,7 @@ class RollingPrimeSubstrateEngine:
             "floating_weight": floating_weight
         }
 
-    def stream_rolling_window(self, window_size: int = 17) -> Generator[Dict[str, Any], None, None]:
+    def stream_rolling_window(self, window_size: int = 17) -> Generator[dict[str, Any], None, None]:
         with open(self.path, "r+b") as f:
             with mmap.mmap(f.fileno(), self.total_size) as mm:
                 for i in range(window_size):

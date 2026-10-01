@@ -4,9 +4,9 @@ The generator emits a version that does `p['kind']` etc, which crashes
 because pollinate() returns {stream, change, a, b, delta}. This replaces
 just that loop with a defensive version. Idempotent.
 """
+import ast
 import re
 from pathlib import Path
-import ast
 
 p = Path("app/train/cli.py")
 src = p.read_text()

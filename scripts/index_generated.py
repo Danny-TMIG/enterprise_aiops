@@ -5,7 +5,9 @@ home is the actual .py file path, not the dotted module name.
 Only names DEFINED in the module (fn.__module__ == mod_name) are indexed,
 so `from typing import Any` does not leak in as a callable.
 """
-import importlib, sqlite3, sys
+import importlib
+import sqlite3
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
