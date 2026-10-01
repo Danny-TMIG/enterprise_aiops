@@ -35,3 +35,21 @@ class SDLCEngine:
             self.load()
         self.validate()
         return [req["id"] for req in self.data["requirements"]]
+
+    def by_body(self):
+        if self.data is None:
+            self.load()
+        out = {}
+        for req in self.data["requirements"]:
+            body = req["identity"]["body"]
+            out.setdefault(body, []).append(req["id"])
+        return out
+
+    def by_category(self):
+        if self.data is None:
+            self.load()
+        out = {}
+        for req in self.data["requirements"]:
+            cat = req["category"]
+            out.setdefault(cat, []).append(req["id"])
+        return out
