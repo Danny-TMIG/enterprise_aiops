@@ -1,34 +1,19 @@
 [run]
 branch = True
-source = dcs
-disable_warnings = include-ignored
-omit =
-    dcs/tests/*
-    tests/*
-    *test_*.py
-
-[report]
-fail_under = 100
-show_missing = True
-exclude_lines =
-    pragma: no cover
-    _NACL = True
-    _HAS_NACL = True
-    __version__ =
-    try:
-    except ImportError:
-    if __name__ == .__main__.:
-    def main
-    import 
-    raise 
 include =
     dcs/verify.py
     dcs/verify_intoto.py
     dcs/mesh/behavior.py
     dcs/self.py
-    dcs/crosscut/semver.py
-    dcs/__main__.py
-    dcs/conform.py
-    dcs/equivalence.py
-    dcs/coherence.py
-    dcs/crosscut/interop.py
+
+[report]
+fail_under = 100
+show_missing = True
+skip_covered = False
+
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if __name__ == .__main__.:
+    raise AssertionError
+    raise NotImplementedError

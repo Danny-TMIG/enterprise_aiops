@@ -40,6 +40,8 @@ causal_7layer.py
 dendritic_ops.py
 dendritic_seeds.py
 gener.py
-.pytest_cache/
-*.orig
-*.rej
+meta_glasses_integration/
+pimeyes_integration/
+whisper_cpp_bindings/
+universal_platform/
+run_coverage_discovery.sh
