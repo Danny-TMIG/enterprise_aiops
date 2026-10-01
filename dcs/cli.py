@@ -206,6 +206,16 @@ def cmd_apop(args):  # pragma: no cover
 # ══════════════════════════════════════════════════════════════════
 # dcs license — issue / verify / show
 # ══════════════════════════════════════════════════════════════════
+def cmd_qualify(args):  # pragma: no cover
+    from dcs.qualify_evidence import main as _q
+    return _q(args.profile)
+
+
+def cmd_verify(args):  # pragma: no cover
+    from dcs.verify_evidence import main as _v
+    return _v(args.record)
+
+
 def _reconstruct_cert(raw):  # pragma: no cover
     from dcs.certify import Certification, NonClaims, Scope  # pragma: no cover
     raw["scope"] = Scope(**raw["scope"])
@@ -315,6 +325,14 @@ def cmd_license(args):  # pragma: no cover
 
 
 def main(argv=None):  # pragma: no cover
+    import sys as _s  # _argv_preamble
+    _a = list(_s.argv[1:] if argv is None else argv)
+    if _a and _a[0] == "qualify":
+        from dcs.qualify_evidence import main as _q
+        return _q(*_a[1:])
+    if _a and _a[0] == "verify":
+        from dcs.verify_evidence import main as _v
+        return _v(*_a[1:])
     p = argparse.ArgumentParser(prog="dcs")
     sub = p.add_subparsers(dest="cmd", required=True)
 
@@ -355,5 +373,11 @@ def main(argv=None):  # pragma: no cover
     return args.fn(args)  # pragma: no cover
 
 
+    q = sub.add_parser("qualify", help="run a qualification profile")
+    q.add_argument("profile", nargs="?", default="evidence_capture")
+    q.set_defaults(func=cmd_qualify)
+    v = sub.add_parser("verify", help="re-execute a stored evidence record")
+    v.add_argument("record", nargs="?", default="evidence_capture.json")
+    v.set_defaults(func=cmd_verify)
 if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())  # pragma: no cover
