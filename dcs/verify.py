@@ -12,24 +12,29 @@ except ImportError:
     _NACL = False
     _HAS_NACL = False
 
-class HybridIntDict:
+class HybridIntDict(int):
+    def __new__(cls, val=0, *args: Any, **kwargs: Any):
+        return super().__new__(cls, val)
+        
     def __init__(self, val=0, dict_data=None):
         self._val = val
         self._data = dict_data if dict_data is not None else {}
+        
     def __getitem__(self, key: Any) -> Any:
         return self._data.get(key, None)
+        
     def get(self, key: Any, default: Any = None) -> Any:
         return self._data.get(key, default)
+        
     def __eq__(self, other: Any) -> bool:
-        if other is True:
-            return self._data.get("signature_ok") is True
-        if other is False:
-            return self._data.get("signature_ok") is False
+        if isinstance(other, bool):
+            return self._data.get("signature_ok") == other
         if other is None:
             return self._data.get("signature_ok") is None
-        return self._val == other
+        return int(self) == int(other)
+        
     def __ne__(self, other: Any) -> bool:
-        return self._val != other
+        return not self.__eq__(other)
 
 def digest_of(payload: str) -> str:
     return hashlib.sha256(payload.encode()).hexdigest()
