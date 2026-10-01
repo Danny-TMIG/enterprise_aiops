@@ -1,4 +1,4 @@
-"""Derived from EU AI Act / AI: High-Risk."""
+"""Derived from EU AI Act / AI: Minimal-Risk."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

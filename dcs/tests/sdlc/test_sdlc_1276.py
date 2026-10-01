@@ -1,4 +1,4 @@
-"""Derived from AWS Well-Architected / Cloud: Clause 1."""
+"""Derived from AWS Well-Architected / Cloud: Clause 3."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

@@ -1,4 +1,4 @@
-"""Derived from NIST SP 800-218 SSDF / NIST: PS Protect."""
+"""Derived from NIST SP 800-218 SSDF / NIST: RV Respond."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

@@ -1,4 +1,4 @@
-"""Derived from SOC 2 Type II / Audit: Clause 1."""
+"""Derived from SOC 2 Type II / Audit: Clause 3."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

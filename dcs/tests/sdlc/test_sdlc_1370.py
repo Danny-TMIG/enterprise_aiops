@@ -1,4 +1,4 @@
-"""Derived from IEEE 828 / IEEE: Clause 1."""
+"""Derived from IEEE 828 / IEEE: Clause 3."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

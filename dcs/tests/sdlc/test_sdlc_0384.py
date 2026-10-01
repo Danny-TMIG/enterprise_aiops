@@ -1,4 +1,4 @@
-"""Derived from Protection Profile / CC: Clause 2."""
+"""Derived from Protection Profile / CC: Clause 1."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

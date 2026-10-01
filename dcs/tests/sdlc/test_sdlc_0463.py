@@ -1,4 +1,4 @@
-"""Derived from Common Criteria ISO 15408 / CC: Clause 3."""
+"""Derived from Common Criteria ISO 15408 / CC: Clause 2."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

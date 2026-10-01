@@ -1,4 +1,4 @@
-"""Derived from SWIFT CSCF / FinTech: Clause 1."""
+"""Derived from SWIFT CSCF / FinTech: Clause 2."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

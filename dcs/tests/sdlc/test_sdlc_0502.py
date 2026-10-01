@@ -1,4 +1,4 @@
-"""Derived from NIST SP 800-160 / NIST: Clause 4."""
+"""Derived from NIST SP 800-160 / NIST: Clause 3."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

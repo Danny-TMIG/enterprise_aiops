@@ -1,4 +1,4 @@
-"""Derived from IEEE 1012 / IEEE: 7 V&V Activities."""
+"""Derived from IEEE 1012 / IEEE: 5 V&V Concepts."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

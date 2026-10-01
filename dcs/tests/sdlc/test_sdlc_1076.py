@@ -1,4 +1,4 @@
-"""Derived from PMBOK 7 / PMI: Clause 2."""
+"""Derived from PMBOK 7 / PMI: Clause 4."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

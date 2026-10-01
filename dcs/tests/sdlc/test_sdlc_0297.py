@@ -1,4 +1,4 @@
-"""Derived from PCI DSS 4.0 / Privacy: 1 Network."""
+"""Derived from PCI DSS 4.0 / Privacy: 11 Testing."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

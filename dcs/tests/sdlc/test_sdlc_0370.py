@@ -1,4 +1,4 @@
-"""Derived from DO-254 / RTCA: Clause 4."""
+"""Derived from DO-254 / RTCA: Clause 1."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")

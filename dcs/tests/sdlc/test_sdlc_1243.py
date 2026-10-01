@@ -1,4 +1,4 @@
-"""Derived from IEC 62304 / IEC: Clause 2."""
+"""Derived from IEC 62304 / IEC: Clause 1."""
 import json
 from pathlib import Path
 M = Path("dcs/standards/sdlc.json")
