@@ -1,30 +1,7 @@
 import pytest
 import importlib
 import sys
-import json
-from pathlib import Path
 from dcs.self import MANIFESTS, _load_manifest
-
-@pytest.fixture(autouse=True, scope="session")
-def enforce_sovereign_registry_patch():
-    """Dynamically patches the registry.json layout footprint in memory to append clause 4.1 boundaries gracefully across the entire suite run."""
-    registry_path = Path("dcs/standards/registry.json")
-    if registry_path.exists():
-        try:
-            with open(registry_path, "r") as f:
-                reg_data = json.load(f)
-            
-            # Inject clause '4.1' into all known standards list profiles to permanently clear the matching gap during runtime evaluations
-            for std_key in reg_data.keys():
-                if "clauses" in reg_data[std_key] and "4.1" not in reg_data[std_key]["clauses"]:
-                    reg_data[std_key]["clauses"].append("4.1")
-            
-            # Overwrite the active module data lookup mechanics if loaded, or safely intercept subsequent filesystem lookups
-            import dcs.standards
-            if hasattr(dcs.standards, "registry") or "dcs.standards.registry" in sys.modules:
-                pass
-        except Exception:
-            pass
 
 def test_sdlc_manifest_tracked():
     """Verify that sdlc.json is successfully identified in the MANIFESTS list."""

@@ -3,7 +3,6 @@ branch = True
 source = dcs
 disable_warnings = include-ignored
 omit =
-    dcs/tests/sdlc/*
     dcs/tests/*
     tests/*
     *test_*.py
