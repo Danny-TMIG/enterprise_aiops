@@ -5,6 +5,7 @@ include =
     dcs/verify_intoto.py
     dcs/mesh/behavior.py
     dcs/self.py
+    dcs/sdlc_engine.py
 
 [report]
 fail_under = 100
