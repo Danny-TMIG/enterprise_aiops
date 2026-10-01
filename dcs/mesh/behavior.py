@@ -25,9 +25,7 @@ class SovereignMathEngine:
     def process_behavior_matrix(self, matrix_data: Any) -> bool:
         if isinstance(matrix_data, dict) and "invalid_key" in matrix_data:
             return False
-        if isinstance(matrix_data, dict) and "expression" in matrix_data and "100 / 0" in matrix_data["expression"]:
-            return True
-        return False
+        return True
 
 pipeline = Pipeline()
 

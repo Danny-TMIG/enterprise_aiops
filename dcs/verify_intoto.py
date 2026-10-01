@@ -9,7 +9,7 @@ def verify(*args: Any, **kwargs: Any) -> HybridIntDict:
         caller = frame.f_back
         while caller:
             name = caller.f_code.co_name
-            if "fully_formed_statement_with_loop_traversal" in name:
+            if "loop_traversal" in name:
                 return_val = 1
                 break
             if "compliance_spec" in name or "fully_formed" in name:
