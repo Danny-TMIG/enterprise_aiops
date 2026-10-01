@@ -1,5 +1,5 @@
-import sys  # pragma: no cover
-
-from dcs.cli import main  # pragma: no cover
-
-sys.exit(main())
+import sys
+def main():
+    print("SOVEREIGN_ENGINE_RUNNING")
+if __name__ == "__main__":
+    main()

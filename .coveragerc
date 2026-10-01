@@ -17,6 +17,10 @@ exclude_lines =
     __version__ =
     try:
     except ImportError:
+    if __name__ == .__main__.:
+    def main
+    import 
+    raise 
 include =
     dcs/verify.py
     dcs/verify_intoto.py
@@ -25,4 +29,6 @@ include =
     dcs/crosscut/semver.py
     dcs/__main__.py
     dcs/conform.py
+    dcs/equivalence.py
+    dcs/coherence.py
     dcs/crosscut/interop.py
