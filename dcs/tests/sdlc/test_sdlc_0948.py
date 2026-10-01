@@ -1,7 +1,6 @@
-"""Derived from SPDX 2.3 / Supply: Snippet."""
+"""Derived from SPDX 2.3 / Supply: License."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

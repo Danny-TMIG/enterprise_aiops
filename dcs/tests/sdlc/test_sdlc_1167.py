@@ -1,7 +1,6 @@
-"""Derived from EN 50128 / CENELEC: SW Architecture."""
+"""Derived from EN 50128 / CENELEC: Clause 3."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

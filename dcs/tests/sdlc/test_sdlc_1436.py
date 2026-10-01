@@ -1,7 +1,6 @@
-"""Derived from AWS Well-Architected / Cloud: Reliability."""
+"""Derived from AWS Well-Architected / Cloud: Clause 3."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

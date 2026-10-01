@@ -1,7 +1,6 @@
-"""Derived from BSI IT-Grundschutz / BSI: Protection Needs."""
+"""Derived from BSI IT-Grundschutz / BSI: Clause 4."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

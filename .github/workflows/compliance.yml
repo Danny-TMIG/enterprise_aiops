@@ -1,0 +1,36 @@
+name: Sovereign Pipeline SDLC Compliance Quality Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  coverage-gate:
+    name: Enforce 100% Core Test Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code Repository
+      uses: actions/checkout@v4
+
+    - name: Initialize Python Environment Runtime
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install System Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install pytest pytest-cov coverage hypothesis pytest-sugar
+
+    - name: Execute Isolated Test Telemetry Gathering
+      run: |
+        pytest -c /dev/null -p no:timeout --cov=dcs --cov-config=.coveragerc dcs/tests/test_sdlc_integration.py dcs/tests/test_pytest_mastery.py
+
+    - name: Run Deep Telemetry Structural Analysis
+      run: |
+        python discover_coverage.py

@@ -1,7 +1,6 @@
-"""Derived from GDPR / Privacy: Art5 Principles."""
+"""Derived from GDPR / Privacy: Art6 Lawful."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

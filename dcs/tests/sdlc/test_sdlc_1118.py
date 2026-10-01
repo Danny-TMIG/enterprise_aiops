@@ -1,7 +1,6 @@
-"""Derived from PCI PIN / FinTech: Key Mgmt."""
+"""Derived from PCI PIN / FinTech: Clause 1."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

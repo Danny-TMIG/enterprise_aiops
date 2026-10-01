@@ -1,7 +1,6 @@
-"""Derived from ISO 26262 / ISO: Part 5 Hardware."""
+"""Derived from ISO 26262 / ISO: Clause 4."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

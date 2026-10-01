@@ -1,7 +1,6 @@
-"""Derived from The Update Framework / Signing: Root."""
+"""Derived from The Update Framework / Signing: Clause 1."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

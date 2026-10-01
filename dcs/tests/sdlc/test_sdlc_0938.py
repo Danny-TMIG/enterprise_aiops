@@ -1,7 +1,6 @@
-"""Derived from CCPA / Privacy: Opt-Out."""
+"""Derived from CCPA / Privacy: Clause 4."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

@@ -1,7 +1,6 @@
-"""Derived from SEI CERT C++ / CERT: MSC."""
+"""Derived from SEI CERT C++ / CERT: Clause 2."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

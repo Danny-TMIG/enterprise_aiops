@@ -1,7 +1,6 @@
-"""Derived from CMMI SVC 3.0 / CMMI: IRP Incident."""
+"""Derived from CMMI SVC 3.0 / CMMI: Clause 1."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

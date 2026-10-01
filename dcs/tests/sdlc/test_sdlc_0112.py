@@ -1,7 +1,6 @@
-"""Derived from CMMI DEV 3.0 / CMMI: VER Verification."""
+"""Derived from CMMI DEV 3.0 / CMMI: PI Integration."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

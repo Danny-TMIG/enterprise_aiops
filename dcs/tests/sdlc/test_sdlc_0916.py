@@ -1,7 +1,6 @@
-"""Derived from PMBOK 7 / PMI: Dev Approach."""
+"""Derived from PMBOK 7 / PMI: Clause 2."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

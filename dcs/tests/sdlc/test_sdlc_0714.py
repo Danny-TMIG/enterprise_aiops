@@ -1,7 +1,6 @@
-"""Derived from OECD AI Principles / AI: Robustness."""
+"""Derived from OECD AI Principles / AI: Clause 3."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

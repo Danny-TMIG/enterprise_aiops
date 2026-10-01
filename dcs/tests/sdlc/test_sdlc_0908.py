@@ -1,7 +1,6 @@
-"""Derived from OWASP SAMM 2.0 / OWASP: Verification."""
+"""Derived from OWASP SAMM 2.0 / OWASP: Governance."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

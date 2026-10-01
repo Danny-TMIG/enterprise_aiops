@@ -1,7 +1,6 @@
-"""Derived from BSI TR-03161 / BSI: Implementation."""
+"""Derived from BSI TR-03161 / BSI: Clause 1."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

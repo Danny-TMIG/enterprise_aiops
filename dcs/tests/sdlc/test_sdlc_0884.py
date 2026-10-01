@@ -1,7 +1,6 @@
-"""Derived from ISO/IEC 27001 / ISO: A.17 Continuity."""
+"""Derived from ISO/IEC 27001 / ISO: A.8 Asset."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

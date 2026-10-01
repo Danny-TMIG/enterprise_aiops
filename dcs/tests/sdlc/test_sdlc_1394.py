@@ -1,7 +1,6 @@
-"""Derived from CMMI ACQ 3.0 / CMMI: PMC."""
+"""Derived from CMMI ACQ 3.0 / CMMI: Clause 2."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

@@ -1,7 +1,6 @@
-"""Derived from IEEE 730 / IEEE: 5 SQA Plan."""
+"""Derived from IEEE 730 / IEEE: 6 SQA Activities."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

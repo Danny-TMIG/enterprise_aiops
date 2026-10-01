@@ -1,7 +1,6 @@
-"""Derived from IEC 62304 / IEC: Class A."""
+"""Derived from IEC 62304 / IEC: Clause 2."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

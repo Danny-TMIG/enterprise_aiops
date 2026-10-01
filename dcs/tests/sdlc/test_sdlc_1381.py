@@ -1,7 +1,6 @@
-"""Derived from NIST SP 800-53 / NIST: SC Comms."""
+"""Derived from NIST SP 800-53 / NIST: SR Supply."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

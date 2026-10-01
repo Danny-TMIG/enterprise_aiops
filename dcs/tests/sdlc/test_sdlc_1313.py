@@ -1,7 +1,6 @@
-"""Derived from CMMI SVC 3.0 / CMMI: CAM Capacity."""
+"""Derived from CMMI SVC 3.0 / CMMI: Clause 3."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

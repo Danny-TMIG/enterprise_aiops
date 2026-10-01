@@ -1,7 +1,6 @@
-"""Derived from IEEE 828 / IEEE: 6 SCM Records."""
+"""Derived from IEEE 828 / IEEE: Clause 2."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

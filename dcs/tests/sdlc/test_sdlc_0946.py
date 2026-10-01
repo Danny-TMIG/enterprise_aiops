@@ -1,7 +1,6 @@
-"""Derived from OpenSSF Scorecard / Supply: Token-Permissions."""
+"""Derived from OpenSSF Scorecard / Supply: Clause 1."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

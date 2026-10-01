@@ -1,7 +1,6 @@
-"""Derived from OWASP ASVS 4.0 / OWASP: V9 Comms."""
+"""Derived from OWASP ASVS 4.0 / OWASP: V1 Arch."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

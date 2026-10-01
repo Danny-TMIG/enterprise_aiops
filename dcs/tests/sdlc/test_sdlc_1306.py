@@ -1,7 +1,6 @@
-"""Derived from NIST SP 800-207 / NIST: SDP."""
+"""Derived from NIST SP 800-207 / NIST: Clause 1."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

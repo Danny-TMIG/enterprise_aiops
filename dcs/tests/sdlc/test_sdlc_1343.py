@@ -1,7 +1,6 @@
-"""Derived from Common Criteria ISO 15408 / CC: Part 2."""
+"""Derived from Common Criteria ISO 15408 / CC: Clause 1."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

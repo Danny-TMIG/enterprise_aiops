@@ -1,7 +1,6 @@
-"""Derived from MISRA C:2023 / Automotive: Rule 1-21."""
+"""Derived from MISRA C:2023 / Automotive: Clause 4."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

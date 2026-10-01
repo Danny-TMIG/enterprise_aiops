@@ -1,7 +1,6 @@
-"""Derived from Automotive SPICE 3.1 / Automotive: SPL.1-2."""
+"""Derived from Automotive SPICE 3.1 / Automotive: Clause 4."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

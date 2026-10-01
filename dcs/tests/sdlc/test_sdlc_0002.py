@@ -1,7 +1,6 @@
-"""Derived from ISO/IEC 15288 / ISO: 6.3 Technical Mgmt."""
+"""Derived from ISO/IEC 15288 / ISO: 6.1 Agreement."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

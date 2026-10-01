@@ -1,7 +1,6 @@
-"""Derived from ISO 15408 / ISO: Part 3 Assurance."""
+"""Derived from ISO 15408 / ISO: Clause 4."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

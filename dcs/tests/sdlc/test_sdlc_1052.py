@@ -1,7 +1,6 @@
-"""Derived from IEEE 830 / IEEE: 2 Overall Description."""
+"""Derived from IEEE 830 / IEEE: 5 Appendices."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

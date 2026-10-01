@@ -1,7 +1,6 @@
-"""Derived from CycloneDX 1.5 / Supply: dependencies."""
+"""Derived from CycloneDX 1.5 / Supply: metadata."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

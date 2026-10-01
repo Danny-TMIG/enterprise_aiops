@@ -1,7 +1,6 @@
-"""Derived from HIPAA / Privacy: Administrative."""
+"""Derived from HIPAA / Privacy: Physical."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 

@@ -1,7 +1,6 @@
-"""Derived from DO-254 / RTCA: DAL D."""
+"""Derived from DO-254 / RTCA: Clause 4."""
 import json
 from pathlib import Path
-
 M = Path("dcs/standards/sdlc.json")
 R = Path("dcs/standards/registry.json")
 
